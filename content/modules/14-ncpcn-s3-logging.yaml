@@ -1,0 +1,681 @@
+id: ncpcn-s3-logging
+title: 3.2 Configure Logging
+track: NCP-CN Section 3
+order: 32
+icon: book
+summary: 'NKP ships a pre-configured logging stack built on Grafana Loki, Fluent Bit and Fluentd, orchestrated by the BanzaiCloud Logging operator via Kubernetes custom resources. This objective covers enabling workspace and multi-tenant logging, customizing the stack with config overrides, scaling its components, and persisting log data to S3-compatible object storage such as Nutanix Objects or Rook Ceph.
+
+  '
+questions:
+- id: q33
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does NKP provide out of the box for logging?
+  options:
+  - id: a
+    text: Nothing; you must build it
+  - id: b
+    text: A pre-configured logging stack that collects and visualizes pod and admin log data at the Workspace level (and is multi-tenant capable)
+  - id: c
+    text: Only node metrics
+  - id: d
+    text: Only audit logs
+  correct: b
+  explanation: NKP provides a pre-configured logging stack that collects and visualizes pod and admin log data at the Workspace level and is multi-tenant capable.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.589
+    quote: NKP comes with a pre-configured logging stack that allows you to collect and visualize pod and admin log data at the Workspace level. The logging stack is also multi-tenant capable...
+- id: q34
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the primary components of the NKP logging stack?
+  options:
+  - id: a
+    text: Elasticsearch, Kibana, Logstash
+  - id: b
+    text: BanzaiCloud Logging-operator, Grafana + Grafana Loki, and Fluent Bit + Fluentd
+  - id: c
+    text: Splunk and Fluentd
+  - id: d
+    text: Prometheus and Alertmanager
+  correct: b
+  explanation: The primary components are the BanzaiCloud Logging-operator, Grafana and Grafana Loki, and Fluent Bit and Fluentd.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.589
+    quote: 'The primary components of the logging stack include these platform services: BanzaiCloud Logging-operator; Grafana and Grafana Loki; Fluent Bit and Fluentd.'
+- id: q35
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How does log data flow through the stack?
+  options:
+  - id: a
+    text: Loki -> Fluentd -> Fluent Bit
+  - id: b
+    text: Fluent Bit gathers pod logs and sends them to Fluentd, which forwards to the appropriate Grafana Loki servers per custom-resource config
+  - id: c
+    text: Grafana collects logs directly
+  - id: d
+    text: Nodes push logs to Grafana
+  correct: b
+  explanation: Fluent Bit gathers pod-log data and sends it to Fluentd, which forwards it to the appropriate Grafana Loki servers based on custom-resource configuration.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.590
+    quote: NKP uses the BanzaiCloud Logging operator to manage the Fluent Bit and Fluentd deployments that collect pod logs using Kubernetes API extensions called custom resources.
+- id: q36
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How does Loki store and index log data?
+  options:
+  - id: a
+    text: It indexes the full log messages
+  - id: b
+    text: It indexes log data by label and stores it for querying, but does not index the messages themselves (improving efficiency)
+  - id: c
+    text: It stores logs in etcd
+  - id: d
+    text: It does not store logs
+  correct: b
+  explanation: Loki indexes log data by label and stores it for querying, but does not index the log messages themselves, improving efficiency and lowering its footprint.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.590
+    quote: Loki then indexes the log data by label and stores it for querying. Loki maintains log order integrity but does not index the log messages themselves...
+- id: q37
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What manages the Fluent Bit and Fluentd deployments in NKP?
+  options:
+  - id: a
+    text: A DaemonSet you write
+  - id: b
+    text: The BanzaiCloud Logging operator, via Kubernetes custom resources (declared with kubectl)
+  - id: c
+    text: Helm only
+  - id: d
+    text: The kubelet
+  correct: b
+  explanation: The BanzaiCloud Logging operator manages the Fluent Bit and Fluentd deployments via Kubernetes custom resources that you declare with kubectl.
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.590
+    quote: NKP uses the BanzaiCloud Logging operator to manage the Fluent Bit and Fluentd deployments that collect pod logs using Kubernetes API extensions called custom resources.
+- id: q38
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: By default, what is the logging state on managed and attached clusters?
+  options:
+  - id: a
+    text: Enabled
+  - id: b
+    text: Disabled — you must explicitly enable the logging stack applications on the workspace
+  - id: c
+    text: Partially enabled
+  - id: d
+    text: Enabled only for admin logs
+  correct: b
+  explanation: Logging is disabled by default on managed and attached clusters; you must explicitly enable the logging stack applications on the workspace.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.589
+    quote: By default, logging is disabled on managed and attached clusters. You need to enable the logging stack applications explicitly on the workspace...
+- id: q39
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What prerequisite must be met on each attached cluster for successful Loki deployment?
+  options:
+  - id: a
+    text: A GPU
+  - id: b
+    text: A default storage class set on each attached cluster
+  - id: c
+    text: An external load balancer
+  - id: d
+    text: FIPS mode
+  correct: b
+  explanation: Set a default storage class on each attached cluster for successful Loki deployment.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.595
+    quote: Set a default storage class on each attached cluster for successful Loki deployment.
+- id: q40
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you enable Workspace-level logging via the UI?
+  options:
+  - id: a
+    text: Edit etcd
+  - id: b
+    text: In the target workspace > Applications, enable Rook Ceph, Rook Ceph Cluster, Grafana Loki, Logging Operator, and Grafana Logging
+  - id: c
+    text: Restart the cluster
+  - id: d
+    text: Apply a license
+  correct: b
+  explanation: In the target workspace > Applications, enable Rook Ceph and Rook Ceph Cluster, then Grafana Loki, Logging Operator, and Grafana Logging.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.595
+    quote: Select the three-dot button... for Rook Ceph and Rook Ceph Cluster, then click Enable... Repeat the process for the Grafana Loki, Logging Operator, and Grafana Logging applications.
+- id: q41
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which CLI command creates the logging AppDeployments on the management cluster?
+  options:
+  - id: a
+    text: kubectl create logging
+  - id: b
+    text: nkp create appdeployment logging-operator --app logging-operator-<ver> --workspace ${WORKSPACE_NAME} (and rook-ceph, grafana-loki, grafana-logging)
+  - id: c
+    text: helm install loki
+  - id: d
+    text: nkp enable logging
+  correct: b
+  explanation: Use nkp create appdeployment for logging-operator, rook-ceph, rook-ceph-cluster, grafana-loki, and grafana-logging with --workspace ${WORKSPACE_NAME}.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.597
+    quote: nkp create appdeployment logging-operator --app logging-operator-3.17.9 --workspace ${WORKSPACE_NAME} ... nkp create appdeployment rook-ceph --app rook-ceph-1.10.3 --workspace ${WORKSPACE_NAME}...
+- id: q42
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Why does the documentation warn against enabling Fluent Bit (admin logs) without sufficient Ceph storage?
+  options:
+  - id: a
+    text: It disables the UI
+  - id: b
+    text: Admin logs can use around 2 GB/day per node, requiring additional disk on the rook-ceph-cluster
+  - id: c
+    text: It breaks RBAC
+  - id: d
+    text: It is unsupported
+  correct: b
+  explanation: Fluent Bit collects admin logs, which can consume around 2 GB/day per node; enable it only after configuring the Grafana Loki Ceph bucket with sufficient storage.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.596
+    quote: We do not recommend installing Fluent Bit, which is responsible for collecting admin logs, unless you have configured the Grafana Loki Ceph Cluster Bucket with sufficient storage space… around 2GB/day per node.
+- id: q43
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you customize a logging stack application on an attached/managed cluster?
+  options:
+  - id: a
+    text: Edit the pod directly
+  - id: b
+    text: Apply a ConfigMap (e.g., logging-operator-logging-overrides) to the cluster and reference it as a config override
+  - id: c
+    text: Reinstall NKP
+  - id: d
+    text: It cannot be customized
+  correct: b
+  explanation: Customize by applying a ConfigMap (e.g., logging-operator-logging-overrides) to the managed/attached cluster and referencing it as a config override.
+  source:
+    label: Customizing Logging Stack Applications
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-customize-logging-stack-apps-t.html
+    page: p.613
+    quote: Apply the ConfigMap directly to the managed/attached cluster using the name, logging-operator-logging-overrides.
+- id: q44
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How large is the in-memory buffer Fluent Bit maintains, and how often does it flush?
+  options:
+  - id: a
+    text: 50 MB, every 10s
+  - id: b
+    text: 5 MB in memory, flushed every one second (with a checkpoint per file so it resumes after restart)
+  - id: c
+    text: 1 GB, every minute
+  - id: d
+    text: No buffer
+  correct: b
+  explanation: Fluent Bit maintains a 5 MB in-memory buffer, flushes it every one second, and keeps a checkpoint per file so it resumes after a restart.
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.590
+    quote: Maintains a small buffer of logs (5 MB in memory)... Maintains a checkpoint on each host for each file it's consumed... Flushes the buffer every one second.
+- id: q45
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where can you view the Logging Operator / Loki / Ceph dashboards?
+  options:
+  - id: a
+    text: Only via CLI
+  - id: b
+    text: In the Grafana UI, when the Prometheus Monitoring (kube-prometheus-stack) platform app is enabled
+  - id: c
+    text: In Prism Central
+  - id: d
+    text: They are not available
+  correct: b
+  explanation: When the kube-prometheus-stack (Prometheus Monitoring) platform app is enabled, you can view the Logging Operator, Loki, and Ceph dashboards in the Grafana UI.
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.591
+    quote: In NKP, if the Prometheus Monitoring (kube-prometheus-stack) platform application is enabled, you can view the Logging Operator dashboard in the Grafana UI.
+- id: q46
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When configuring an app's overrides, what do the configuration values correspond to?
+  options:
+  - id: a
+    text: Node labels
+  - id: b
+    text: The application's Helm Chart values (applied via a config override / AppDeployment patch)
+  - id: c
+    text: Kernel parameters
+  - id: d
+    text: CLI flags
+  correct: b
+  explanation: Configuration values correspond to the application's Helm Chart values, applied via a config override (ConfigMap) or an AppDeployment patch.
+  source:
+    label: Customizing Logging Stack Applications
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-customize-logging-stack-apps-t.html
+    page: p.613
+    quote: Apply the ConfigMap directly to the managed/attached cluster... (config override referenced by the AppDeployment).
+- id: q47
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the prerequisite for enabling multi-tenant (Project-level) logging?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: You must first enable Workspace-level logging
+  - id: c
+    text: An Ultimate license only
+  - id: d
+    text: A second cluster
+  correct: b
+  explanation: You must enable Workspace-level logging before you can configure multi-tenant (Project-level) logging.
+  source:
+    label: Multi-Tenant Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenant-logging-c.html
+    page: p.603
+    quote: You must perform the Workspace-level Logging procedures as a prerequisite to enable multi-tenant logging at the Project level… Enable workspace-level logging before you can configure multi-tenant logging.
+- id: q48
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How is multi-tenant log access isolated?
+  options:
+  - id: a
+    text: By cluster only
+  - id: b
+    text: At the namespace level through Projects — each Project namespace has its own logging-operator Flow, Loki, and Grafana
+  - id: c
+    text: By node
+  - id: d
+    text: By IP address
+  correct: b
+  explanation: Multi-tenant log access is isolated at the namespace level through Projects — each Project namespace runs its own logging-operator Flow, Loki, and Grafana.
+  source:
+    label: Multi-Tenant Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenant-logging-c.html
+    page: p.602
+    quote: Access to log data is done at the namespace level through the use of Projects... Each Project namespace has a logging-operator, 'Flow' that sends its pod logs to its own Loki server...
+- id: q49
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In multi-tenant logging, how does a cluster administrator see logs across all namespaces?
+  options:
+  - id: a
+    text: It is impossible
+  - id: b
+    text: Via a cluster-scoped Loki/Grafana pair fed by a Logging-operator ClusterFlow that directs pod logs from all namespaces
+  - id: c
+    text: By querying each pod
+  - id: d
+    text: Through Prometheus
+  correct: b
+  explanation: A cluster-scoped Loki/Grafana pair is deployed with a Logging-operator ClusterFlow that directs pod logs from all namespaces to that pair, for administrator visibility.
+  source:
+    label: Multi-Tenant Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenant-logging-c.html
+    page: p.602
+    quote: a cluster-scoped Loki/Grafana instance pair is deployed with a corresponding Logging-operator ClusterFlow that directs pod logs from all namespaces to the pair.
+- id: q50
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you grant a team access to only their namespace's logs?
+  options:
+  - id: a
+    text: Give them cluster-admin
+  - id: b
+    text: Assign teams to specific namespaces (via RBAC/Projects) so members see only the logs for the namespaces they own
+  - id: c
+    text: Share the admin token
+  - id: d
+    text: Disable RBAC
+  correct: b
+  explanation: Assign teams to specific namespaces (via RBAC/Projects); members then see only the logs for the namespaces they own.
+  source:
+    label: Multi-Tenant Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenant-logging-c.html
+    page: p.602
+    quote: Assigning teams to specific namespaces enables the team members to see only the logs for the namespaces they own.
+- id: q51
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After enabling logging, where do you view cluster/workspace log data?
+  options:
+  - id: a
+    text: In the node console
+  - id: b
+    text: In the Grafana (Loki) dashboards in the NKP UI
+  - id: c
+    text: In Prism Element
+  - id: d
+    text: In the kubelet logs only
+  correct: b
+  explanation: After enabling logging, view log data in the Grafana (Loki) dashboards in the NKP UI.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.595
+    quote: You can view the Loki dashboards in Grafana UI... Then, you can view cluster log data.
+- id: q52
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which tool generates a support bundle (diagnostic data) to send to Nutanix for analysis?
+  options:
+  - id: a
+    text: kubectl logs
+  - id: b
+    text: nkp diagnose (builds on the open-source troubleshoot.sh project)
+  - id: c
+    text: journalctl
+  - id: d
+    text: nkp gather-logs
+  correct: b
+  explanation: Use nkp diagnose to generate a support bundle; it builds on the open-source troubleshoot.sh project.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.1067
+    quote: nkp diagnose was developed by NKP and builds on the open source troubleshoot.sh project.
+- id: q53
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How much history does the support bundle collect by default?
+  options:
+  - id: a
+    text: 1 hour
+  - id: b
+    text: The last 48 hours of the cluster's life
+  - id: c
+    text: 7 days
+  - id: d
+    text: Everything since creation
+  correct: b
+  explanation: The support bundle collects data for the last 48 hours of the cluster's life by default.
+  source:
+    label: Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
+    page: p.1067
+    quote: In order to generate a support bundle with data collected for the last 48 hours of the life of the cluster...
+- id: q54
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which S3-compatible object storage options can NKP use for persisting log data?
+  options:
+  - id: a
+    text: Only Rook Ceph
+  - id: b
+    text: Nutanix Objects (managed by the COSI Driver for Nutanix), external S3 (AWS/Azure/GCP/enterprise), or integrated Rook Ceph
+  - id: c
+    text: Only AWS S3
+  - id: d
+    text: Local disk only
+  correct: b
+  explanation: NKP can persist log data to Nutanix Objects (COSI Driver for Nutanix), external S3 providers (AWS/Azure/GCP/enterprise), or integrated Rook Ceph.
+  source:
+    label: Configuring Loki to Use AWS S3 Storage in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configure-loki-to-use-aws-s3-storage-in-nkp-t.html
+    page: p.340
+    quote: 'Nutanix Objects: Nutanix Objects are well-integrated with Nutanix and managed by the COSI Driver for Nutanix... S3 storage from other providers such as AWS, Azure, GCP... Integrated Rook Ceph...'
+- id: q55
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What must be pre-installed/configured to use Nutanix Objects as the S3 store for an application?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: The COSI Driver for Nutanix application
+  - id: c
+    text: A second cluster
+  - id: d
+    text: An external load balancer
+  correct: b
+  explanation: To use Nutanix Objects as the S3 store, pre-install and configure the COSI Driver for Nutanix application.
+  source:
+    label: Configuring Loki to Use AWS S3 Storage in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configure-loki-to-use-aws-s3-storage-in-nkp-t.html
+    page: p.340
+    quote: 'Nutanix Objects: You do not have to provide additional information after selecting Nutanix Objects. Note: Ensure that you pre-install and configure the COSI Driver for Nutanix application.'
+- id: q56
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When configuring Loki to use S3 storage, how are the credentials supplied?
+  options:
+  - id: a
+    text: Hard-coded in the pod
+  - id: b
+    text: As a Kubernetes Secret (e.g., AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY) mounted into the Loki pods as environment variables
+  - id: c
+    text: Via kubeconfig
+  - id: d
+    text: In a plaintext file
+  correct: b
+  explanation: Create a Kubernetes Secret with AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY; it is mounted into the Grafana Loki pods as environment variables.
+  source:
+    label: Configuring Loki to Use AWS S3 Storage in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configure-loki-to-use-aws-s3-storage-in-nkp-t.html
+    page: p.612
+    quote: Create a secret containing the static AWS S3 credentials. The secret is then mounted into each of the Grafana Loki pods as environment variables. kubectl create secret generic nkp-aws-s3-creds...
+- id: q57
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you point Loki at your object storage endpoint/bucket?
+  options:
+  - id: a
+    text: Edit the Loki binary
+  - id: b
+    text: Provide a grafana-loki-overrides ConfigMap setting loki.structuredConfig.storage_config.aws.s3, then patch the grafana-loki AppDeployment (configOverrides)
+  - id: c
+    text: It auto-detects
+  - id: d
+    text: Use a NodePort
+  correct: b
+  explanation: Provide a grafana-loki-overrides ConfigMap setting loki.structuredConfig.storage_config.aws.s3 (endpoint/bucket), then patch the grafana-loki AppDeployment to reference it (configOverrides).
+  source:
+    label: Configuring Loki to Use AWS S3 Storage in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configure-loki-to-use-aws-s3-storage-in-nkp-t.html
+    page: p.612
+    quote: 'Create a config that overrides ConfigMap to update the storage configuration… name: grafana-loki-overrides… storage_config: aws: s3: s3://<region>/<bucket name>… Update the grafana-loki AppDeployment to apply the configuration override.'
+- id: q58
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For production log storage, what does NKP recommend, and why?
+  options:
+  - id: a
+    text: Always Rook Ceph
+  - id: b
+    text: Enterprise-grade S3 or Nutanix Object Storage — they provide better scalability and lifecycle management (Rook Ceph shares storage with internal apps)
+  - id: c
+    text: Local volumes
+  - id: d
+    text: No persistence
+  correct: b
+  explanation: For production, use enterprise-grade S3 or Nutanix Object Storage for better scalability and lifecycle management; Rook Ceph shares storage with internal apps.
+  source:
+    label: Configuring Loki to Use AWS S3 Storage in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configure-loki-to-use-aws-s3-storage-in-nkp-t.html
+    page: p.340
+    quote: For production environments, choose either enterprise-grade S3 storage or Nutanix Object Storage, because these provide better scalability and lifecycle management.
+- id: q59
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In a high-log-traffic environment, which component is typically the bottleneck?
+  options:
+  - id: a
+    text: Grafana
+  - id: b
+    text: Fluentd (in the Logging Operator)
+  - id: c
+    text: Fluent Bit
+  - id: d
+    text: The API server
+  correct: b
+  explanation: In a high-log-traffic environment, Fluentd (in the Logging Operator) usually becomes the bottleneck.
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.591
+    quote: In a high log traffic environment, fluentd usually becomes the bottleneck of the logging stack.
+- id: q60
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In what mode does NKP deploy Loki, and which component should you scale first?
+  options:
+  - id: a
+    text: Monolithic; scale Grafana
+  - id: b
+    text: Microservice mode; scale the Ingester first (Distributor only when it is stressed)
+  - id: c
+    text: Single-binary; scale etcd
+  - id: d
+    text: Read-only mode
+  correct: b
+  explanation: NKP deploys Loki in Microservice mode; scale the Ingester first, and the Distributor only when it is under stress.
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.592
+    quote: NKP deploys Loki in Microservice mode… Ingester should be the first component to be considered for scaling up. Distributor should be scaled up only when the existing Distributor is experiencing stress…
+- id: q61
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What storage overhead does the default Rook Ceph Cluster configuration have for redundancy?
+  options:
+  - id: a
+    text: 10%
+  - id: b
+    text: About 33% (e.g., 1000 GB of data disk yields ~750 GB usable)
+  - id: c
+    text: 50%
+  - id: d
+    text: 0%
+  correct: b
+  explanation: The default Rook Ceph Cluster configuration has about 33% overhead for redundancy (1000 GB of data disk yields ~750 GB usable).
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.592
+    quote: The default configuration of Rook Ceph Cluster in NKP has a 33% overhead in data storage for redundancy... if the data disks... is 1000Gb, 750Gb will be used to store your data.
+- id: q62
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After sizing up Rook Ceph, what else must you increase for grafana-loki?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: The ObjectBucketClaim storage limit (override nkp.grafana-loki.maxSize in the rook-ceph-cluster app)
+  - id: c
+    text: The node count
+  - id: d
+    text: The license tier
+  correct: b
+  explanation: After sizing up Rook Ceph, also increase the ObjectBucketClaim storage limit by overriding nkp.grafana-loki.maxSize in the rook-ceph-cluster app.
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.592
+    quote: after you size up your Rook Ceph Cluster for more storage... increase the storage limit of your ObjectBucketClaims of your grafana-loki... override nkp.grafana-loki.maxSize.
+- id: q63
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the impact of enabling audit logging (kommander-fluent-bit) on the logging stack?
+  options:
+  - id: a
+    text: No impact
+  - id: b
+    text: It increases log traffic to the stack by approximately 3–4x, so you should scale up all stack components
+  - id: c
+    text: It halves traffic
+  - id: d
+    text: It disables workspace logging
+  correct: b
+  explanation: Enabling audit logging (kommander-fluent-bit) increases log traffic to the stack by approximately 3–4x, so scale up all logging stack components.
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.593
+    quote: When you enable audit logging by enabling the kommander-fluent-bit AppDeployment, inbound traffic to the logging stack increases the log traffic by approximately 3-4 more times… consider scaling up all components…
+- id: q64
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For scaling Loki in high traffic, how do Distributor and Ingester pod counts typically compare?
+  options:
+  - id: a
+    text: Equal numbers
+  - id: b
+    text: The number of Distributor pods should be much lower than the number of Ingester pods
+  - id: c
+    text: More Distributors than Ingesters
+  - id: d
+    text: No Ingesters needed
+  correct: b
+  explanation: The number of Distributor pods should be much lower than the number of Ingester pods.
+  source:
+    label: Logging Operator
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
+    page: p.592
+    quote: Usually, the number of Distributor pods should be much lower than the number of Ingester pods.

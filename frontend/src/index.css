@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-charcoal text-slate-100;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-sans antialiased;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(120, 85, 250, 0.18), transparent 60%),
+      radial-gradient(900px 500px at 0% 100%, rgba(91, 63, 208, 0.14), transparent 55%),
+      #131313;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-charcoal-border bg-charcoal-card/80 backdrop-blur;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5
+           font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-iris text-white hover:bg-iris-dark hover:shadow-glow;
+  }
+  .btn-ghost {
+    @apply btn border border-charcoal-border text-slate-200 hover:border-iris hover:text-white;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-charcoal-border
+           bg-charcoal-light px-3 py-1 text-xs font-medium text-slate-300;
+  }
+}
+
+/* Progress-bar shimmer + answer feedback animations. */
+@keyframes pop {
+  0% { transform: scale(0.96); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-pop { animation: pop 0.18s ease-out; }

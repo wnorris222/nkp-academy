@@ -1,0 +1,71 @@
+# Local development / demo stack.
+#
+#   docker compose up --build            # SQLite (default), app on :8000
+#   docker compose --profile postgres up  # run PostgreSQL + point the app at it
+#
+# The default profile runs the production-like image (FastAPI serving the built
+# SPA). For frontend hot-reload, run `make dev-backend` and `make dev-frontend`
+# on the host instead.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nkp-academy:local
+    ports:
+      - "8000:8000"
+    environment:
+      NKP_ENVIRONMENT: development
+      NKP_AUTO_SEED: "true"
+      # Default: SQLite on a named volume. Override to use the postgres service.
+      NKP_DATABASE_URL: sqlite+aiosqlite:////data/nkp_academy.db
+    volumes:
+      - app_data:/data
+      # Live-edit content without rebuilding the image.
+      - ./content:/app/content:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz').status==200 else 1)"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # Optional PostgreSQL backend — enable with `--profile postgres`.
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["postgres"]
+    environment:
+      POSTGRES_USER: nkp
+      POSTGRES_PASSWORD: nkp
+      POSTGRES_DB: nkp_academy
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nkp -d nkp_academy"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # App wired to PostgreSQL (also part of the `postgres` profile).
+  app-postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nkp-academy:local
+    profiles: ["postgres"]
+    ports:
+      - "8001:8000"
+    environment:
+      NKP_ENVIRONMENT: development
+      NKP_AUTO_SEED: "true"
+      NKP_DATABASE_URL: postgresql+asyncpg://nkp:nkp@postgres:5432/nkp_academy
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  app_data:
+  pg_data:

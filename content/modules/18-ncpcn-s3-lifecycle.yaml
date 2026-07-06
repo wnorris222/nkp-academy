@@ -1,0 +1,643 @@
+id: ncpcn-s3-lifecycle
+title: 3.6 Lifecycle Management
+track: NCP-CN Section 3
+order: 36
+icon: trophy
+summary: 'Lifecycle management covers upgrading NKP (Pro and Ultimate) in the correct sequence, upgrading the Kubernetes version on managed clusters (control plane first, then each worker node pool), and related day-2 upgrade workflows such as managing and scaling node pools and deleting clusters cleanly with the NKP CLI.
+
+  '
+questions:
+- id: q147
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the correct NKP upgrade sequence?
+  options:
+  - id: a
+    text: Kubernetes version first, then Kommander
+  - id: b
+    text: 1) Kommander, 2) Platform Applications on managed/attached clusters, 3) Management and Managed clusters (Kubernetes)
+  - id: c
+    text: Delete then recreate
+  - id: d
+    text: Any order
+  correct: b
+  explanation: 'Upgrade in sequence: 1) Kommander, 2) Platform Applications on managed/attached clusters, 3) Management and Managed clusters (Kubernetes).'
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.1049
+    quote: 'Upgrade your NKP environment in the following sequence to avoid compatibility issues:'
+- id: q148
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What must you upgrade before upgrading the Kubernetes version on attached clusters?
+  options:
+  - id: a
+    text: The node pools
+  - id: b
+    text: Kommander — always upgrade Kommander first to avoid Kubernetes API compatibility issues
+  - id: c
+    text: The license
+  - id: d
+    text: The bastion host
+  correct: b
+  explanation: Always upgrade Kommander before upgrading the Kubernetes version in attached clusters to apply required updates for new/updated Kubernetes APIs.
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.1049
+    quote: Always upgrade Kommander before upgrading the Kubernetes version in attached clusters to apply any required updates for new or updated Kubernetes APIs.
+- id: q149
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command upgrades Kommander in a non-air-gapped environment?
+  options:
+  - id: a
+    text: nkp update kommander
+  - id: b
+    text: nkp upgrade kommander
+  - id: c
+    text: helm upgrade kommander
+  - id: d
+    text: nkp kommander upgrade
+  correct: b
+  explanation: Upgrade Kommander (non-air-gapped) with nkp upgrade kommander.
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.1050
+    quote: 'For non-air-gapped environments, run the upgrade command: nkp upgrade kommander.'
+- id: q150
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you upgrade Kommander in an air-gapped environment?
+  options:
+  - id: a
+    text: It is not supported
+  - id: b
+    text: nkp upgrade kommander --kommander-applications-repository ./application-repositories/kommander-applications-nkp-version.tar.gz (run from the extracted bundle root)
+  - id: c
+    text: nkp upgrade kommander --offline
+  - id: d
+    text: Copy files manually
+  correct: b
+  explanation: For air-gapped, run nkp upgrade kommander --kommander-applications-repository ./application-repositories/kommander-applications-nkp-version.tar.gz from the extracted bundle root.
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.1050
+    quote: 'For air-gapped environments, run the upgrade command with the repository path: nkp upgrade kommander --kommander-applications-repository.'
+- id: q151
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: Which are documented upgrade prerequisites? (Select all that apply)
+  options:
+  - id: a
+    text: Identify the current and target NKP versions
+  - id: b
+    text: Install the target NKP CLI version
+  - id: c
+    text: Identify the NKP license type
+  - id: d
+    text: Verify Kubernetes/OS/application/component compatibility
+  correct:
+  - a
+  - b
+  - c
+  - d
+  explanation: 'Prerequisites: identify current/target NKP versions, install the target NKP CLI, identify the license type, and verify Kubernetes/OS/application/component compatibility.'
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.1043
+    quote: Identify the current and target NKP versions.
+- id: q152
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Within a cluster, in what order do you upgrade the Kubernetes version?
+  options:
+  - id: a
+    text: Workers first, then control plane
+  - id: b
+    text: Control plane first, then each worker node pool
+  - id: c
+    text: All at once
+  - id: d
+    text: Only the control plane
+  correct: b
+  explanation: Upgrade the control plane first, then each worker node pool, to maintain stability and minimize downtime.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.1057
+    quote: Upgrade the Kubernetes version by first upgrading the control plane, then upgrading each worker node pool.
+- id: q153
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command upgrades the control-plane Kubernetes version (e.g., on vSphere)?
+  options:
+  - id: a
+    text: nkp upgrade controlplane
+  - id: b
+    text: nkp update controlplane vsphere --cluster-name=${CLUSTER_NAME} --kubernetes-version=v<version> --vm-template <NIB template>
+  - id: c
+    text: kubectl upgrade
+  - id: d
+    text: nkp cp upgrade
+  correct: b
+  explanation: Upgrade the control plane with nkp update controlplane <provider> --cluster-name --kubernetes-version (plus provider image/template, e.g., --vm-template on vSphere).
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.1063
+    quote: Upgrade the control plane to the new Kubernetes version using the appropriate command for your infrastructure provider.
+- id: q154
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command upgrades a worker node pool's Kubernetes version?
+  options:
+  - id: a
+    text: nkp update nodepool <provider> ${NODEPOOL_NAME} --cluster-name=${CLUSTER_NAME} --kubernetes-version=v<version>
+  - id: b
+    text: nkp scale nodepool
+  - id: c
+    text: kubectl upgrade nodepool
+  - id: d
+    text: nkp nodepool upgrade
+  correct: a
+  explanation: Upgrade each worker pool with nkp update nodepool <provider> ${NODEPOOL_NAME} --cluster-name --kubernetes-version.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.1064
+    quote: Upgrade the node pool to match the control plane Kubernetes version using the appropriate command for your infrastructure provider.
+- id: q155
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Do you upgrade the management cluster or workload clusters first?
+  options:
+  - id: a
+    text: Workload first
+  - id: b
+    text: Complete the management cluster upgrade before upgrading any workload clusters
+  - id: c
+    text: Simultaneously
+  - id: d
+    text: Order doesn't matter
+  correct: b
+  explanation: Complete the management cluster upgrade before upgrading any workload clusters.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.1062
+    quote: Complete the management cluster upgrade before upgrading any workload clusters.
+- id: q156
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Scenario: you must move a workload cluster to a newer Kubernetes version. Which commands apply?'
+  options:
+  - id: a
+    text: Only nkp upgrade kommander
+  - id: b
+    text: nkp update controlplane <provider> ... then nkp update nodepool <provider> ...
+  - id: c
+    text: Delete and recreate the cluster
+  - id: d
+    text: Edit the kubelet on each node
+  correct: b
+  explanation: Move a workload cluster to a new Kubernetes version by upgrading the control plane (nkp update controlplane) and then each node pool (nkp update nodepool).
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.1063
+    quote: Upgrade the control plane to the new Kubernetes version, then Upgrade the node pool to match the control plane Kubernetes version.
+- id: q157
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Scenario: you need to change the Pod/Service subnets or control-plane options. How?'
+  options:
+  - id: a
+    text: Edit the running pods
+  - id: b
+    text: Generate the manifests with --dry-run -o yaml and edit the Cluster / KubeadmControlPlane objects at cluster creation
+  - id: c
+    text: Reinstall NKP
+  - id: d
+    text: It cannot be changed
+  correct: b
+  explanation: Change Pod/Service subnets or control-plane options by generating manifests with --dry-run -o yaml and editing the Cluster / KubeadmControlPlane objects — this must be done at cluster creation for subnets.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.702
+    quote: To modify the Services subnet, add or edit the spec.clusterNetwork.services.cidrBlocks field of the Cluster object.
+- id: q158
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you list node pools and their current Kubernetes versions?
+  options:
+  - id: a
+    text: kubectl get pods
+  - id: b
+    text: nkp get nodepools --cluster-name ${CLUSTER_NAME} -n ${CLUSTER_NAMESPACE}
+  - id: c
+    text: nkp list versions
+  - id: d
+    text: helm list
+  correct: b
+  explanation: List node pools and their Kubernetes versions with nkp get nodepools --cluster-name ${CLUSTER_NAME} -n ${CLUSTER_NAMESPACE}.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.1063
+    quote: 'List all node pools in your cluster: nkp get nodepools --cluster-name ${CLUSTER_NAME} -n ${CLUSTER_NAMESPACE}.'
+- id: q159
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Scenario: you want to change a single node pool''s config without disturbing the others. Why is this possible?'
+  options:
+  - id: a
+    text: All node pools share one config
+  - id: b
+    text: Each node pool is an independent Cluster API MachineDeployment, so you update/scale it individually
+  - id: c
+    text: It is not possible
+  - id: d
+    text: You must recreate the cluster
+  correct: b
+  explanation: Each node pool is an independent Cluster API MachineDeployment, so you can update or scale it individually without affecting the others.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.818
+    quote: NKP implements node pools using Cluster API MachineDeployments.
+- id: q160
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How are NKP node pools implemented?
+  options:
+  - id: a
+    text: As DaemonSets
+  - id: b
+    text: As Cluster API MachineDeployments
+  - id: c
+    text: As raw VMs
+  - id: d
+    text: As StatefulSets
+  correct: b
+  explanation: NKP node pools are implemented as Cluster API MachineDeployments.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.818
+    quote: NKP implements node pools using Cluster API MachineDeployments.
+- id: q161
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command creates a new node pool?
+  options:
+  - id: a
+    text: kubectl create nodepool
+  - id: b
+    text: nkp create nodepool <provider> -c ${CLUSTER_NAME} ${NODEPOOL_NAME} ...
+  - id: c
+    text: nkp add nodes
+  - id: d
+    text: helm install nodepool
+  correct: b
+  explanation: Create a node pool with nkp create nodepool <provider> -c ${CLUSTER_NAME} ${NODEPOOL_NAME} and the provider flags.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.899
+    quote: nkp create nodepool vsphere ${NODEPOOL_NAME} --cluster-name=${CLUSTER_NAME} creates the MachineDeployment, machine template, and KubeadmConfigTemplate.
+- id: q162
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command lists the node pools for a cluster?
+  options:
+  - id: a
+    text: nkp get nodepools --cluster-name=${CLUSTER_NAME}
+  - id: b
+    text: kubectl get nodes
+  - id: c
+    text: nkp show pools
+  - id: d
+    text: velero get nodepools
+  correct: a
+  explanation: List node pools with nkp get nodepools --cluster-name=${CLUSTER_NAME}.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.1063
+    quote: nkp get nodepools --cluster-name ${CLUSTER_NAME} -n ${CLUSTER_NAMESPACE}.
+- id: q163
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command deletes a node pool?
+  options:
+  - id: a
+    text: kubectl delete nodepool
+  - id: b
+    text: nkp delete nodepool ${NODEPOOL_NAME} --cluster-name=${CLUSTER_NAME}
+  - id: c
+    text: nkp remove pool
+  - id: d
+    text: nkp scale nodepool --replicas=0
+  correct: b
+  explanation: Delete a node pool with nkp delete nodepool ${NODEPOOL_NAME} --cluster-name=${CLUSTER_NAME}.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.810
+    quote: nkp delete nodepool ${NODEPOOL_NAME} --cluster-name=${CLUSTER_NAME}.
+- id: q164
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Why would you create additional node pools?
+  options:
+  - id: a
+    text: To duplicate the cluster
+  - id: b
+    text: To manage machines that share specialized properties (e.g., GPU, extra memory, different availability zones)
+  - id: c
+    text: To store backups
+  - id: d
+    text: To run the control plane
+  correct: b
+  explanation: Create additional node pools to manage machines with specialized properties — GPUs, extra memory, specialized networking/storage, or nodes in different availability zones.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.818
+    quote: Creating a node pool is useful when you want to run workloads that require machines with specific resources, such as a GPU, additional memory, or specialized network or storage hardware.
+- id: q165
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command scales a node pool's worker replicas?
+  options:
+  - id: a
+    text: nkp scale nodepools ${NODEPOOL_NAME} --replicas=count --cluster-name=${CLUSTER_NAME}
+  - id: b
+    text: kubectl scale nodepool
+  - id: c
+    text: nkp resize
+  - id: d
+    text: nkp update replicas
+  correct: a
+  explanation: Scale a node pool's worker replicas with nkp scale nodepools ${NODEPOOL_NAME} --replicas=count --cluster-name=${CLUSTER_NAME}.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.818
+    quote: nkp scale nodepools ${NODEPOOL_NAME} --replicas=count --cluster-name=${CLUSTER_NAME}.
+- id: q166
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you manually increase or decrease worker replicas for a node pool?
+  options:
+  - id: a
+    text: Edit the VM directly
+  - id: b
+    text: nkp scale nodepools ${NODEPOOL_NAME} --replicas=count --cluster-name=${CLUSTER_NAME}
+  - id: c
+    text: kubectl edit machinedeployment only
+  - id: d
+    text: It is automatic only
+  correct: b
+  explanation: Manually increase/decrease worker replicas with nkp scale nodepools ${NODEPOOL_NAME} --replicas=count --cluster-name=${CLUSTER_NAME}.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.818
+    quote: Increase or decrease worker replicas for a node pool using the nkp scale nodepools command.
+- id: q167
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you scale up vs. scale down with nkp scale nodepools?
+  options:
+  - id: a
+    text: Use --up / --down flags
+  - id: b
+    text: Set --replicas to a count higher than the current value to scale up, or lower to scale down
+  - id: c
+    text: Use two different commands
+  - id: d
+    text: Only scale-up is supported
+  correct: b
+  explanation: Set --replicas higher than the current value to scale up, or lower than the current value to scale down.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.818
+    quote: Replace the count with the target replica count that is more than the current value to scale up or a count that is less than the current value to scale down.
+- id: q168
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Can you manually scale node pools while the Cluster Autoscaler is running?
+  options:
+  - id: a
+    text: 'No'
+  - id: b
+    text: Yes — you can manually scale when you need finite control, but the replica count must stay within the autoscaler's min/max bounds
+  - id: c
+    text: Only scale down
+  - id: d
+    text: Only if the autoscaler is disabled
+  correct: b
+  explanation: You can manually scale while the Cluster Autoscaler runs when you need finite control, but the replica count must stay within the autoscaler's configured min/max bounds.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.808
+    quote: While running Cluster Autoscaler, you can manually scale your node pools up or down when you need finite control over your environment.
+- id: q169
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In a pre-provisioned environment, what must you do before scaling up a node pool?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: Have the bootstrap node running with SSH keys/secrets, update preprovisioned_inventory.yaml with the new host addresses, and run kubectl apply
+  - id: c
+    text: Reinstall the OS
+  - id: d
+    text: Delete the cluster
+  correct: b
+  explanation: 'For pre-provisioned scale-up: have the bootstrap node running with SSH keys/secrets, update preprovisioned_inventory.yaml with the new host addresses, and run kubectl apply.'
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.808
+    quote: You must have the bootstrap node running with the SSH key or secrets created. Update the preprovisioned_inventory.yaml with the new host addresses. Run the kubectl apply command.
+- id: q170
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What determines whether nkp scale nodepools performs a scale-up or scale-down?
+  options:
+  - id: a
+    text: The time of day
+  - id: b
+    text: The target --replicas count relative to the current replica count
+  - id: c
+    text: The license tier
+  - id: d
+    text: The node labels
+  correct: b
+  explanation: Whether it scales up or down is determined by the target --replicas count relative to the current replica count.
+  source:
+    label: Upgrading Kubernetes Version on a Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
+    page: p.818
+    quote: a count that is more than the current value to scale up the node pools, or a count that is less than the current value to scale down.
+- id: q171
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command deletes a Kubernetes cluster?
+  options:
+  - id: a
+    text: kubectl delete cluster
+  - id: b
+    text: nkp delete cluster --cluster-name=${CLUSTER_NAME} --kubeconfig $HOME/.kube/config
+  - id: c
+    text: nkp remove cluster
+  - id: d
+    text: helm uninstall cluster
+  correct: b
+  explanation: Delete a cluster with nkp delete cluster --cluster-name=${CLUSTER_NAME} --kubeconfig $HOME/.kube/config.
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.806
+    quote: nkp delete cluster --cluster-name=${CLUSTER_NAME} --kubeconfig $HOME/.kube/config.
+- id: q172
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command should you use to get the Konvoy Kubernetes cluster details for deletion (not Kommander)?
+  options:
+  - id: a
+    text: nkp get clusters
+  - id: b
+    text: kubectl get clusters (do NOT use nkp get clusters, which returns Kommander cluster details)
+  - id: c
+    text: kubectl get pods
+  - id: d
+    text: nkp list clusters
+  correct: b
+  explanation: Use kubectl get clusters to get the Konvoy Kubernetes cluster details; do NOT use nkp get clusters, which returns Kommander cluster details.
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.806
+    quote: Do not use nkp get clusters since that gets you Kommander cluster details rather than Konvoy Kubernetes cluster details. kubectl get clusters.
+- id: q173
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does NKP delete before deleting the cluster itself?
+  options:
+  - id: a
+    text: The namespaces
+  - id: b
+    text: All Services of type LoadBalancer (each backed by a cloud load balancer / AWS Classic ELB)
+  - id: c
+    text: The nodes only
+  - id: d
+    text: Nothing
+  correct: b
+  explanation: Before deleting the cluster, NKP deletes all Services of type LoadBalancer — each backed by a cloud load balancer (e.g., an AWS Classic ELB).
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.806
+    quote: Before deleting the cluster, NKP deletes all Services of type LoadBalancer on the cluster. Each Service is backed by an AWS Classic ELB. Deleting the Service deletes the ELB that backs it.
+- id: q174
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which flag skips the deletion of LoadBalancer/Kubernetes resources?
+  options:
+  - id: a
+    text: --skip-lb
+  - id: b
+    text: --delete-kubernetes-resources=false (do not skip if the VPC is managed by NKP)
+  - id: c
+    text: --no-cleanup
+  - id: d
+    text: --force
+  correct: b
+  explanation: Use --delete-kubernetes-resources=false to skip that step — but do not skip it if the VPC is managed by NKP.
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.806
+    quote: To skip this step, use the flag --delete-kubernetes-resources=false. Do not skip this step if the VPC is managed by NKP.
+- id: q175
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After deleting a managed cluster in the self-managed workflow, what do you delete next?
+  options:
+  - id: a
+    text: The management cluster
+  - id: b
+    text: The bootstrap cluster (nkp delete bootstrap)
+  - id: c
+    text: The registry
+  - id: d
+    text: Nothing
+  correct: b
+  explanation: After deleting the managed cluster (self-managed workflow), delete the bootstrap cluster with nkp delete bootstrap.
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.807
+    quote: After the managed cluster is deleted, you can delete the bootstrap cluster. nkp delete bootstrap --kubeconfig $HOME/.kube/config.
+- id: q176
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Why should you NOT skip LoadBalancer deletion when the VPC is managed by NKP?
+  options:
+  - id: a
+    text: It's faster to skip
+  - id: b
+    text: NKP deletes the VPC; if the VPC still has AWS Classic ELBs, AWS won't allow the VPC to be deleted and NKP cannot delete the cluster
+  - id: c
+    text: Skipping corrupts etcd
+  - id: d
+    text: There is no reason
+  correct: b
+  explanation: If you skip LB deletion and the VPC is NKP-managed, NKP tries to delete the VPC; AWS won't delete a VPC that still has Classic ELBs, so NKP cannot delete the cluster.
+  source:
+    label: Upgrade NKP Pro
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
+    page: p.806
+    quote: If the VPC has any AWS Classic ELBs, AWS does not allow the VPC to be deleted, and NKP cannot delete the cluster.

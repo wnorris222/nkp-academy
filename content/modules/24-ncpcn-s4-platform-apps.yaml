@@ -1,0 +1,639 @@
+id: ncpcn-s4-platform-apps
+title: 4.6 Configure Platform Applications
+track: NCP-CN Section 4
+order: 46
+icon: star
+summary: 'Platform applications are deployed on newly attached clusters and often depend on each other, so dependencies must be reviewed before customizing. Apps are enabled per cluster via the Kommander UI or the nkp create appdeployment CLI, with deployment scope and customization capabilities governed by the NKP license (Starter, Pro, Ultimate).
+
+  '
+questions:
+- id: q151
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When are platform applications deployed to a cluster?
+  options:
+  - id: a
+    text: Only manually
+  - id: b
+    text: When a cluster is attached — NKP deploys certain platform applications on the newly attached cluster (customizable per workspace)
+  - id: c
+    text: Only via Helm
+  - id: d
+    text: Never automatically
+  correct: b
+  explanation: When a cluster is newly attached into the workspace, all applications enabled for the workspace are automatically enabled on and deployed to it.
+  source:
+    label: Platform Applications
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-platform-apps-c.html
+    page: p.351
+    quote: When attaching a cluster, NKP deploys certain platform applications on the newly attached cluster.
+- id: q152
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Why must you note platform dependencies when customizing platform applications?
+  options:
+  - id: a
+    text: For billing
+  - id: b
+    text: Because platform applications often depend on each other — if a required dependency fails to deploy, any dependent application also fails to deploy
+  - id: c
+    text: To pick a license
+  - id: d
+    text: No reason
+  correct: b
+  explanation: Check the application's required dependencies first — a failed required dependency causes the dependent application to fail to deploy.
+  source:
+    label: Platform Applications Dependencies
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-platform-apps-dependencies-c.html
+    page: p.355
+    quote: If a required dependency of a platform application fails to deploy, any dependent application also fails to deploy.
+- id: q153
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the foundational applications, and why do they matter?
+  options:
+  - id: a
+    text: Prometheus, Grafana, Loki
+  - id: b
+    text: flux, reloader, and traefik — you must enable them for any platform applications to work properly
+  - id: c
+    text: Velero and Rook Ceph
+  - id: d
+    text: Dex and Gatekeeper
+  correct: b
+  explanation: Foundational applications (flux, reloader, traefik) must be enabled for any platform applications to work properly.
+  source:
+    label: Platform Applications Dependencies
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-platform-apps-dependencies-c.html
+    page: p.356
+    quote: 'The foundational applications comprise of the following platform applications: flux... reloader... traefik...'
+- id: q154
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: If a required dependency of a platform application fails to deploy, what happens?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: Any application that depends on it also fails to deploy
+  - id: c
+    text: It auto-installs the dependency
+  - id: d
+    text: The cluster is deleted
+  correct: b
+  explanation: Check the application's required dependencies first — a failed required dependency causes the dependent application to fail to deploy.
+  source:
+    label: Platform Applications Dependencies
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-platform-apps-dependencies-c.html
+    page: p.355
+    quote: If a required dependency of a platform application fails to deploy, any application that depends on it also fails to deploy.
+- id: q155
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command shows which apps are enabled/disabled and their status across categories?
+  options:
+  - id: a
+    text: nkp status apps
+  - id: b
+    text: kubectl get apps,clusterapps,appdeployments -A
+  - id: c
+    text: helm list
+  - id: d
+    text: kubectl get pods
+  correct: b
+  explanation: Use kubectl get apps,clusterapps,appdeployments -A to see the overall status across all categories.
+  source:
+    label: Platform Applications Dependencies
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-platform-apps-dependencies-c.html
+    page: p.355
+    quote: 'To view the applications that are enabled or disabled in each category, verify their status: kubectl get apps,clusterapps,appdeployments -A.'
+- id: q156
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where do you check which platform applications are supported per license (management vs workload clusters)?
+  options:
+  - id: a
+    text: The release notes only
+  - id: b
+    text: The Supported Platform Applications table (per NKP license)
+  - id: c
+    text: The Grafana UI
+  - id: d
+    text: The bootstrap logs
+  correct: b
+  explanation: The Supported Platform Applications table lists which platform applications are supported per NKP license for management and workload clusters.
+  source:
+    label: Platform Applications
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-platform-apps-c.html
+    page: p.351
+    quote: 'For more information on the applications supported for management and workload clusters, see Supported Platform Applications... Table 25: Supported Applications per NKP Licenses.'
+- id: q157
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you enable a platform application from the UI?
+  options:
+  - id: a
+    text: Edit etcd
+  - id: b
+    text: From Applications, select the app card's three-dot button > Enable, choose a version if offered, then Enable
+  - id: c
+    text: kubectl apply
+  - id: d
+    text: Restart Kommander
+  correct: b
+  explanation: From the Applications page, select the app card's three-dot button > Enable, choose a version if offered, then click Enable.
+  source:
+    label: 'Ultimate: Enabling an Application Using the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enterprise-enable-an-app-using-ui-t.html
+    page: p.335
+    quote: Select the three-dot button of the desired application card > Enable. If available, select a version from the dropdown list... Confirm the details are correct and then select Enable.
+- id: q158
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you customize an application's values while enabling it in the UI?
+  options:
+  - id: a
+    text: You cannot
+  - id: b
+    text: Override the default configuration values in the Workspace Application Configuration text editor (or upload a YAML file)
+  - id: c
+    text: Edit the container
+  - id: d
+    text: Use SSH
+  correct: b
+  explanation: Override the default configuration values in the Workspace Application Configuration text editor, or upload a YAML file, while enabling the application.
+  source:
+    label: 'Ultimate: Enabling an Application Using the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enterprise-enable-an-app-using-ui-t.html
+    page: p.335
+    quote: To customize an application for all clusters in a workspace, copy your customized values into the text editor under Workspace Application Configuration or upload your YAML file that contains the values.
+- id: q159
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What warning applies when customizing a platform application in the UI?
+  options:
+  - id: a
+    text: None
+  - id: b
+    text: Review the platform application dependencies before customizing, to ensure the applications deploy successfully
+  - id: c
+    text: Back up first
+  - id: d
+    text: Disable RBAC
+  correct: b
+  explanation: Review the platform application dependencies before customizing to ensure the applications deploy successfully.
+  source:
+    label: 'Ultimate: Enabling an Application Using the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enterprise-enable-an-app-using-ui-t.html
+    page: p.335
+    quote: Review them carefully before customizing to ensure that the applications are deployed successfully.
+- id: q160
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you disable a platform application from the UI?
+  options:
+  - id: a
+    text: Delete the workspace
+  - id: b
+    text: Select the app card's three-dot button > Disable, then confirm with Disable Application
+  - id: c
+    text: Delete the namespace
+  - id: d
+    text: Uninstall NKP
+  correct: b
+  explanation: Select the app card's three-dot button > Disable, then confirm with Disable Application.
+  source:
+    label: 'Ultimate: Enabling an Application Using the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enterprise-enable-an-app-using-ui-t.html
+    page: p.337
+    quote: Select the three-dot button of the desired application card and select Disable... select Disable Application.
+- id: q161
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which license levels allow customizing a platform application?
+  options:
+  - id: a
+    text: All including Starter
+  - id: b
+    text: Pro (single-cluster, customize any app) and Ultimate (multi-cluster, incl. cluster-scoped); Starter allows no customization
+  - id: c
+    text: Only Ultimate
+  - id: d
+    text: Starter only
+  correct: b
+  explanation: 'Deployment Scope depends on the license: Starter allows no customization; Pro (single-cluster) can customize any app; Ultimate (multi-cluster) supports resource requirements, project apps, and cluster-scoped apps.'
+  source:
+    label: Deployment Scope
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deployment-scope-c.html
+    page: p.331
+    quote: In a single-cluster environment with a Starter license, AppDeployments do not allow for any customization.
+- id: q162
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which two configuration editors does the UI provide for an application?
+  options:
+  - id: a
+    text: Global and Local
+  - id: b
+    text: Workspace Application Configuration (all clusters in the workspace) and Cluster Application Configuration Override (per cluster)
+  - id: c
+    text: Basic and Advanced
+  - id: d
+    text: YAML and JSON
+  correct: b
+  explanation: 'The UI provides two editors: Workspace Application Configuration (applies to all clusters in the workspace) and Cluster Application Configuration Override (applies to a specific cluster).'
+  source:
+    label: 'Ultimate: Enabling an Application Using the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enterprise-enable-an-app-using-ui-t.html
+    page: p.374
+    quote: 'Workspace Application Configuration: A workspace-level code editor... Cluster Application Configuration Override: A cluster-scoped code editor...'
+- id: q163
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does the Deployment Scope for AppDeployments depend on?
+  options:
+  - id: a
+    text: The provider
+  - id: b
+    text: 'The license: Starter allows no customization; Pro (single-cluster) can customize any app; Ultimate (multi-cluster) supports resource requirements, project apps, and cluster-scoped apps'
+  - id: c
+    text: The node count
+  - id: d
+    text: The region
+  correct: b
+  explanation: 'The Deployment Scope depends on the license: Starter = no customization; Pro (single-cluster) = customize any app; Ultimate (multi-cluster) = resource requirements, project apps, and cluster-scoped apps.'
+  source:
+    label: Deployment Scope
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deployment-scope-c.html
+    page: p.331
+    quote: Ultimate license, you can customize AppDeployments to enable resource requirements, project applications, and cluster-scoped applications.
+- id: q164
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does a workspace- (global-) scope application configuration apply to?
+  options:
+  - id: a
+    text: One node
+  - id: b
+    text: All clusters in the workspace for that application
+  - id: c
+    text: Only the management cluster
+  - id: d
+    text: Only new clusters
+  correct: b
+  explanation: A workspace- (global-) scope configuration applies all its overrides to every cluster in the workspace for that application.
+  source:
+    label: 'Ultimate: Enabling an Application Using the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enterprise-enable-an-app-using-ui-t.html
+    page: p.374
+    quote: 'Workspace Application Configuration: A workspace-level code editor that applies all configurations and overrides to the entirety of the workspace and its clusters for this application.'
+- id: q165
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does a cluster-scope application configuration override do?
+  options:
+  - id: a
+    text: Replaces the workspace config entirely
+  - id: b
+    text: Applies per-cluster settings that merge with the workspace application configuration (if no cluster override exists, the workspace config applies)
+  - id: c
+    text: Disables the app
+  - id: d
+    text: Nothing
+  correct: b
+  explanation: A cluster-scope override applies per-cluster settings that merge with the workspace application configuration; if there is no cluster-scoped config, the workspace configuration applies.
+  source:
+    label: 'Ultimate: Enabling an Application Using the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enterprise-enable-an-app-using-ui-t.html
+    page: p.374
+    quote: These customizations will merge with the workspace application configuration.
+- id: q166
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you enable an application on only a subset of clusters in a workspace (CLI)?
+  options:
+  - id: a
+    text: Enable it everywhere
+  - id: b
+    text: 'Use the --clusters flag: nkp create appdeployment <app> --app <app>-<ver> --workspace ${WORKSPACE_NAME} --clusters cluster1,cluster2'
+  - id: c
+    text: Edit each node
+  - id: d
+    text: It is not possible
+  correct: b
+  explanation: 'Enable on a subset with the --clusters flag: nkp create appdeployment <app> --app <app>-<ver> --workspace ${WORKSPACE_NAME} --clusters cluster1,cluster2.'
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.376
+    quote: nkp create appdeployment kube-prometheus-stack --app kube-prometheus-stack-46.8.0 --workspace ${WORKSPACE_NAME} --clusters attached-cluster1,attached-cluster2.
+- id: q167
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which AppDeployment field selects the clusters an application runs on?
+  options:
+  - id: a
+    text: metadata.labels
+  - id: b
+    text: spec.clusterSelector (e.g., matchExpressions on kommander.d2iq.io/cluster-name)
+  - id: c
+    text: spec.replicas
+  - id: d
+    text: spec.nodes
+  correct: b
+  explanation: The AppDeployment's spec.clusterSelector (e.g., matchExpressions on kommander.d2iq.io/cluster-name) selects the clusters the application runs on.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.376
+    quote: 'Edit the AppDeployment YAML by adding or removing the names of the clusters... clusterSelector: matchExpressions: - key: kommander.d2iq.io/cluster-name operator: In values: - attached-cluster1...'
+- id: q168
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you apply a different configuration to specific clusters (per-cluster overrides)?
+  options:
+  - id: a
+    text: Reinstall the app
+  - id: b
+    text: Reference a per-cluster ConfigMap in the AppDeployment's spec.clusterConfigOverrides fields
+  - id: c
+    text: Edit the pod
+  - id: d
+    text: Use environment variables
+  correct: b
+  explanation: Reference a per-cluster ConfigMap in the AppDeployment's spec.clusterConfigOverrides fields to apply different configurations to specific clusters.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.377
+    quote: Reference the name of the ConfigMap to be applied per cluster in the spec.clusterConfigOverrides fields.
+- id: q169
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command verifies that a platform application deployed successfully?
+  options:
+  - id: a
+    text: kubectl get pods
+  - id: b
+    text: kubectl get helmreleases <app> -n ${WORKSPACE_NAMESPACE} -w (the HelmRelease must be Ready)
+  - id: c
+    text: nkp status
+  - id: d
+    text: helm status
+  correct: b
+  explanation: Verify with kubectl get helmreleases <app> -n ${WORKSPACE_NAMESPACE} -w; the HelmRelease must be marked Ready.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.355
+    quote: Connect to the attached cluster and watch the HelmReleases to verify the deployment... kubectl get helmreleases kiali -n ${WORKSPACE_NAMESPACE} -w. HelmRelease must be marked as Ready.
+- id: q170
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: A platform application fails to deploy. What should you check first?
+  options:
+  - id: a
+    text: The license
+  - id: b
+    text: Its required dependencies — a failed required dependency causes the dependent application to fail
+  - id: c
+    text: The node OS
+  - id: d
+    text: The registry password
+  correct: b
+  explanation: Check the application's required dependencies first — a failed required dependency causes the dependent application to fail to deploy.
+  source:
+    label: Platform Applications Dependencies
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-platform-apps-dependencies-c.html
+    page: p.355
+    quote: If a required dependency fails to deploy, any dependent application also fails to deploy.
+- id: q171
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What status must a platform application's HelmRelease reach to be considered deployed?
+  options:
+  - id: a
+    text: Pending
+  - id: b
+    text: Ready ('Release reconciliation succeeded')
+  - id: c
+    text: Suspended
+  - id: d
+    text: Error
+  correct: b
+  explanation: The HelmRelease must reach the Ready status ('Release reconciliation succeeded').
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.355
+    quote: HelmRelease must be marked as Ready... kiali True Release reconciliation succeeded...
+- id: q172
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you see the overall status of all apps, clusterapps, and appdeployments?
+  options:
+  - id: a
+    text: kubectl get nodes
+  - id: b
+    text: kubectl get apps,clusterapps,appdeployments -A
+  - id: c
+    text: nkp diagnose only
+  - id: d
+    text: helm list -A
+  correct: b
+  explanation: Use kubectl get apps,clusterapps,appdeployments -A to see the overall status across all categories.
+  source:
+    label: Platform Applications Dependencies
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-platform-apps-dependencies-c.html
+    page: p.355
+    quote: 'To view the applications that are enabled or disabled in each category, verify their status: kubectl get apps,clusterapps,appdeployments -A.'
+- id: q173
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: A new cluster is attached to a workspace. What happens to that workspace's enabled applications?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: All applications enabled for the workspace are automatically enabled on and deployed to the new cluster
+  - id: c
+    text: They are disabled
+  - id: d
+    text: You must re-enable each manually
+  correct: b
+  explanation: When a cluster is newly attached into the workspace, all applications enabled for the workspace are automatically enabled on and deployed to it.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.376
+    quote: For clusters that are newly attached into the workspace, all applications enabled for the workspace are automatically enabled on and deployed to the new clusters.
+- id: q174
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: You customized logging-operator-logging-overrides. Which constraint applies?
+  options:
+  - id: a
+    text: UI only
+  - id: b
+    text: It can be configured only through the CLI (create a ConfigMap in the workspace namespace for every cluster in that workspace)
+  - id: c
+    text: It requires Ultimate
+  - id: d
+    text: It is not supported
+  correct: b
+  explanation: logging-operator-logging-overrides can be configured only through the CLI, and you must create a ConfigMap in the workspace namespace for every cluster in that workspace.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.331
+    quote: When configuring storage for logging-operator-logging-overrides, ensure that you create a ConfigMap in your workspace namespace for every cluster in that workspace.
+- id: q175
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which CLI command enables/deploys a platform application to a workspace?
+  options:
+  - id: a
+    text: helm install
+  - id: b
+    text: nkp create appdeployment <app> --app <APP-ID>-<Version> --workspace ${WORKSPACE_NAME}
+  - id: c
+    text: kubectl enable app
+  - id: d
+    text: nkp deploy app
+  correct: b
+  explanation: Enable/deploy a platform app with nkp create appdeployment <app> --app <APP-ID>-<Version> --workspace ${WORKSPACE_NAME}.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.355
+    quote: nkp create appdeployment kiali --app kiali-2.18.0 --workspace ${WORKSPACE_NAME}.
+- id: q176
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the required format for the --app flag value?
+  options:
+  - id: a
+    text: Just the app name
+  - id: b
+    text: <APP-ID>-<Version> (for example, kiali-2.18.0)
+  - id: c
+    text: A URL
+  - id: d
+    text: A UUID
+  correct: b
+  explanation: The --app flag must be in <APP-ID>-<Version> format, for example kiali-2.18.0 (matching the APP NAME).
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.355
+    quote: You must add them in the <APP-ID>-<Version> format, for example, kiali-2.18.0... The --app flag must match the APP NAME...
+- id: q177
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When running nkp create appdeployment, do you use WORKSPACE_NAME or WORKSPACE_NAMESPACE?
+  options:
+  - id: a
+    text: WORKSPACE_NAMESPACE
+  - id: b
+    text: WORKSPACE_NAME (the nkp create command must be run with WORKSPACE_NAME, not WORKSPACE_NAMESPACE)
+  - id: c
+    text: Either works
+  - id: d
+    text: Neither
+  correct: b
+  explanation: Run nkp create appdeployment with WORKSPACE_NAME (not WORKSPACE_NAMESPACE).
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.355
+    quote: Observe that the nkp create command must be run with the WORKSPACE_NAME instead of the WORKSPACE_NAMESPACE flag.
+- id: q178
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you disable/remove a platform application via the CLI?
+  options:
+  - id: a
+    text: nkp disable app
+  - id: b
+    text: kubectl delete appdeployment -n <WORKSPACE_NAMESPACE> <app>
+  - id: c
+    text: helm uninstall only
+  - id: d
+    text: Delete the namespace
+  correct: b
+  explanation: Disable/remove a platform application via the CLI with kubectl delete appdeployment -n <WORKSPACE_NAMESPACE> <app>.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.681
+    quote: kubectl delete appdeployment -n <WORKSPACE_NAMESPACE> rook-ceph-cluster.
+- id: q179
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you deploy an application to a subset of clusters via the CLI?
+  options:
+  - id: a
+    text: One command per node
+  - id: b
+    text: Add --clusters attached-cluster1,attached-cluster2 to the nkp create appdeployment command
+  - id: c
+    text: Edit the kubelet
+  - id: d
+    text: It is UI-only
+  correct: b
+  explanation: Add --clusters attached-cluster1,attached-cluster2 to the nkp create appdeployment command to deploy to a subset of clusters.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.376
+    quote: nkp create appdeployment kube-prometheus-stack --app kube-prometheus-stack-46.8.0 --workspace ${WORKSPACE_NAME} --clusters attached-cluster1,attached-cluster2.
+- id: q180
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After enabling an app at the workspace level, how do you change which clusters run it?
+  options:
+  - id: a
+    text: Delete and recreate the workspace
+  - id: b
+    text: Edit the AppDeployment YAML clusterSelector, adding or removing cluster names
+  - id: c
+    text: Reinstall NKP
+  - id: d
+    text: Restart the nodes
+  correct: b
+  explanation: Edit the AppDeployment YAML clusterSelector, adding or removing the cluster names where the application should be enabled.
+  source:
+    label: Deploying Platform Applications Using CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
+    page: p.376
+    quote: Edit the AppDeployment YAML by adding or removing the names of the clusters where you want to enable your application in the clusterSelector section.

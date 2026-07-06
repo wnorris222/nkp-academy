@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nkp-academy-config
+  namespace: nkp-academy
+  labels:
+    app.kubernetes.io/name: nkp-academy
+data:
+  # Non-secret runtime configuration. Consumed via envFrom in the Deployment.
+  # Every key maps to an NKP_-prefixed Settings field (see backend/app/config.py).
+  NKP_ENVIRONMENT: "production"
+  NKP_DEBUG: "false"
+  NKP_AUTO_SEED: "true"
+  NKP_STATIC_DIR: "/app/static"
+  NKP_CONTENT_DIR: "/app/content"
+  # SQLite on the mounted PVC by default. To use PostgreSQL, remove this key and
+  # set NKP_DATABASE_URL in the Secret instead.
+  NKP_DATABASE_URL: "sqlite+aiosqlite:////data/nkp_academy.db"
+  # Same-origin in production (FastAPI serves the SPA), so CORS can stay empty.
+  NKP_CORS_ORIGINS: ""

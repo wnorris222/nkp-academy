@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nkp-academy",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": [
+        "run", "--rm", "--name", "nkp-academy-preview",
+        "-p", "8099:8000", "nkp-academy:dev"
+      ],
+      "port": 8099
+    }
+  ]
+}

@@ -1,0 +1,681 @@
+id: ncpcn-s2-deploy-clusters
+title: 2.1 Customize & Deploy Clusters
+track: NCP-CN Section 2
+order: 21
+icon: refresh
+summary: 'Objective 2.1 covers using the NKP CLI to build and deploy clusters on Nutanix and other providers, applying Cluster API (CAPI) components for customization, and generating and editing YAML manifests (Service/Pod subnets, node pools, control plane). It also covers diagnosing deployments and the provider, air-gapped, proxy, GPU, and FIPS parameters used at cluster creation.
+
+  '
+questions:
+- id: q1
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command creates an NKP cluster on Nutanix?
+  options:
+  - id: a
+    text: nkp deploy nutanix
+  - id: b
+    text: nkp create cluster nutanix ...
+  - id: c
+    text: kubectl create cluster
+  - id: d
+    text: nkp cluster new nutanix
+  correct: b
+  explanation: Create an NKP cluster on Nutanix with nkp create cluster nutanix and the required flags.
+  source:
+    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
+    page: p.20
+    quote: nkp create cluster nutanix --control-plane-prism-element-cluster=${NUTANIX_CLUSTER} --control-plane-subnets=… --control-plane-replicas=3 … --worker-replicas=4 …
+- id: q2
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which flag makes the new cluster self-managed (CAPI controllers run on the cluster itself)?
+  options:
+  - id: a
+    text: --managed
+  - id: b
+    text: --self-managed
+  - id: c
+    text: --pivot
+  - id: d
+    text: --standalone
+  correct: b
+  explanation: The --self-managed flag makes the CAPI resources and controllers run on the same cluster they manage.
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.80
+    quote: The create cluster command below includes the --self-managed flag. A self-managed cluster refers to one in which the CAPI resources and controllers that describe and manage it are running on the same cluster they are managing.
+- id: q3
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After creating a management cluster, how do you export its kubeconfig?
+  options:
+  - id: a
+    text: nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf
+  - id: b
+    text: kubectl config view
+  - id: c
+    text: nkp export cluster
+  - id: d
+    text: nkp kubeconfig save
+  correct: a
+  explanation: Export the cluster kubeconfig with nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf.
+  source:
+    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
+    page: p.20
+    quote: '# export kubeconfig of the clusternkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf'
+- id: q4
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: On Nutanix, which flags set the control-plane and worker replica counts?
+  options:
+  - id: a
+    text: --cp-count / --worker-count
+  - id: b
+    text: --control-plane-replicas and --worker-replicas
+  - id: c
+    text: --replicas only
+  - id: d
+    text: --masters / --workers
+  correct: b
+  explanation: --control-plane-replicas and --worker-replicas set the control-plane and worker counts.
+  source:
+    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
+    page: p.20
+    quote: --control-plane-replicas=3 … --worker-replicas=4
+- id: q5
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which flags point a cluster at a registry mirror during creation?
+  options:
+  - id: a
+    text: --mirror only
+  - id: b
+    text: --registry-mirror-url, --registry-mirror-username, --registry-mirror-password (and --registry-mirror-cacert)
+  - id: c
+    text: --docker-registry
+  - id: d
+    text: --image-source
+  correct: b
+  explanation: Point the cluster at a registry mirror with --registry-mirror-url, --registry-mirror-username, --registry-mirror-password (and --registry-mirror-cacert for a self-signed CA).
+  source:
+    label: Nutanix Air-gapped Installation
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-ag-install-c.html
+    page: p.20
+    quote: --registry-mirror-url=${REGISTRY_URL} --registry-mirror-username=${DOCKERHUB_USERNAME} --registry-mirror-password=${DOCKERHUB_PASSWORD}
+- id: q6
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you add worker nodes in a different availability zone (or with special hardware like a GPU) to an existing cluster?
+  options:
+  - id: a
+    text: Edit the Cluster object directly
+  - id: b
+    text: With the nkp create nodepool command
+  - id: c
+    text: Re-run nkp create cluster
+  - id: d
+    text: It is not possible after creation
+  correct: b
+  explanation: Add worker nodes in another availability zone or with special hardware using nkp create nodepool.
+  source:
+    label: Creating vSphere Node Pools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-vsphere-node-pools-t.html
+    page: p.899
+    quote: Nodes will reside in a single availability zone. You may create additional node pools in other availability zones with the nkp create nodepool command.
+- id: q7
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In CAPI, what is a Machine?
+  options:
+  - id: a
+    text: A physical server only
+  - id: b
+    text: A declarative specification for a platform/infrastructure component that hosts a Kubernetes node (bare metal or VM)
+  - id: c
+    text: A Kubernetes Pod
+  - id: d
+    text: A container image
+  correct: b
+  explanation: A Machine is a declarative specification for a platform/infrastructure component that hosts a Kubernetes node as a bare metal server or VM.
+  source:
+    label: Prerequisites for Installation
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
+    page: p.22
+    quote: A machine is a declarative specification for a platform or infrastructure component that hosts a Kubernetes node as a bare metal server or a VM.
+- id: q8
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is 'machine immutability' in CAPI?
+  options:
+  - id: a
+    text: Machines can never be deleted
+  - id: b
+    text: When you update a machine spec (other than annotations/status/labels), the controller deletes the host and creates a new one that conforms to the latest spec
+  - id: c
+    text: Machines cannot be scaled
+  - id: d
+    text: Machine specs cannot be edited at all
+  correct: b
+  explanation: 'Machine immutability: updating a machine spec (other than annotations, status, labels) causes the controller to delete the host and create a new one conforming to the latest spec.'
+  source:
+    label: Prerequisites for Installation
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
+    page: p.22
+    quote: When you update a machine spec other than for specific values, such as annotations, status, and labels, the controller deletes the host and creates a new one that conforms to the latest spec. This is called machine immutability.
+- id: q9
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which CAPI object handles rolling changes to machines by replacing them (like a Deployment replaces Pods)?
+  options:
+  - id: a
+    text: ReplicaSet
+  - id: b
+    text: MachineDeployment
+  - id: c
+    text: StatefulSet
+  - id: d
+    text: DaemonSet
+  correct: b
+  explanation: MachineDeployments reconcile changes to machine specs by rolling them out (like a Deployment replaces Pods).
+  source:
+    label: Prerequisites for Installation
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
+    page: p.22
+    quote: Within CAPI, you use declarative MachineDeployments to handle changes to machines by replacing them like a core Kubernetes Deployment replaces Pods.
+- id: q10
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does a MachineHealthCheck (MHC) do, and what is its default maxunhealthy value?
+  options:
+  - id: a
+    text: Scans images; 20%
+  - id: b
+    text: Identifies unhealthy node conditions and initiates remediation for MachineSet-owned nodes; default maxunhealthy is 40%
+  - id: c
+    text: Balances load; 50%
+  - id: d
+    text: Backs up etcd; 10%
+  correct: b
+  explanation: An MHC identifies unhealthy node conditions and initiates remediation for MachineSet-owned nodes; the default maxunhealthy is 40%.
+  source:
+    label: Prerequisites for Installation
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
+    page: p.22
+    quote: A MachineHealthCheck (MHC) identifies unhealthy node conditions and initiates remediation for nodes owned by a MachineSet… the default value of maxunhealthy is set to 40%.
+- id: q11
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is a ClusterResourceSet used for?
+  options:
+  - id: a
+    text: Storing secrets
+  - id: b
+    text: Grouping and deploying core cluster components (like CNI and CSI) after the Kubernetes cluster is installed
+  - id: c
+    text: Defining node pools
+  - id: d
+    text: Managing licenses
+  correct: b
+  explanation: A ClusterResourceSet groups and deploys core cluster components (e.g., CNI, CSI) after the Kubernetes cluster is installed.
+  source:
+    label: Prerequisites for Installation
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
+    page: p.22
+    quote: A ClusterResourceSet is a custom resource definition (CRD) that can be used to group and deploy core cluster components after the installation of the Kubernetes cluster.
+- id: q12
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: a customer needs a pool of GPU worker machines in a second availability zone without disturbing existing workers. Which CAPI-backed approach fits?'
+  options:
+  - id: a
+    text: Delete and recreate the cluster
+  - id: b
+    text: Create a new node pool (which generates its own MachineDeployment / machine template / KubeadmConfigTemplate)
+  - id: c
+    text: Edit the control plane
+  - id: d
+    text: Add a ClusterResourceSet
+  correct: b
+  explanation: Create a new node pool - it generates its own MachineDeployment, infrastructure machine template, and KubeadmConfigTemplate, isolating the change from existing workers.
+  source:
+    label: Creating vSphere Node Pools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-vsphere-node-pools-t.html
+    page: p.899
+    quote: machinedeployment.cluster.x-k8s.io/example created / vspheremachinetemplate.infrastructure.cluster.x-k8s.io/example created / kubeadmconfigtemplate.bootstrap.cluster.x-k8s.io/example created.
+- id: q13
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command lists all CAPI resources (clusters, machines, control planes, infrastructure) and their statuses?
+  options:
+  - id: a
+    text: nkp status
+  - id: b
+    text: kubectl get cluster-api
+  - id: c
+    text: kubectl get all
+  - id: d
+    text: nkp health
+  correct: b
+  explanation: kubectl get cluster-api gathers all resources that comprise a cluster and their statuses.
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.1041
+    quote: Gather a list of all resources that comprise a cluster and their statuses. kubectl get cluster-api… reviewing the CAPI resources helps identify configuration issues…
+- id: q14
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command checks the health of the cluster infrastructure and shows a readiness tree for the Cluster, ClusterInfrastructure, ControlPlane, and Machines?
+  options:
+  - id: a
+    text: nkp describe cluster --cluster-name=${CLUSTER_NAME}
+  - id: b
+    text: kubectl describe pods
+  - id: c
+    text: nkp logs
+  - id: d
+    text: nkp inspect
+  correct: a
+  explanation: nkp describe cluster --cluster-name=${CLUSTER_NAME} checks the infrastructure health and prints a readiness tree (Cluster, ClusterInfrastructure, ControlPlane, Machines).
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.1040
+    quote: 'run this command to check the health of the cluster infrastructure. nkp describe cluster --cluster-name=${CLUSTER_NAME}… Cluster/nkp-example True … ##ControlPlane - KubeadmControlPlane…'
+- id: q15
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After install, some pods are not in Running/Completed state. Which command collects diagnostic information from pods and infrastructure (feeding a support bundle)?
+  options:
+  - id: a
+    text: nkp diagnose
+  - id: b
+    text: kubectl top pods
+  - id: c
+    text: nkp reset
+  - id: d
+    text: nkp gather
+  correct: a
+  explanation: Run nkp diagnose to collect information from pods and infrastructure when pods aren't Running/Completed (feeds a support bundle).
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.1041
+    quote: If something has not been deployed properly or thoroughly, run the nkp diagnose command. This collects information from pods and infrastructure.
+- id: q16
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command verifies that all system pods are Running or Completed across all namespaces?
+  options:
+  - id: a
+    text: kubectl get pods --all-namespaces
+  - id: b
+    text: kubectl get nodes
+  - id: c
+    text: nkp verify
+  - id: d
+    text: kubectl cluster-info
+  correct: a
+  explanation: Verify all system pods with kubectl get pods --all-namespaces; if any is not Running/Completed, investigate further.
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.1041
+    quote: Ensure to check pod status across all namespaces… kubectl get pods --all-namespaces. If any pod is not in Running or Completed status, see Troubleshooting.
+- id: q17
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When diagnosing a stuck deployment, which CAPI resources are most relevant to analyze?
+  options:
+  - id: a
+    text: Only Kubernetes Services
+  - id: b
+    text: Cluster, Machines, KubeadmControlPlane, MachineDeployments, and the infrastructure objects (e.g., the *MachineTemplate) - via nkp describe cluster / kubectl get cluster-api
+  - id: c
+    text: Only ConfigMaps
+  - id: d
+    text: Only Ingress objects
+  correct: b
+  explanation: Analyze the Cluster, Machines, KubeadmControlPlane, MachineDeployments, and infrastructure objects (e.g., the machine template) via nkp describe cluster and kubectl get cluster-api.
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.1040
+    quote: Cluster/… ClusterInfrastructure - AWSCluster/… ControlPlane - KubeadmControlPlane/… Machine/… MachineDeployment/…
+- id: q18
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the nkp describe cluster output, a healthy resource shows which READY value?
+  options:
+  - id: a
+    text: 'False'
+  - id: b
+    text: 'True'
+  - id: c
+    text: Pending
+  - id: d
+    text: Unknown
+  correct: b
+  explanation: In the describe cluster tree, a healthy resource shows READY = True.
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.1040
+    quote: A healthy cluster returns an output similar to this example… Cluster/nkp-example True … all of the previous commands should return as Ready or True.
+- id: q19
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you generate the cluster's YAML manifests for customization instead of deploying immediately?
+  options:
+  - id: a
+    text: Add --dry-run and -o yaml to the nkp create cluster command (e.g., > cluster.yaml)
+  - id: b
+    text: Copy files from /etc/nkp
+  - id: c
+    text: Export from the UI only
+  - id: d
+    text: It is not supported
+  correct: a
+  explanation: Generate manifests with --dry-run and -o yaml (redirect to a file, e.g., cluster.yaml) instead of deploying, then edit them.
+  source:
+    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
+    page: p.702
+    quote: Generate the YAML… manifests for the cluster using the --dry-run and -o yaml flags… nkp create cluster preprovisioned … --dry-run -o yaml > cluster.yaml
+- id: q20
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the generated manifest, which object's spec.clusterNetwork.services.cidrBlocks / pods.cidrBlocks fields do you edit to change the Service/Pod subnets?
+  options:
+  - id: a
+    text: The Deployment object
+  - id: b
+    text: The Cluster object
+  - id: c
+    text: The Namespace object
+  - id: d
+    text: The KubeadmControlPlane object
+  correct: b
+  explanation: Edit the Cluster object's spec.clusterNetwork.services.cidrBlocks and spec.clusterNetwork.pods.cidrBlocks fields to change the subnets.
+  source:
+    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
+    page: p.702
+    quote: 'To modify the Services subnet, add or edit the spec.clusterNetwork.services.cidrBlocks field of the Cluster object… To modify the cluster: Add or edit the spec.clusterNetwork.pods.cidrBlocks field.'
+- id: q21
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: A node pool's generated manifest contains which corresponding CAPI resources?
+  options:
+  - id: a
+    text: Only a Deployment
+  - id: b
+    text: A MachineDeployment, an infrastructure machine template (e.g., VSphereMachineTemplate), and a KubeadmConfigTemplate
+  - id: c
+    text: A StatefulSet and a Service
+  - id: d
+    text: A DaemonSet and a ConfigMap
+  correct: b
+  explanation: A node pool manifest contains a MachineDeployment, an infrastructure machine template (e.g., VSphereMachineTemplate), and a KubeadmConfigTemplate.
+  source:
+    label: Creating vSphere Node Pools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-vsphere-node-pools-t.html
+    page: p.899
+    quote: machinedeployment.cluster.x-k8s.io/example created / vspheremachinetemplate.infrastructure.cluster.x-k8s.io/example created / kubeadmconfigtemplate.bootstrap.cluster.x-k8s.io/example created
+- id: q22
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which flags let advanced users output a complete set of node pool objects to modify locally or store in version control?
+  options:
+  - id: a
+    text: --dry-run with --output=yaml (or --output-directory=<dir>)
+  - id: b
+    text: --save
+  - id: c
+    text: --export-manifest
+  - id: d
+    text: --gitops
+  correct: a
+  explanation: Advanced users combine --dry-run with --output=yaml (or --output-directory=<existing-directory>) to get a complete set of node pool objects to modify locally or store in version control.
+  source:
+    label: Creating vSphere Node Pools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-vsphere-node-pools-t.html
+    page: p.899
+    quote: Advanced users can use a combination of the --dry-run and --output=yaml or --output-directory=<existing-directory> flags to get a complete set of node pool objects to modify locally or store in version control.
+- id: q23
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which object do you edit to customize control-plane kubelet/apiserver options (e.g., audit log flags)?
+  options:
+  - id: a
+    text: The MachineDeployment
+  - id: b
+    text: The KubeadmControlPlane object
+  - id: c
+    text: The Cluster object
+  - id: d
+    text: The Namespace
+  correct: b
+  explanation: Edit the KubeadmControlPlane object to configure control-plane kubelet/apiserver options (e.g., audit-log flags).
+  source:
+    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
+    page: p.702
+    quote: 'look for the KubeadmControlPlane object for your cluster… apiServer: extraArgs: audit-log-maxage… audit-policy-file…'
+- id: q24
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When customizing Pod/Service subnets in the manifest, what constraint must you satisfy?
+  options:
+  - id: a
+    text: They must match the node subnet
+  - id: b
+    text: They must not overlap with node subnets (or LoadBalancer virtual-IP subnets), and must be set at cluster creation
+  - id: c
+    text: They must be public
+  - id: d
+    text: No constraint
+  correct: b
+  explanation: Pod and Service subnets must not overlap with node subnets (or LoadBalancer virtual-IP subnets), and must be changed at cluster creation.
+  source:
+    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
+    page: p.701
+    quote: These subnets must not overlap with subnets used by cluster Nodes… you must change the Pods or Services subnets… at cluster creation.
+- id: q25
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: production HA management cluster on Nutanix. Which replica values match the documented defaults?'
+  options:
+  - id: a
+    text: --control-plane-replicas=1 --worker-replicas=1
+  - id: b
+    text: --control-plane-replicas=3 --worker-replicas=4
+  - id: c
+    text: --control-plane-replicas=2 --worker-replicas=2
+  - id: d
+    text: --control-plane-replicas=5 --worker-replicas=5
+  correct: b
+  explanation: The documented Nutanix defaults for a production HA management cluster are 3 control-plane replicas and 4 worker replicas.
+  source:
+    label: Pro and Ultimate Cluster Minimum Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-pro-and-ultimate-cluster-min-r.html
+    page: p.20
+    quote: --control-plane-replicas=3 … --worker-replicas=4
+- id: q26
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: on-prem cluster with no external load balancer. Which parameter provides the control-plane VIP?'
+  options:
+  - id: a
+    text: --load-balancer
+  - id: b
+    text: --virtual-ip-interface (kube-vip) with --control-plane-endpoint-host
+  - id: c
+    text: --endpoint-ip only
+  - id: d
+    text: --metallb
+  correct: b
+  explanation: 'With no external LB, use kube-vip: pass --virtual-ip-interface together with --control-plane-endpoint-host.'
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.80
+    quote: ALTERNATIVE Virtual IP - if you don't have an external LB… use a VIRTUAL IP provided by kube-vip… --control-plane-endpoint-host 196.168.1.10 --virtual-ip-interface eth1
+- id: q27
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: air-gapped Nutanix cluster. Which parameters are required to point nodes at the local registry?'
+  options:
+  - id: a
+    text: --registry-mirror-url (plus --registry-mirror-username/password and --registry-mirror-cacert for a self-signed CA)
+  - id: b
+    text: --offline
+  - id: c
+    text: --no-internet
+  - id: d
+    text: --local only
+  correct: a
+  explanation: Point air-gapped nodes at the local registry with --registry-mirror-url (plus username/password, and --registry-mirror-cacert if the registry uses a self-signed CA).
+  source:
+    label: Nutanix Air-gapped Installation
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-ag-install-c.html
+    page: p.20
+    quote: --registry-mirror-url=${REGISTRY_URL} --registry-mirror-cacert=${REGISTRY_CA} --registry-mirror-username=${REGISTRY_USERNAME} --registry-mirror-password=${REGISTRY_PASSWORD}
+- id: q28
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: specify the control-plane endpoint on a non-default API port. Which flag do you use?'
+  options:
+  - id: a
+    text: --api-port
+  - id: b
+    text: --control-plane-endpoint-port (default 6443)
+  - id: c
+    text: --port
+  - id: d
+    text: --endpoint-port only
+  correct: b
+  explanation: Use --control-plane-endpoint-port; it defaults to 6443 unless a different port is specified.
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.80
+    quote: --control-plane-endpoint-port <control plane endpoint port, if different than 6443>
+- id: q29
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: a GPU node pool on Nutanix needs two GPUs per machine. Which flag sets that, and what limit applies?'
+  options:
+  - id: a
+    text: --gpus 2; no limit
+  - id: b
+    text: --gpu-count 2 (default 1); creation fails if gpu-count x replicas exceeds available GPUs in the Prism Element cluster
+  - id: c
+    text: --gpu-mem 2; limited by memory
+  - id: d
+    text: --replicas 2; unlimited
+  correct: b
+  explanation: Use --gpu-count (default 1). For Nutanix, creation fails when gpu-count x replicas exceeds the available GPUs in the Prism Element cluster.
+  source:
+    label: Creating vSphere Node Pools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-vsphere-node-pools-t.html
+    page: p.652
+    quote: Use the --gpu-count flag to specify the number of GPUs per machine. The default gpu-count is 1… the command fails when the required number of GPUs (calculated as gpu-count * replicas) exceeds the available GPUs in your Prism Element cluster.
+- id: q30
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which flags are required for creating a pre-provisioned cluster from an inventory?
+  options:
+  - id: a
+    text: --cluster-name, --control-plane-endpoint-host, --pre-provisioned-inventory-file, --ssh-private-key-file
+  - id: b
+    text: --provider only
+  - id: c
+    text: --nodes and --token
+  - id: d
+    text: --kubeconfig only
+  correct: a
+  explanation: A pre-provisioned cluster create needs --cluster-name, --control-plane-endpoint-host, --pre-provisioned-inventory-file, and --ssh-private-key-file (plus --self-managed for the initial cluster).
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.80
+    quote: nkp create cluster preprovisioned --cluster-name ${CLUSTER_NAME} --control-plane-endpoint-host … --pre-provisioned-inventory-file preprovisioned_inventory.yaml --ssh-private-key-file <path> --self-managed
+- id: q31
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: a proxied environment. Which flags must be included on nkp create cluster?'
+  options:
+  - id: a
+    text: --http-proxy, --https-proxy, --no-proxy
+  - id: b
+    text: --proxy only
+  - id: c
+    text: --offline
+  - id: d
+    text: --tls
+  correct: a
+  explanation: In a proxied environment, include --http-proxy, --https-proxy, and --no-proxy on the nkp create cluster command.
+  source:
+    label: Installing NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
+    page: p.80
+    quote: If your environment uses HTTP or HTTPS proxies, include the flags --http-proxy, --https-proxy, and --no-proxy with their values in the command…
+- id: q32
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where do you find provider-specific, environment-variable-based install options that get you operative in common scenarios (e.g., for AWS or AKS)?
+  options:
+  - id: a
+    text: The Installation Options section for that provider (e.g., AWS Installation Options)
+  - id: b
+    text: The release notes only
+  - id: c
+    text: The bootstrap logs
+  - id: d
+    text: There is no such reference
+  correct: a
+  explanation: Each provider's Installation Options section provides environment-variable-based install options for common scenarios (with pointers to custom YAML for advanced cases).
+  source:
+    label: AWS Installation Options
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-aws-install-options-c.html
+    page: p.171
+    quote: AWS Installation Options — For information on how to install NKP on AWS Infrastructure…

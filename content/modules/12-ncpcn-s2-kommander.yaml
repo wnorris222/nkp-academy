@@ -1,0 +1,681 @@
+id: ncpcn-s2-kommander
+title: 2.2 Deploy Kommander & Apply Licenses
+track: NCP-CN Section 2
+order: 22
+icon: crown
+summary: 'Covers installing and configuring the Kommander component of NKP: generating and customizing the installer config file, managing platform applications (HelmReleases), diagnosing and troubleshooting deployments, and handling minimal, air-gapped, and FIPS installs. Also covers applying the appropriate NKP licenses (Starter, Pro, Ultimate).
+
+  '
+questions:
+- id: q33
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command installs the Kommander component of NKP?
+  options:
+  - id: a
+    text: nkp deploy kommander
+  - id: b
+    text: nkp install kommander (with --kubeconfig=${CLUSTER_NAME}.conf)
+  - id: c
+    text: kubectl install kommander
+  - id: d
+    text: nkp kommander up
+  correct: b
+  explanation: Install Kommander with nkp install kommander, using --kubeconfig=${CLUSTER_NAME}.conf to target the correct cluster; it brings up the UI dashboard.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.84
+    quote: nkp install kommander --installer-config kommander.yaml --kubeconfig=${CLUSTER_NAME}.conf
+- id: q34
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does the --kubeconfig=${CLUSTER_NAME}.conf flag ensure during the Kommander install?
+  options:
+  - id: a
+    text: It enables FIPS
+  - id: b
+    text: It ensures Kommander installs on the correct (intended) cluster
+  - id: c
+    text: It sets the license
+  - id: d
+    text: It skips validation
+  correct: b
+  explanation: The --kubeconfig flag ensures you install Kommander on the correct/intended cluster.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.83
+    quote: The --kubeconfig=${CLUSTER_NAME}.conf flag ensures that you install Kommander on the correct cluster.
+- id: q35
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command generates a default Kommander installer configuration file?
+  options:
+  - id: a
+    text: nkp install kommander --init > kommander.yaml
+  - id: b
+    text: nkp config kommander
+  - id: c
+    text: nkp get kommander-config
+  - id: d
+    text: kubectl create kommander
+  correct: a
+  explanation: Generate a default installer configuration file with nkp install kommander --init > kommander.yaml.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.83
+    quote: Create a configuration file for the deployment. nkp install kommander --init > kommander.yaml
+- id: q36
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you install Kommander using a customized configuration file?
+  options:
+  - id: a
+    text: nkp install kommander --installer-config kommander.yaml --kubeconfig=${CLUSTER_NAME}.conf
+  - id: b
+    text: nkp apply -f kommander.yaml
+  - id: c
+    text: helm install kommander
+  - id: d
+    text: nkp install kommander --file kommander.yaml
+  correct: a
+  explanation: Install with a custom config via --installer-config kommander.yaml (and --kubeconfig).
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.84
+    quote: Use the customized kommander.yaml to install NKP. nkp install kommander --installer-config kommander.yaml --kubeconfig=${CLUSTER_NAME}.conf
+- id: q37
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Applications take longer to deploy and the install times out. Which flag allocates more time?
+  options:
+  - id: a
+    text: --timeout-extend
+  - id: b
+    text: --wait-timeout <time> (e.g., 1h)
+  - id: c
+    text: --retry
+  - id: d
+    text: --slow
+  correct: b
+  explanation: Add --wait-timeout <time> (e.g., 1h) to allocate more time when app deployment times out.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.83
+    quote: Applications can take longer to deploy and time out the installation. Add the --wait-timeout <time to wait> flag and specify a period (for example, 1h)…
+- id: q38
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: If the Kommander installation fails or you want to reconfigure applications, what can you do?
+  options:
+  - id: a
+    text: Delete the cluster
+  - id: b
+    text: Rerun the install command to retry
+  - id: c
+    text: Reboot all nodes
+  - id: d
+    text: Reinstall the OS
+  correct: b
+  explanation: If the install fails or you want to reconfigure applications, simply rerun the install command to retry.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.83
+    quote: If the Kommander installation fails, or you want to reconfigure applications, rerun the install command to retry.
+- id: q39
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which commands log you into the dashboard and retrieve the URL/credentials?
+  options:
+  - id: a
+    text: nkp open dashboard and nkp get dashboard
+  - id: b
+    text: kubectl proxy
+  - id: c
+    text: nkp ui
+  - id: d
+    text: nkp login
+  correct: a
+  explanation: Use nkp open dashboard to log in, and nkp get dashboard to retrieve the URL and credentials at any time.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.85
+    quote: nkp open dashboard --kubeconfig=${CLUSTER_NAME}.conf … Retrieve the URL and credentials at any time… nkp get dashboard --kubeconfig=${CLUSTER_NAME}.conf
+- id: q40
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command checks Kommander install status by waiting for all HelmReleases to be Ready?
+  options:
+  - id: a
+    text: kubectl -n kommander wait --for condition=Ready helmreleases --all --timeout 15m
+  - id: b
+    text: nkp status kommander
+  - id: c
+    text: kubectl get pods
+  - id: d
+    text: helm list
+  correct: a
+  explanation: Check install status with kubectl -n kommander wait --for condition=Ready helmreleases --all --timeout 15m.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.84
+    quote: kubectl -n kommander wait --for condition=Ready helmreleases --all --timeout 15m
+- id: q41
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which flag makes the CLI not wait for all applications to become available?
+  options:
+  - id: a
+    text: --no-wait
+  - id: b
+    text: --wait=false
+  - id: c
+    text: --async
+  - id: d
+    text: --skip-wait
+  correct: b
+  explanation: Set --wait=false so the CLI does not wait for all applications to be available.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.84
+    quote: If you prefer using the CLI to not wait for all applications to be available, you can set the flag to --wait=false.
+- id: q42
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: An application fails to deploy. How do you check that application's status?
+  options:
+  - id: a
+    text: kubectl -n kommander get helmrelease <HELMRELEASE_NAME>
+  - id: b
+    text: nkp app status
+  - id: c
+    text: docker ps
+  - id: d
+    text: kubectl get svc
+  correct: a
+  explanation: Check a failing application with kubectl -n kommander get helmrelease <HELMRELEASE_NAME>.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.85
+    quote: If an application fails to deploy, check the status of the HelmRelease using the following command. kubectl -n kommander get helmrelease <HELMRELEASE_NAME>
+- id: q43
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: A HelmRelease is stuck in a broken/exhausted state. How do you trigger a reconciliation?
+  options:
+  - id: a
+    text: Delete the namespace
+  - id: b
+    text: Patch spec.suspend to true, then back to false (kubectl -n kommander patch helmrelease ...)
+  - id: c
+    text: Restart the API server
+  - id: d
+    text: Reapply the license
+  correct: b
+  explanation: Trigger reconciliation by patching the HelmRelease's spec.suspend to true, then back to false.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.85
+    quote: 'kubectl -n kommander patch helmrelease <HELMRELEASE_NAME> … "path": "/spec/suspend", "value": true … then … "value": false'
+- id: q44
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In which namespace do the Kommander platform applications (HelmReleases) run?
+  options:
+  - id: a
+    text: default
+  - id: b
+    text: kommander
+  - id: c
+    text: kube-system
+  - id: d
+    text: flux-system
+  correct: b
+  explanation: Kommander platform applications (HelmReleases) run in the kommander namespace.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.84
+    quote: kubectl -n kommander wait --for condition=Ready helmreleases --all… kubectl -n kommander get helmrelease…
+- id: q45
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What resource type represents each Kommander platform application?
+  options:
+  - id: a
+    text: Deployment
+  - id: b
+    text: A HelmRelease (helm.toolkit.fluxcd.io)
+  - id: c
+    text: StatefulSet
+  - id: d
+    text: Pod
+  correct: b
+  explanation: Each Kommander platform application is represented by a HelmRelease (helm.toolkit.fluxcd.io).
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.84
+    quote: helmrelease.helm.toolkit.fluxcd.io/kommander condition met… /traefik condition met… /velero condition met
+- id: q46
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For an air-gapped environment, how do you initialize the Kommander config file?
+  options:
+  - id: a
+    text: nkp install kommander --init --airgapped > kommander.yaml
+  - id: b
+    text: nkp install kommander --offline
+  - id: c
+    text: nkp init --local
+  - id: d
+    text: It is the same as non-air-gapped
+  correct: a
+  explanation: For air-gapped, initialize with nkp install kommander --init --airgapped > kommander.yaml.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.996
+    quote: 'For an air-gapped environment, run the following command: nkp install kommander --init --airgapped > kommander.yaml'
+- id: q47
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the installer config, how do you exclude a platform application from installation?
+  options:
+  - id: a
+    text: Delete it from the file
+  - id: b
+    text: 'Set enabled: false under apps.<app-name>'
+  - id: c
+    text: Comment it out
+  - id: d
+    text: Use --skip
+  correct: b
+  explanation: 'Exclude an application by setting enabled: false under apps.<app-name> in the config.'
+  source:
+    label: Installing Kommander in a Small Environment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-kommander-in-small-env-t.html
+    page: p.992
+    quote: Applications that have enabled set to false are not taken into account during installation.
+- id: q48
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the two ways to configure an application's Helm values in the Kommander config?
+  options:
+  - id: a
+    text: 'inline (values: |) or by reference (valuesFrom: <file>)'
+  - id: b
+    text: Only inline
+  - id: c
+    text: Only environment variables
+  - id: d
+    text: Only via the UI
+  correct: a
+  explanation: 'Configure an app either inline (values: |) or by reference (valuesFrom: <file>).'
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.996
+    quote: Inline configuration (using values)… Reference another YAML file (using valuesFrom)…
+- id: q49
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: The configuration values you set for each app correspond to what?
+  options:
+  - id: a
+    text: Kubernetes annotations
+  - id: b
+    text: The application's Helm Chart values
+  - id: c
+    text: Node labels
+  - id: d
+    text: CLI flags
+  correct: b
+  explanation: The configuration values for each app correspond to that application's Helm Chart values.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.996
+    quote: The configuration values for each app correspond to the Helm Chart values for the application.
+- id: q50
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After install, how do you find an application's Helm Chart source?
+  options:
+  - id: a
+    text: Check spec.chart.spec.sourceRef of the HelmRelease (kubectl get helmreleases <app> -o yaml -n kommander)
+  - id: b
+    text: Look in /etc/helm
+  - id: c
+    text: Check the Dockerfile
+  - id: d
+    text: It cannot be found
+  correct: a
+  explanation: 'Find the Helm Chart via the HelmRelease''s spec.chart.spec.sourceRef: kubectl get helmreleases <app> -o yaml -n kommander.'
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.996
+    quote: you can find the application Helm Charts by checking the spec.chart.spec.sourceRef field of the associated HelmRelease. kubectl get helmreleases <application> -o yaml -n kommander
+- id: q51
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which configuration parameter lists the platform applications to install on the management cluster?
+  options:
+  - id: a
+    text: platform
+  - id: b
+    text: apps
+  - id: c
+    text: charts
+  - id: d
+    text: addons
+  correct: b
+  explanation: The apps parameter lists the platform applications installed on the management cluster.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.998
+    quote: 'Table 73: Configuration Parameters — apps: List of platform applications that will be installed on the management cluster.'
+- id: q52
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which parameter provides a hostname used for accessing the cluster's ingresses?
+  options:
+  - id: a
+    text: ingressHost
+  - id: b
+    text: clusterHostName
+  - id: c
+    text: domainName
+  - id: d
+    text: dnsName
+  correct: b
+  explanation: clusterHostName provides a hostname used for accessing the cluster's ingresses.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.998
+    quote: clusterHostName — Allows users to provide a hostname that is used for accessing the cluster's ingresses.
+- id: q53
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which parameter provides a custom certificate for TLS on the cluster's ingresses?
+  options:
+  - id: a
+    text: tlsSecret
+  - id: b
+    text: ingressCertificate
+  - id: c
+    text: certManager
+  - id: d
+    text: caBundle
+  correct: b
+  explanation: ingressCertificate provides a custom certificate used for TLS in the cluster's ingresses.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.998
+    quote: ingressCertificate — Allows users to provide a custom certificate that's used for TLS in the cluster's ingresses.
+- id: q54
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: a small single-cluster demo. How do you install a minimal Kommander?'
+  options:
+  - id: a
+    text: 'Init with -o yaml, set non-essential apps to enabled: false, then install with --installer-config'
+  - id: b
+    text: Use --minimal flag only
+  - id: c
+    text: Install everything then delete apps
+  - id: d
+    text: It is not possible
+  correct: a
+  explanation: 'Init the config with -o yaml, set non-essential apps to enabled: false, then install with --installer-config — the minimal setup deploys apps and the UI without cost/logging/alerting/object-storage apps.'
+  source:
+    label: Installing Kommander in a Small Environment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-kommander-in-small-env-t.html
+    page: p.991
+    quote: nkp install kommander --init --kubeconfig=${CLUSTER_NAME}.conf -oyaml > kommander_minimal.yaml… Applications that have enabled set to false are not taken into account…
+- id: q55
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: enable the logging stack in a minimal install. Which applications must you enable?'
+  options:
+  - id: a
+    text: Only grafana-logging
+  - id: b
+    text: grafana-logging, grafana-loki, logging-operator, rook-ceph, and rook-ceph-cluster
+  - id: c
+    text: Only kube-prometheus-stack
+  - id: d
+    text: dex and traefik
+  correct: b
+  explanation: 'To enable the logging stack, set enabled: true for grafana-logging, grafana-loki, logging-operator, rook-ceph, and rook-ceph-cluster.'
+  source:
+    label: Installing Kommander in a Small Environment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-kommander-in-small-env-t.html
+    page: p.991
+    quote: if you want to enable the logging stack, set enabled to true for grafana-logging, grafana-lokilogging-operator, rook-ceph and rook-ceph-cluster.
+- id: q56
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: create a FIPS-compliant cluster. Which flags are used?'
+  options:
+  - id: a
+    text: --fips-mode only
+  - id: b
+    text: --kubernetes-version=v<version>+fips.0, --kubernetes-image-repository=docker.io/mesosphere, and --etcd-image-repository=docker.io/mesosphere --etcd-version=<etcd-version>+fips.0
+  - id: c
+    text: --secure
+  - id: d
+    text: --compliance fips
+  correct: b
+  explanation: FIPS clusters are created with --kubernetes-version=v<version>+fips.0, --kubernetes-image-repository=docker.io/mesosphere, and --etcd-image-repository=docker.io/mesosphere --etcd-version=<etcd>+fips.0.
+  source:
+    label: FIPS Support in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-fips-140-support-nkp-c.html
+    page: p.1026
+    quote: --kubernetes-version=v<kubernetes-version>+fips.0 --kubernetes-image-repository=docker.io/mesosphere --etcd-image-repository=docker.io/mesosphere --etcd-version=etcd-version+fips.0
+- id: q57
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Can you enable FIPS mode on an existing cluster?
+  options:
+  - id: a
+    text: Yes, with a flag
+  - id: b
+    text: No — you must create a new cluster with FIPS enabled, and a FIPS cluster must remain FIPS (status cannot change)
+  - id: c
+    text: Yes, via the UI
+  - id: d
+    text: Only for worker nodes
+  correct: b
+  explanation: You cannot apply FIPS to an existing cluster — you must create a new FIPS cluster, and a FIPS cluster must remain FIPS (status can't be changed).
+  source:
+    label: FIPS Support in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-fips-140-support-nkp-c.html
+    page: p.1026
+    quote: You cannot apply FIPS mode to an existing cluster. You must create a new cluster with FIPS enabled… you cannot change the FIPS status after creating it.
+- id: q58
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command validates FIPS compliance in a cluster?
+  options:
+  - id: a
+    text: nkp check cluster fips
+  - id: b
+    text: nkp validate fips
+  - id: c
+    text: kubectl fips
+  - id: d
+    text: nkp fips test
+  correct: a
+  explanation: Validate FIPS compliance with nkp check cluster fips, which checks components/services against signed signature files.
+  source:
+    label: FIPS Support in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-fips-140-support-nkp-c.html
+    page: p.1027
+    quote: To verify the FIPS compliant cluster, run nkp check cluster fips.
+- id: q59
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Use case: reconfigure Kommander applications after the initial install. Which command applies changes?'
+  options:
+  - id: a
+    text: Rerun nkp install kommander --installer-config kommander.yaml --kubeconfig=... (works post-install too)
+  - id: b
+    text: nkp reconfigure
+  - id: c
+    text: helm upgrade
+  - id: d
+    text: Reinstall the cluster
+  correct: a
+  explanation: Rerun nkp install kommander --installer-config kommander.yaml --kubeconfig=... — this works after the initial install to reconfigure applications.
+  source:
+    label: Additional Kommander Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
+    page: p.84
+    quote: To reconfigure applications, you can also run this command after the initial installation. nkp install kommander --installer-config kommander.yaml --kubeconfig=${CLUSTER_NAME}.conf
+- id: q60
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What default license key does NKP assign when you create a cluster?
+  options:
+  - id: a
+    text: Always Ultimate
+  - id: b
+    text: Starter for AHV installations, Pro for all other infrastructure providers
+  - id: c
+    text: Always Starter
+  - id: d
+    text: None
+  correct: b
+  explanation: 'On cluster creation NKP assigns a default key: Starter for AHV, Pro for all other providers; replace it with your purchased key.'
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.26
+    quote: The default key is either a Starter for AHV installations or a Pro for all other infrastructure providers.
+- id: q61
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For a cluster at a default license level vs. one already on a non-default Nutanix license, which UI actions apply?
+  options:
+  - id: a
+    text: Both Activate
+  - id: b
+    text: Default → Activate License; non-default (e.g., Ultimate renewal / core increase) → Update License
+  - id: c
+    text: Both Update
+  - id: d
+    text: Neither
+  correct: b
+  explanation: A cluster at a default license level uses Activate License; a cluster already on a non-default Nutanix license (e.g., Ultimate renewal or added core capacity) uses Update License.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.27
+    quote: Default License… select Activate License… Non-default Nutanix License… use the Update License option…
+- id: q62
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Applying a Pro or Ultimate license installs which application, and which installs only with Ultimate?
+  options:
+  - id: a
+    text: Prometheus / Traefik
+  - id: b
+    text: AI Navigator (Pro & Ultimate) / Centralized Grafana (Ultimate only)
+  - id: c
+    text: Dex / Velero
+  - id: d
+    text: Nothing extra
+  correct: b
+  explanation: Applying a Pro or Ultimate key installs the AI Navigator App; Centralized Grafana installs only with an Ultimate key.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.27
+    quote: if you apply Pro or Ultimate license key, NKP installs the AI Navigator App… NKP installs Centralized Grafana only when you apply an Ultimate license key.
+- id: q63
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Why should you avoid applying an Ultimate license in a small single-cluster (demo/test) environment?
+  options:
+  - id: a
+    text: It is cheaper to use Starter
+  - id: b
+    text: Ultimate is designed for multi-cluster/fleet management and requires more resources; applying it can exhaust a small environment
+  - id: c
+    text: Ultimate disables the UI
+  - id: d
+    text: It is not supported on Nutanix
+  correct: b
+  explanation: Ultimate is designed for multi-cluster/fleet management and requires a minimum amount of resources; applying it to a small single-cluster environment can exhaust its resources.
+  source:
+    label: Installing Kommander in a Small Environment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-kommander-in-small-env-t.html
+    page: p.992
+    quote: The Ultimate license is designed for multi-cluster environments and fleet management, which require a minimum number of resources. Applying an Ultimate license key… can exhaust a small environment's resources.
+- id: q64
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'In the minimal Kommander YAML, how are applications with enabled: false treated during installation?'
+  options:
+  - id: a
+    text: They are installed but disabled
+  - id: b
+    text: They are not taken into account (not installed)
+  - id: c
+    text: They are queued
+  - id: d
+    text: They cause an error
+  correct: b
+  explanation: 'Applications with enabled: false in the minimal YAML are not taken into account during installation (not installed).'
+  source:
+    label: Installing Kommander in a Small Environment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-kommander-in-small-env-t.html
+    page: p.991
+    quote: Applications that have enabled set to false are not taken into account during installation.

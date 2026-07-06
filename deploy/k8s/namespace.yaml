@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nkp-academy
+  labels:
+    app.kubernetes.io/name: nkp-academy
+    app.kubernetes.io/part-of: nkp-academy

@@ -1,0 +1,27 @@
+
+🎓  NKP Academy {{ .Chart.AppVersion }} deployed as release "{{ .Release.Name }}".
+
+1. Check the rollout:
+     kubectl -n {{ .Release.Namespace }} rollout status deploy/{{ include "nkp-academy.fullname" . }}
+
+{{- if .Values.ingress.enabled }}
+
+2. Open the app (once DNS points at your NKP ingress):
+     http{{ if .Values.ingress.tls.enabled }}s{{ end }}://{{ .Values.ingress.host }}
+{{- else }}
+
+2. No ingress enabled — port-forward to try it locally:
+     kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "nkp-academy.fullname" . }} 8080:{{ .Values.service.port }}
+     open http://localhost:8080
+{{- end }}
+
+3. Health & metrics:
+     /healthz   liveness/readiness probe
+     /metrics   Prometheus exposition (scraped by NKP platform Prometheus)
+
+{{- if and .Values.persistence.enabled (contains "sqlite" .Values.config.NKP_DATABASE_URL) }}
+
+⚠️  Running on SQLite (single writer). Keep replicaCount=1 and autoscaling
+    disabled. To scale out, set config.NKP_DATABASE_URL to a PostgreSQL DSN and
+    enable autoscaling.
+{{- end }}

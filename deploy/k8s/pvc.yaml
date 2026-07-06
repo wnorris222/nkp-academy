@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nkp-academy-data
+  namespace: nkp-academy
+  labels:
+    app.kubernetes.io/name: nkp-academy
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  # On NKP/Nutanix, the default StorageClass is backed by the Nutanix CSI
+  # driver. Leave unset to use the cluster default, or pin it explicitly, e.g.:
+  # storageClassName: nutanix-volume

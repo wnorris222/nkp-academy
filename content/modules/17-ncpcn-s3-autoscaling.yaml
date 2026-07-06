@@ -1,0 +1,387 @@
+id: ncpcn-s3-autoscaling
+title: 3.5 Cluster Autoscaling
+track: NCP-CN Section 3
+order: 35
+icon: rocket
+summary: 'Configuring the NKP Cluster Autoscaler on Nutanix, AWS, and vSphere to automatically scale worker node pools up or down based on pending pods. CAPI-based node pools (MachineDeployments) are scaled between min-size and max-size annotations, and the autoscaler needs no metrics source.
+
+  '
+questions:
+- id: q129
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does the Cluster Autoscaler do?
+  options:
+  - id: a
+    text: Scales the number of pods
+  - id: b
+    text: Automatically scales the number of worker nodes up or down based on the number of pending pods to be scheduled
+  - id: c
+    text: Scales control-plane nodes only
+  - id: d
+    text: Scales CPU limits on containers
+  correct: b
+  explanation: The Cluster Autoscaler automatically scales the number of worker nodes up or down based on the number of pending pods to be scheduled.
+  source:
+    label: Configuring vSphere Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-cluster-autoscaler-t.html
+    page: p.904
+    quote: Cluster Autoscaler provides the ability to automatically scale up or scale down the number of worker nodes in a cluster based on the number of pending pods to be scheduled.
+- id: q130
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Is running the Cluster Autoscaler required?
+  options:
+  - id: a
+    text: Yes, always
+  - id: b
+    text: No — running the Cluster Autoscaler is optional
+  - id: c
+    text: Only on AWS
+  - id: d
+    text: Only for the management cluster
+  correct: b
+  explanation: Running the Cluster Autoscaler is optional.
+  source:
+    label: Configuring vSphere Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-cluster-autoscaler-t.html
+    page: p.904
+    quote: Running the Cluster Autoscaler is optional.
+- id: q131
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Does the Cluster Autoscaler depend on a metrics server or Prometheus?
+  options:
+  - id: a
+    text: Yes, it needs the metrics server
+  - id: b
+    text: No — unlike the Horizontal Pod Autoscaler, it does not depend on any metrics server, Prometheus, or other metrics source
+  - id: c
+    text: It needs Grafana
+  - id: d
+    text: It needs Thanos
+  correct: b
+  explanation: Unlike the Horizontal-Pod Autoscaler, the Cluster Autoscaler does not depend on any Metrics server and does not need Prometheus or any other metrics source.
+  source:
+    label: Configuring vSphere Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-cluster-autoscaler-t.html
+    page: p.904
+    quote: Unlike Horizontal-Pod Autoscaler, Cluster Autoscaler does not depend on any Metrics server and does not need Prometheus or any other metrics source.
+- id: q132
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the primary use case / benefit of cluster autoscaling?
+  options:
+  - id: a
+    text: Improving pod scheduling latency only
+  - id: b
+    text: Saving operational costs by automatically scaling down capacity when it's not needed and adding capacity when demand increases
+  - id: c
+    text: Encrypting traffic
+  - id: d
+    text: Backing up the cluster
+  correct: b
+  explanation: The benefit is saving operational costs by automatically scaling down capacity when it's not needed and adding capacity when there is greater demand (with CAPI-enabled autoscaling groups).
+  source:
+    label: Configuring Nutanix Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-cluster-autoscaler-t.html
+    page: p.10
+    quote: Cluster Autoscaling - Save operational costs by automatically scaling down capacity when it's not needed and adding capability when there is greater demand, with CAPI enabled autoscaling groups.
+- id: q133
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What triggers the Cluster Autoscaler to scale up?
+  options:
+  - id: a
+    text: High CPU on a node
+  - id: b
+    text: Pending pods that cannot be scheduled
+  - id: c
+    text: A cron schedule
+  - id: d
+    text: Manual approval
+  correct: b
+  explanation: Scale-up is triggered by pending pods that cannot be scheduled.
+  source:
+    label: Configuring vSphere Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-cluster-autoscaler-t.html
+    page: p.904
+    quote: '...automatically scale up or scale down the number of worker nodes... based on the number of pending pods to be scheduled.'
+- id: q134
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How does NKP implement the node pools that the autoscaler scales?
+  options:
+  - id: a
+    text: As raw VMs
+  - id: b
+    text: Using Cluster API MachineDeployments
+  - id: c
+    text: As DaemonSets
+  - id: d
+    text: As StatefulSets
+  correct: b
+  explanation: NKP implements node pools using Cluster API MachineDeployments, which the autoscaler scales.
+  source:
+    label: Configuring AWS Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-aws-cluster-autoscaler-t.html
+    page: p.818
+    quote: NKP implements node pools using Cluster API MachineDeployments. While running the Cluster Autoscaler allows dynamic adjustments...
+- id: q135
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How does the Cluster Autoscaler differ from the Horizontal Pod Autoscaler (HPA)?
+  options:
+  - id: a
+    text: They are the same
+  - id: b
+    text: Cluster Autoscaler scales nodes (no metrics source needed); HPA scales pods and relies on metrics
+  - id: c
+    text: HPA scales nodes
+  - id: d
+    text: Cluster Autoscaler scales pods
+  correct: b
+  explanation: The Cluster Autoscaler scales nodes and needs no metrics source; the Horizontal Pod Autoscaler scales pods and relies on a metrics server.
+  source:
+    label: Configuring vSphere Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-cluster-autoscaler-t.html
+    page: p.904
+    quote: Unlike Horizontal-Pod Autoscaler, Cluster Autoscaler does not depend on any Metrics server and does not need Prometheus or any other metrics source.
+- id: q136
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does the Cluster Autoscaler look at to determine its scale-up/scale-down ranges?
+  options:
+  - id: a
+    text: Node labels
+  - id: b
+    text: Minimum and maximum size annotations on the MachineDeployment
+  - id: c
+    text: The pod anti-affinity rules
+  - id: d
+    text: The license tier
+  correct: b
+  explanation: The autoscaler reads the minimum and maximum size annotations on the MachineDeployment to determine its scale ranges.
+  source:
+    label: Configuring vSphere Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-cluster-autoscaler-t.html
+    page: p.904
+    quote: The Cluster Autoscaler looks at the following annotations on a MachineDeployment to determine its scale-up and scale-down ranges.
+- id: q137
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the first step to enable cluster autoscaling on a node pool?
+  options:
+  - id: a
+    text: Reboot the nodes
+  - id: b
+    text: Verify the cluster-autoscaler controller is running without errors (kubectl logs deployments/cluster-autoscaler -n kube-system)
+  - id: c
+    text: Delete the node pool
+  - id: d
+    text: Apply a license
+  correct: b
+  explanation: 'First, verify the cluster-autoscaler controller is running without errors or restarts: kubectl --kubeconfig=... logs deployments/cluster-autoscaler cluster-autoscaler -n kube-system -f.'
+  source:
+    label: Configuring AWS Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-aws-cluster-autoscaler-t.html
+    page: p.819
+    quote: Verify that the Cluster Autoscaler controller is running without errors or restarts in the logs. kubectl ... logs deployments/cluster-autoscaler cluster-autoscaler -n kube-system -f.
+- id: q138
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you enable and configure the autoscaler's scale range on a node pool?
+  options:
+  - id: a
+    text: Edit the kubelet
+  - id: b
+    text: Annotate the target MachineDeployment with the min-size and max-size autoscaler annotations
+  - id: c
+    text: Use nkp enable autoscaler
+  - id: d
+    text: Set an environment variable
+  correct: b
+  explanation: Enable the autoscaler by applying the minimum and maximum range annotations to the target node pool MachineDeployment (kubectl annotate machinedeployment ...).
+  source:
+    label: Configuring AWS Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-aws-cluster-autoscaler-t.html
+    page: p.819
+    quote: Enable the Cluster Autoscaler by applying the minimum and maximum range annotations to your target node pool MachineDeployment.
+- id: q139
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which two annotations set the autoscaler's node-group range?
+  options:
+  - id: a
+    text: min-replicas / max-replicas
+  - id: b
+    text: cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size and -max-size
+  - id: c
+    text: scale-min / scale-max
+  - id: d
+    text: autoscale.io/min and autoscale.io/max
+  correct: b
+  explanation: The two annotations are cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size and cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size.
+  source:
+    label: Configuring vSphere Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-cluster-autoscaler-t.html
+    page: p.819
+    quote: cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size ... cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size
+- id: q140
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the documented example, what are the minimum and maximum node ranges set?
+  options:
+  - id: a
+    text: min 1, max 3
+  - id: b
+    text: min 2 nodes, max 6 nodes
+  - id: c
+    text: min 0, max 10
+  - id: d
+    text: min 3, max 3
+  correct: b
+  explanation: The documented example sets a minimum of 2 nodes and a maximum of 6 nodes.
+  source:
+    label: Configuring AWS Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-aws-cluster-autoscaler-t.html
+    page: p.819
+    quote: '...node-group-min-size=2 ... node-group-max-size=6 ... In this example, the minimum range is 2 nodes and the maximum is 6 nodes.'
+- id: q141
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What happens if you try to manually scale a node pool beyond the maximum (or below the minimum) bound?
+  options:
+  - id: a
+    text: It silently succeeds
+  - id: b
+    text: The NKP CLI returns an error (scaling is forbidden)
+  - id: c
+    text: It scales to the bound
+  - id: d
+    text: It deletes the node pool
+  correct: b
+  explanation: Scaling beyond the maximum bound (or below the minimum) in a MachineDeployment causes the NKP CLI to return an error.
+  source:
+    label: Configuring AWS Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-aws-cluster-autoscaler-t.html
+    page: p.819
+    quote: If you scale a node pool beyond the maximum bounds in MachineDeployment, the NKP CLI returns an error. Scaling below the minimum size also returns an error.
+- id: q142
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When the autoscaler is configured, what constraint applies to nkp scale nodepools --replicas?
+  options:
+  - id: a
+    text: No constraint
+  - id: b
+    text: The --replicas value must be within the configured minimum and maximum bounds
+  - id: c
+    text: It must be exactly the max
+  - id: d
+    text: It must be zero
+  correct: b
+  explanation: When the autoscaler is configured, the --replicas value for nkp scale nodepools must be within the configured minimum and maximum bounds.
+  source:
+    label: Configuring Nutanix Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-cluster-autoscaler-t.html
+    page: p.901
+    quote: If you configured the cluster autoscaler for the ... node pool, the value of --replicas must be within the minimum and maximum bounds.
+- id: q143
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: With min-size=2 and max-size=6 annotations, what does 'nkp scale nodepools --replicas=7' return?
+  options:
+  - id: a
+    text: Success
+  - id: b
+    text: 'An error: desired replicas 7 is greater than the configured max size annotation (6)'
+  - id: c
+    text: It scales to 6
+  - id: d
+    text: It scales to 2
+  correct: b
+  explanation: 'It returns an error: scaling MachineDeployment is forbidden — desired replicas 7 is greater than the configured max size annotation (6).'
+  source:
+    label: Configuring Nutanix Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-cluster-autoscaler-t.html
+    page: p.901
+    quote: 'Error: failed to scale nodepool: scaling MachineDeployment is forbidden: desired replicas 7 is greater than the configured max size annotation ... max-size: 6.'
+- id: q144
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where does the Cluster Autoscaler run for a self-managed management cluster?
+  options:
+  - id: a
+    text: On a worker node
+  - id: b
+    text: On the management cluster itself
+  - id: c
+    text: On the bastion host
+  - id: d
+    text: On Prism Central
+  correct: b
+  explanation: For a self-managed management cluster, the Cluster Autoscaler runs on the management cluster itself.
+  source:
+    label: Configuring Nutanix Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-cluster-autoscaler-t.html
+    page: p.905
+    quote: Run Cluster Autoscaler to the Management Cluster ... the Autoscaler on the management cluster itself.
+- id: q145
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How is autoscaling run for a managed (workload) cluster?
+  options:
+  - id: a
+    text: Directly on the managed cluster only
+  - id: b
+    text: An additional Autoscaler instance runs on the management cluster, pointed at the managed cluster (its clusterresourceset/flags are modified accordingly)
+  - id: c
+    text: It cannot be autoscaled
+  - id: d
+    text: On each worker node
+  correct: b
+  explanation: For a managed (workload) cluster, an additional Autoscaler instance runs on the management cluster, pointed at the managed cluster; the clusterresourceset and autoscaler flags are modified accordingly.
+  source:
+    label: Configuring Nutanix Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-cluster-autoscaler-t.html
+    page: p.905
+    quote: an additional instance of Autoscaler is required to run Autoscaler on a managed cluster. This instance is run on the management cluster but must be pointed at the managed cluster...
+- id: q146
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you verify the autoscaler deployment is healthy?
+  options:
+  - id: a
+    text: ping the autoscaler
+  - id: b
+    text: kubectl get deployment cluster-autoscaler-<cluster-name> shows AVAILABLE (READY) 1/1
+  - id: c
+    text: nkp autoscaler status
+  - id: d
+    text: Check the license
+  correct: b
+  explanation: Verify with kubectl get deployment cluster-autoscaler-<cluster-name>, which should show AVAILABLE (READY) 1/1.
+  source:
+    label: Configuring Nutanix Cluster Autoscaler
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-cluster-autoscaler-t.html
+    page: p.534
+    quote: To check that the status of the deployment has the expected AVAILABLE count of 1... kubectl get deployment ... cluster-autoscaler-<cluster-name> ... READY 1/1 ... AVAILABLE 1.

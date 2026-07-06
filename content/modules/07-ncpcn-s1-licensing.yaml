@@ -1,0 +1,532 @@
+id: ncpcn-s1-licensing
+title: 1.3 Determine License Tiers
+track: NCP-CN Section 1
+order: 13
+icon: badge
+summary: 'NKP is licensed in three tiers - Starter, Pro, and Ultimate - each unlocking progressively more features per the Feature Support Matrix. This objective covers differentiating feature levels per tier, matching a customer use case to the right tier, understanding per-node metering, and the process to obtain (via the Nutanix Support Portal) and apply a license in the NKP UI or CLI.
+
+  '
+questions:
+- id: q48
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which three NKP license tiers are defined in the Feature Support Matrix?
+  options:
+  - id: a
+    text: Free, Standard, Enterprise
+  - id: b
+    text: Starter, Pro, Ultimate
+  - id: c
+    text: Community, Team, Enterprise
+  - id: d
+    text: Basic, Advanced, Premium
+  correct: b
+  explanation: 'The Feature Support Matrix lists three tiers: NKP Starter, NKP Pro, and NKP Ultimate.'
+  source:
+    label: NKP Starter License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-starter-c.html
+    page: p.24
+    quote: This table lists NKP Starter, Pro, and Ultimate license tiers. An X in a column indicates the feature is included for that tier.
+- id: q49
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Attaching a workload cluster (Attached Cluster) is available in which tier(s)?
+  options:
+  - id: a
+    text: Starter only
+  - id: b
+    text: Pro and Ultimate
+  - id: c
+    text: Ultimate only
+  - id: d
+    text: All tiers
+  correct: c
+  explanation: Attaching Workload Cluster is marked only in the Ultimate column; the Attached Cluster type is NKP Ultimate only.
+  source:
+    label: NKP Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    page: p.25
+    quote: Attaching Workload Cluster … Ultimate. / Attached Cluster (NKP Ultimate only).
+- id: q50
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Lifecycle management (LCM) of EKS and AKS clusters is available in which tier(s)?
+  options:
+  - id: a
+    text: All tiers
+  - id: b
+    text: Pro and Ultimate
+  - id: c
+    text: Ultimate only
+  - id: d
+    text: Starter only
+  correct: c
+  explanation: LCM of EKS Cluster and LCM of AKS Cluster are marked only in the Ultimate column.
+  source:
+    label: NKP Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    page: p.25
+    quote: LCM of EKS Cluster … Ultimate; LCM of AKS Cluster … Ultimate.
+- id: q51
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Cluster provisioning on AWS, Azure, GCP, and vSphere is supported starting at which tier?
+  options:
+  - id: a
+    text: Starter (all tiers)
+  - id: b
+    text: Pro (Pro and Ultimate)
+  - id: c
+    text: Ultimate only
+  - id: d
+    text: Not supported on any tier
+  correct: b
+  explanation: NKP on AWS, Azure, GCP, and vSphere are marked for Pro and Ultimate (not Starter). Starter supports NKP on Nutanix AHV.
+  source:
+    label: NKP Pro License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    page: p.25
+    quote: NKP on AWS/Azure/GCP/vSphere … Pro, Ultimate.
+- id: q52
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Continuous Deployment (FluxCD) - full GitOps CD - is included in which tier?
+  options:
+  - id: a
+    text: All tiers
+  - id: b
+    text: Pro only
+  - id: c
+    text: Ultimate only
+  - id: d
+    text: Starter and Pro
+  correct: c
+  explanation: Continuous Deployment (FluxCD) is marked Ultimate only; FluxCD as an application is Pro and Ultimate.
+  source:
+    label: NKP Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    page: p.25
+    quote: Continuous Deployment (FluxCD) … Ultimate; FluxCD (as an application) … Pro, Ultimate.
+- id: q53
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: Insights (AI OPS) is included in the NKP Pro tier.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: Insights (AI OPS) is marked only in the Ultimate column; it is not included in Pro. AI Navigator is Pro and Ultimate.
+  source:
+    label: NKP Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    page: p.25
+    quote: Insights … Ultimate; AI Navigator … Pro, Ultimate.
+- id: q54
+  type: multiple_choice
+  difficulty: stretch
+  points: 15
+  prompt: Which of the following are Ultimate-only features? (Select all that apply)
+  options:
+  - id: a
+    text: Projects and Workspaces Management
+  - id: b
+    text: Multi-tenant Logging
+  - id: c
+    text: Multi-Cloud / Hybrid Cloud (management and workload clusters on different infrastructures)
+  - id: d
+    text: NKP CLI
+  correct:
+  - a
+  - b
+  - c
+  explanation: Projects, Workspaces Management, Multi-tenant Logging, and Multi-Cloud/Hybrid Cloud are Ultimate-only; NKP CLI is available in all tiers.
+  source:
+    label: NKP Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    page: p.25
+    quote: Projects, Workspaces Management, Multi-tenant Logging, and Multi-Cloud/Hybrid Cloud are marked Ultimate only; NKP CLI is marked for all tiers.
+- id: q55
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Policy control using Gatekeeper and FIPS Compliant Build are available starting at which tier?
+  options:
+  - id: a
+    text: Starter
+  - id: b
+    text: Pro (Pro and Ultimate)
+  - id: c
+    text: Ultimate only
+  - id: d
+    text: Not available
+  correct: b
+  explanation: Policy control using Gatekeeper and FIPS Compliant Build are marked for Pro and Ultimate.
+  source:
+    label: NKP Pro License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    page: p.26
+    quote: Policy control using Gatekeeper … Pro, Ultimate; FIPS Compliant Build … Pro, Ultimate.
+- id: q56
+  type: multiple_choice
+  difficulty: stretch
+  points: 15
+  prompt: Which features are available across all three tiers (Starter, Pro, and Ultimate)? (Select all that apply)
+  options:
+  - id: a
+    text: Air-Gapped Deployments
+  - id: b
+    text: Single Sign On (SSO)
+  - id: c
+    text: LCM of Management and Workload clusters
+  - id: d
+    text: Attaching Workload Cluster
+  correct:
+  - a
+  - b
+  - c
+  explanation: Air-Gapped Deployments, Single Sign On, and LCM of Management/Workload clusters are marked for all three tiers. Attaching Workload Cluster is Ultimate only.
+  source:
+    label: NKP Starter License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-starter-c.html
+    page: p.26
+    quote: Air-Gapped Deployments … Starter, Pro, Ultimate; Single Sign On … all tiers; LCM Management/Workload Clusters … all tiers.
+- id: q57
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Backup & Restore (based on Velero) and NVIDIA GPU support are available starting at which tier?
+  options:
+  - id: a
+    text: Starter
+  - id: b
+    text: Pro (Pro and Ultimate)
+  - id: c
+    text: Ultimate only
+  - id: d
+    text: Not available
+  correct: b
+  explanation: Backup & Restore based on Velero and NVIDIA GPU are marked for Pro and Ultimate.
+  source:
+    label: NKP Pro License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    page: p.25
+    quote: Backup & Restore based on Velero … Pro, Ultimate; NVIDIA GPU … Pro, Ultimate.
+- id: q58
+  type: scenario
+  difficulty: core
+  points: 15
+  prompt: A customer runs a single cluster on Nutanix AHV with minimal add-ons and no multi-cluster needs. Which is the most cost-appropriate tier?
+  options:
+  - id: a
+    text: Starter
+  - id: b
+    text: Pro
+  - id: c
+    text: Ultimate
+  - id: d
+    text: Full Stack
+  correct: a
+  explanation: Starter supports NKP on Nutanix AHV with basic cluster lifecycle management, making it the most cost-appropriate tier for a single AHV cluster with minimal needs.
+  source:
+    label: NKP Starter License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-starter-c.html
+    page: p.26
+    quote: The default key is either a Starter for AHV installations or a Pro for all other infrastructure providers.
+- id: q59
+  type: scenario
+  difficulty: stretch
+  points: 15
+  prompt: A customer must manage EKS/AKS clusters, attach externally-created clusters, and run management and workload clusters across different infrastructures. Which tier is required?
+  options:
+  - id: a
+    text: Starter
+  - id: b
+    text: Pro
+  - id: c
+    text: Ultimate
+  - id: d
+    text: Any tier
+  correct: c
+  explanation: LCM of EKS/AKS clusters, Attaching Workload Cluster, and Multi-Cloud/Hybrid Cloud are all Ultimate-only features, so Ultimate is required.
+  source:
+    label: NKP Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    page: p.25
+    quote: LCM of EKS/AKS, Attaching Workload Cluster, and Multi-Cloud/Hybrid Cloud are all marked Ultimate only.
+- id: q60
+  type: scenario
+  difficulty: stretch
+  points: 15
+  prompt: A customer deploys on AWS and needs Backup/Restore, NVIDIA GPU, FIPS builds, and Gatekeeper policy, but does not need to attach clusters or manage EKS/AKS lifecycles. Which tier suffices?
+  options:
+  - id: a
+    text: Starter
+  - id: b
+    text: Pro
+  - id: c
+    text: Ultimate
+  - id: d
+    text: None
+  correct: b
+  explanation: AWS provisioning, Backup/Restore, NVIDIA GPU, FIPS builds, and Gatekeeper policy are all available in Pro, and the Ultimate-only features are not required.
+  source:
+    label: NKP Pro License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    page: p.25
+    quote: Backup/Restore (Velero), NVIDIA GPU, FIPS Compliant Build, Gatekeeper, and NKP on AWS are marked Pro (and Ultimate).
+- id: q61
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: The Management Cluster concept is available in which editions, and the Attached Cluster in which editions?
+  options:
+  - id: a
+    text: 'Management: Ultimate only; Attached: all editions'
+  - id: b
+    text: 'Management: all editions; Attached: Ultimate only'
+  - id: c
+    text: 'Both: Ultimate only'
+  - id: d
+    text: 'Both: all editions'
+  correct: b
+  explanation: The Management Cluster exists across all editions, while the Attached Cluster type is NKP Ultimate only.
+  source:
+    label: NKP Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    page: p.19
+    quote: Management Cluster (All NKP editions)… Attached Cluster (NKP Ultimate only).
+- id: q62
+  type: scenario
+  difficulty: core
+  points: 15
+  prompt: A customer needs multi-tenancy - Projects, Workspaces Management, and Multi-tenant Logging. Which tier is required?
+  options:
+  - id: a
+    text: Starter
+  - id: b
+    text: Pro
+  - id: c
+    text: Ultimate
+  - id: d
+    text: Starter or Pro
+  correct: c
+  explanation: Projects, Workspaces Management, and Multi-tenant Logging are Ultimate-only features, so Ultimate is required.
+  source:
+    label: NKP Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    page: p.25
+    quote: Projects, Workspaces Management, and Multi-tenant Logging are marked Ultimate only.
+- id: q63
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which customers are permitted to use the NKP-provided Ubuntu OS images?
+  options:
+  - id: a
+    text: All customers including Starter and non-NKP
+  - id: b
+    text: NKP Pro and NKP Ultimate customers only (and Pro Ubuntu images only on AHV)
+  - id: c
+    text: Starter customers only
+  - id: d
+    text: Only Ultimate customers
+  correct: b
+  explanation: The Nutanix provided Ubuntu OS Image is marked for Pro and Ultimate tiers only, not Starter.
+  source:
+    label: NKP Pro License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    page: p.26
+    quote: The NKP Ubuntu OS images are for NKP Pro and NKP Ultimate customers only… The NKP Pro Ubuntu OS images are supported only when using the AHV infrastructure provider.
+- id: q64
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: NKP licenses are sold by which unit, and they apply to what?
+  options:
+  - id: a
+    text: Per cluster; applies to control plane nodes
+  - id: b
+    text: Per node; applies to all nodes
+  - id: c
+    text: By core unit; applies to the vCPUs of all worker nodes
+  - id: d
+    text: Per socket; applies to physical hosts
+  correct: c
+  explanation: NKP licenses are sold by core unit and apply to the vCPUs of all worker nodes in on-premises, public cloud, or edge deployments.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.24
+    quote: NKP licenses are sold by core unit and apply to the vCPUs of all worker nodes in on-premises, public cloud, or edge deployments.
+- id: q65
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: You can downgrade a license after you register it for a cluster.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: A license cannot be downgraded after it has been registered for a cluster.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.24
+    quote: You cannot downgrade a license after you register it for a cluster.
+- id: q66
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When you create an NKP cluster, what default license key does NKP assign?
+  options:
+  - id: a
+    text: Always Ultimate
+  - id: b
+    text: Always Starter
+  - id: c
+    text: Starter for AHV installations, or Pro for all other infrastructure providers
+  - id: d
+    text: No default; you must apply one before creation
+  correct: c
+  explanation: NKP assigns a default license key of Starter for AHV installations, or Pro for all other infrastructure providers.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.26
+    quote: The default key is either a Starter for AHV installations or a Pro for all other infrastructure providers.
+- id: q67
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For licenses purchased directly from D2iQ or Nutanix, where do you obtain the license token?
+  options:
+  - id: a
+    text: From the AWS Marketplace only
+  - id: b
+    text: From the Nutanix Support Portal (Generating NKP License Keys)
+  - id: c
+    text: It is emailed automatically
+  - id: d
+    text: From the NKP CLI offline
+  correct: b
+  explanation: For licenses purchased directly from D2iQ or Nutanix, you obtain the license token from the Nutanix Support Portal by generating NKP License Keys.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.26
+    quote: For licenses purchased directly from D2iQ or Nutanix, you can obtain the license token from the Nutanix Support Portal, see Generating NKP License Keys.
+- id: q68
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the NKP UI, what is the navigation path to add/activate a license?
+  options:
+  - id: a
+    text: Clusters > Settings > Add-ons
+  - id: b
+    text: Global workspace > Settings > Licensing
+  - id: c
+    text: Projects > Licensing
+  - id: d
+    text: Admin > Billing
+  correct: b
+  explanation: In the NKP UI, you add or activate a license via Global workspace > Settings > Licensing.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.27
+    quote: In the workspace header drop-down list, select Global. In the navigation menu, select Settings > Licensing.
+- id: q69
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Who is permitted to add or remove NKP licenses?
+  options:
+  - id: a
+    text: Any authenticated user
+  - id: b
+    text: Only NKP administrators
+  - id: c
+    text: Only Nutanix support
+  - id: d
+    text: Project members
+  correct: b
+  explanation: Only NKP administrators are permitted to add or remove NKP licenses.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.27
+    quote: You must be an administrator to add licenses to NKP. / Only NKP administrators can remove licenses.
+- id: q70
+  type: multiple_choice
+  difficulty: stretch
+  points: 10
+  prompt: For a cluster at a default license level versus one already using a non-default Nutanix license, which UI actions apply?
+  options:
+  - id: a
+    text: Both use Activate License
+  - id: b
+    text: Default level -> Activate License; non-default (e.g., Ultimate renewal or core-capacity increase) -> Update License
+  - id: c
+    text: Both use Update License
+  - id: d
+    text: Default -> Update; non-default -> Activate
+  correct: b
+  explanation: A cluster at a default license level uses Activate License, while one already using a non-default Nutanix license uses Update License (e.g., for renewal or capacity increase).
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.27
+    quote: Default License… you must select Activate License… Non-default Nutanix License… use the Update License option to apply a new license.
+- id: q71
+  type: multiple_choice
+  difficulty: stretch
+  points: 10
+  prompt: To remove a license via the CLI (kubectl), which objects must you delete?
+  options:
+  - id: a
+    text: Only the ConfigMap
+  - id: b
+    text: The Deployment and Service
+  - id: c
+    text: The Secret and License objects (e.g., in the kommander namespace)
+  - id: d
+    text: The Namespace
+  correct: c
+  explanation: To remove a license via kubectl, you delete the Secret and License objects (for example, in the kommander namespace).
+  source:
+    label: Removing an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-delete-nkp-license-t.html
+    page: p.30
+    quote: To remove a license from NKP using kubectl, you have to delete the Secret and License objects.
+- id: q72
+  type: multiple_choice
+  difficulty: stretch
+  points: 10
+  prompt: Applying a Pro or Ultimate license key installs which application, and which application installs only with an Ultimate key?
+  options:
+  - id: a
+    text: Prometheus installs with Pro/Ultimate; Traefik only with Ultimate
+  - id: b
+    text: AI Navigator installs with Pro/Ultimate; Centralized Grafana only with Ultimate
+  - id: c
+    text: Insights installs with Pro/Ultimate; OpenCost only with Ultimate
+  - id: d
+    text: Nothing extra installs automatically
+  correct: b
+  explanation: Applying a Pro or Ultimate license key installs AI Navigator, while Centralized Grafana installs only with an Ultimate key.
+  source:
+    label: Adding an NKP License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
+    page: p.27
+    quote: if you apply Pro or Ultimate license key, NKP installs the AI Navigator App… NKP installs Centralized Grafana only when you apply an Ultimate license key.

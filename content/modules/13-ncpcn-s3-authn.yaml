@@ -1,0 +1,681 @@
+id: ncpcn-s3-authn
+title: 3.1 Authentication & Authorization
+track: NCP-CN Section 3
+order: 31
+icon: badge
+summary: 'Configuring identity providers (GitHub/LDAP/SAML/OIDC) in NKP, scoping IdPs globally or per workspace and mapping external groups to Kommander groups, and distinguishing Kommander Roles from Cluster Roles. Covers custom roles and bindings, token-based authentication, environment-context scopes, and RBAC-based access control.
+
+  '
+questions:
+- id: q1
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which identity providers does NKP support?
+  options:
+  - id: a
+    text: Only local username/password
+  - id: b
+    text: GitHub, LDAP, SAML, and standard OIDC providers (e.g., Google)
+  - id: c
+    text: Only Active Directory
+  - id: d
+    text: Only OIDC
+  correct: b
+  explanation: NKP supports GitHub, LDAP, SAML, and standard OIDC identity providers (such as Google) for login/authentication.
+  source:
+    label: Security
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
+    page: p.299
+    quote: NKP supports GitHub Identity Provider Configuration… Adding an LDAP Connector… SAML, and standard OIDC identity providers such as Google.
+- id: q2
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How can identity providers be scoped in a multi-workspace environment?
+  options:
+  - id: a
+    text: Only one global IdP is allowed
+  - id: b
+    text: A single IdP for all workspaces, or a dedicated IdP per workspace (useful for multi-tenancy)
+  - id: c
+    text: One IdP per user
+  - id: d
+    text: IdPs cannot be scoped
+  correct: b
+  explanation: You can use a single IdP for all workspaces or configure a dedicated IdP per workspace, useful for multi-tenancy.
+  source:
+    label: Security
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
+    page: p.299
+    quote: you can use a single identity provider to manage access for all of them or choose to configure an identity provider per workspace… particularly helpful if you have multiple tenants.
+- id: q3
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which access limitation is correct per provider?
+  options:
+  - id: a
+    text: OIDC can limit users by identity
+  - id: b
+    text: GitHub limits by organizations/teams; LDAP configures user/group search filters; OIDC cannot limit by identity; SAML enables SSO
+  - id: c
+    text: SAML cannot do SSO
+  - id: d
+    text: LDAP has no filters
+  correct: b
+  explanation: GitHub limits by orgs/teams; LDAP configures user/group search filters; OIDC cannot limit by identity; SAML enables SSO.
+  source:
+    label: External LDAP Directory Configurations
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-external-ldap-directory-config-c.html
+    page: p.300
+    quote: The GitHub provider allows you to specify any organizations and teams… The LDAP provider allows you to configure search filters… The OIDC provider cannot limit users based on identity… The SAML provider allows users to log in using a single sign-on (SSO).
+- id: q4
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When mapping an external group to a Kommander group, what prefix is applied to external group names?
+  options:
+  - id: a
+    text: 'group:'
+  - id: b
+    text: 'oidc: (e.g., oidc:engineering) — prevents collision with locally defined groups'
+  - id: c
+    text: 'ext:'
+  - id: d
+    text: 'ad:'
+  correct: b
+  explanation: 'External group names are prefixed with oidc: (e.g., oidc:engineering) to prevent collision with locally defined groups.'
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.292
+    quote: all external groups are prefixed with oidc:, so a group name is oidc:devops. This prevents collision with locally defined groups.
+- id: q5
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For an IdP configured for a Specific Workspace, what is the group subjects.name format?
+  options:
+  - id: a
+    text: oidc:<IdP_user_group>
+  - id: b
+    text: oidc:<workspace_ID>:<IdP_user_group> (e.g., oidc:tenant-z:engineering)
+  - id: c
+    text: <user_email>
+  - id: d
+    text: <workspace_ID>
+  correct: b
+  explanation: For a workspace-scoped IdP, group subjects use oidc:<workspace_ID>:<IdP_user_group> (e.g., oidc:tenant-z:engineering).
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.289
+    quote: 'If you have set up an identity provider for a Specific Workspace: For groups: configure the subjects.name field to oidc:<workspace_ID>:<IdP_user_group>. For example, oidc:tenant-z:engineering.'
+- id: q6
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where in the UI do you configure access-control groups?
+  options:
+  - id: a
+    text: Cluster settings
+  - id: b
+    text: The Groups tab of the Identity Providers page (global workspace > Administration > Identity Providers)
+  - id: c
+    text: The Projects page
+  - id: d
+    text: The License page
+  correct: b
+  explanation: Access-control groups are configured in the Groups tab of the Identity Providers page (global workspace > Administration > Identity Providers).
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.289
+    quote: Access control groups are configured in the Groups tab of the Identity Providers page… select administration or identity providers in the left sidebar in the global workspace level, and then select the Groups tab.
+- id: q7
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the difference between Kommander Roles and Cluster Roles in NKP?
+  options:
+  - id: a
+    text: They are identical
+  - id: b
+    text: Kommander Roles control access to resources on the management cluster; Cluster Roles control access to resources on all target clusters
+  - id: c
+    text: Kommander Roles are for storage only
+  - id: d
+    text: Cluster Roles apply only to the management cluster
+  correct: b
+  explanation: Kommander Roles control access to resources on the management cluster; Cluster Roles control access to resources on all target clusters.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.287
+    quote: 'Kommander Roles: control access to resources on the management clusters. Cluster Roles: control access to resources on all target clusters.'
+- id: q8
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: At the Global scope, what do Kommander Roles and Cluster Roles do respectively?
+  options:
+  - id: a
+    text: Nothing / everything
+  - id: b
+    text: Kommander Roles create ClusterRoles on the management cluster; Cluster Roles federate ClusterRoles on all target clusters across all workspaces
+  - id: c
+    text: Both create namespaced Roles
+  - id: d
+    text: Both apply only to one workspace
+  correct: b
+  explanation: 'Global scope: Kommander Roles create ClusterRoles on the management cluster; Cluster Roles federate ClusterRoles on all target clusters across all workspaces.'
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.287
+    quote: 'Global… Kommander Roles: Create ClusterRoles on the management cluster. Cluster Roles: Federates ClusterRoles on all target clusters across all workspaces.'
+- id: q9
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: At the Workspace scope, where do Kommander Roles create their Roles?
+  options:
+  - id: a
+    text: On every target cluster
+  - id: b
+    text: Namespaced Roles on the management cluster in the workspace namespace
+  - id: c
+    text: In kube-system
+  - id: d
+    text: They are not created
+  correct: b
+  explanation: At the Workspace scope, Kommander Roles create namespaced Roles on the management cluster in the workspace namespace.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.287
+    quote: 'Workspace… Kommander Roles: Create namespaced Roles on the management cluster in the workspace namespace.'
+- id: q10
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does the cluster-admin role grant?
+  options:
+  - id: a
+    text: Read-only access
+  - id: b
+    text: Permission to all actions (verbs) on any resource, including non-resource URLs; the default dashboard user is bound to it
+  - id: c
+    text: Access to one namespace
+  - id: d
+    text: No access
+  correct: b
+  explanation: cluster-admin is a system role granting permission to all actions on any resource, including non-resource URLs; the default dashboard user is bound to it.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.292
+    quote: The cluster-admin role is a system role that grants permission to all actions (verbs) on any resource, including non-resource URLs. The default dashboard user is bound to this role.
+- id: q11
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: With the NKP Starter license, which cluster roles can you select?
+  options:
+  - id: a
+    text: All default roles
+  - id: b
+    text: Only cluster-admin or cluster view (default roles are not available with Starter)
+  - id: c
+    text: Only dkp-admin
+  - id: d
+    text: None
+  correct: b
+  explanation: With NKP Starter you can only select cluster-admin or cluster view; the default roles are not available with Starter.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.292
+    quote: 'With the NKP Starter license, you can only select the following cluster roles: cluster-admin or cluster view… The default roles are not available with the NKP Starter license.'
+- id: q12
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which built-in NKP role grants read/write/delete access to the Kommander routes at /dkp/*?
+  options:
+  - id: a
+    text: dkp-view
+  - id: b
+    text: dkp-admin
+  - id: c
+    text: dkp-kommander-view
+  - id: d
+    text: cluster view
+  correct: b
+  explanation: dkp-admin grants read/write/delete on the Kommander routes at /dkp/* (dkp-view=read, dkp-edit=read/write).
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.293
+    quote: kommander dkp-admin /dkp/* read, write, delete.
+- id: q13
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you create a custom role in the NKP UI?
+  options:
+  - id: a
+    text: Edit a YAML file only
+  - id: b
+    text: Administration > Access Control > Cluster Roles tab > + Create Role, then Add Rule with resources and verbs
+  - id: c
+    text: Via the License page
+  - id: d
+    text: It is not supported
+  correct: b
+  explanation: Create a custom role via Administration > Access Control > Cluster Roles tab > + Create Role, then Add Rule selecting resources and verbs.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.296
+    quote: In the Administration section… select Access Control. Select the Cluster Roles tab, and then select + Create Role… select Add Rule… select the get, list, and watch options.
+- id: q14
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: To make a read-only custom role, which verbs do you select?
+  options:
+  - id: a
+    text: create, update, delete
+  - id: b
+    text: get, list, and watch
+  - id: c
+    text: patch, replace
+  - id: d
+    text: all verbs
+  correct: b
+  explanation: For a read-only role, select the get, list, and watch verbs.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.296
+    quote: to configure a read-only role, select Add Rule… Select the get, list, and watch options.
+- id: q15
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is a Role/ClusterRole in Kubernetes RBAC terms?
+  options:
+  - id: a
+    text: A user account
+  - id: b
+    text: A named collection of rules defining which verbs can be applied to what resources
+  - id: c
+    text: A network policy
+  - id: d
+    text: A storage class
+  correct: b
+  explanation: A ClusterRole/Role is a named collection of rules defining which verbs can be applied to what resources.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.289
+    quote: ClusterRoles are named collections of rules defining which verbs can be applied to what resources.
+- id: q16
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does a Role Binding do?
+  options:
+  - id: a
+    text: Creates a namespace
+  - id: b
+    text: Binds a Kommander group (or user) to one or more roles
+  - id: c
+    text: Deletes a cluster
+  - id: d
+    text: Installs an application
+  correct: b
+  explanation: Role bindings (Kommander, cluster, and project role bindings) bind a Kommander group to any number of roles.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.289
+    quote: Kommander role bindings, cluster role bindings, and project role bindings bind a Kommander group to any number of roles.
+- id: q17
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When binding an external IdP group to a role in a RoleBinding/ClusterRoleBinding, how is the subject specified?
+  options:
+  - id: a
+    text: 'kind: User with the group name'
+  - id: b
+    text: 'kind: Group with name: oidc:<group> (e.g., oidc:engineering)'
+  - id: c
+    text: 'kind: ServiceAccount'
+  - id: d
+    text: 'kind: Namespace'
+  correct: b
+  explanation: 'Specify the subject as kind: Group with name: oidc:<group> (e.g., oidc:engineering).'
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.292
+    quote: 'subjects: - apiGroup: rbac.authorization.k8s.io kind: Group name: oidc:engineering'
+- id: q18
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: To grant a Kommander Role to an external group, what else must you grant so they can enter the UI?
+  options:
+  - id: a
+    text: Nothing else
+  - id: b
+    text: The appropriate built-in NKP role (e.g., a ClusterRoleBinding to dkp-admin / dkp-kommander-admin) in addition to the Kommander Role
+  - id: c
+    text: A license key
+  - id: d
+    text: A node label
+  correct: b
+  explanation: In addition to the Kommander Role, you must grant the appropriate built-in NKP role (e.g., a ClusterRoleBinding to dkp-admin) so external users/groups can enter the UI.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.287
+    quote: In addition to granting a Kommander Role, you must also grant the appropriate NKP role to allow external users and groups into the UI.
+- id: q19
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Why do users added through an identity provider need to generate a token?
+  options:
+  - id: a
+    text: IdP users have no static credentials, so they generate a token to access the kubectl API (ensuring certificates are rotated continuously)
+  - id: b
+    text: Tokens are only for admins
+  - id: c
+    text: To bypass RBAC
+  - id: d
+    text: Tokens are not needed
+  correct: a
+  explanation: IdP users have no static credentials, so they must generate a token to access the kubectl API; this ensures certificates are rotated continuously for security.
+  source:
+    label: Security
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
+    page: p.307
+    quote: Users added through an identity provider do not have static credentials, but have to generate a token to gain access to your environment's kubectl API. This token ensures that certificates are rotated continuously…
+- id: q20
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: With the manual 'Generating a token' method, how often must the user generate a fresh token/kubeconfig?
+  options:
+  - id: a
+    text: Once, permanently
+  - id: b
+    text: Every 24 hours
+  - id: c
+    text: Every 7 days
+  - id: d
+    text: Every hour
+  correct: b
+  explanation: With the manual method, the user must log in and generate a fresh kubeconfig/token every 24 hours.
+  source:
+    label: Security
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
+    page: p.307
+    quote: Generating a token — User must log in with credentials and manually generate a kubeconfig file with a fresh token every 24 hours.
+- id: q21
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the alternative to manually generating a token every 24 hours?
+  options:
+  - id: a
+    text: Disable RBAC
+  - id: b
+    text: Enable the Konvoy Async Plugin, which routes authentication through Dex's OIDC and generates the token automatically
+  - id: c
+    text: Use a static password
+  - id: d
+    text: Share an admin token
+  correct: b
+  explanation: Enable the Konvoy Async Plugin — authentication routes through Dex's OIDC and the token is generated automatically (no manual token generation).
+  source:
+    label: Security
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
+    page: p.307
+    quote: Enabling the Konvoy Async Plugin — User configures the Konvoy Async Plugin so the authentication is routed through Dex's oidc and the token is generated automatically.
+- id: q22
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the default client access-token lifetime, and can it be changed?
+  options:
+  - id: a
+    text: 1 hour, fixed
+  - id: b
+    text: 24 hours by default; it can be extended (e.g., to 48h) via the dex app config (idTokens expiry)
+  - id: c
+    text: 7 days, fixed
+  - id: d
+    text: Unlimited
+  correct: b
+  explanation: The default client access-token lifetime is 24 hours; it can be extended (e.g., to 48h) via the dex app config idTokens expiry.
+  source:
+    label: Security
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
+    page: p.617
+    quote: 'By default, the client access token lifetime is 24 hours… example configuration for extending the token lifetime to 48 hours… apps: dex: values: config: expiry: idTokens: "48h".'
+- id: q23
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you create a long-lived service-account token for cluster-admin automation?
+  options:
+  - id: a
+    text: Use a user password
+  - id: b
+    text: Create a serviceaccount and a Secret of type kubernetes.io/service-account-token annotated to that SA (e.g., kommander-cluster-admin-sa-token)
+  - id: c
+    text: Copy the kubeconfig
+  - id: d
+    text: Disable authentication
+  correct: b
+  explanation: Create a serviceaccount and a Secret of type kubernetes.io/service-account-token annotated to that SA (e.g., kommander-cluster-admin-sa-token) for a long-lived token.
+  source:
+    label: Security
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
+    page: p.187
+    quote: 'Create a token secret for the serviceaccount… kind: Secret… annotations: kubernetes.io/service-account.name: kommander-cluster-admin … type: kubernetes.io/service-account-token'
+- id: q24
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the three levels of scope (environment contexts) for managing access?
+  options:
+  - id: a
+    text: Cluster, Node, Pod
+  - id: b
+    text: Global, Workspace, and Project
+  - id: c
+    text: Admin, Edit, View
+  - id: d
+    text: Dev, Test, Prod
+  correct: b
+  explanation: The three scopes (environment contexts) are Global, Workspace, and Project.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.287
+    quote: 'Global : Manages access to the entire environment… Workspace: … Project: …'
+- id: q25
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which Kommander roles are automatically propagated from a workspace to projects in that workspace?
+  options:
+  - id: a
+    text: None
+  - id: b
+    text: The Workspace Admin, Edit, and View roles propagate to the equivalent Project Admin/Edit/View roles; other workspace roles are not auto-propagated
+  - id: c
+    text: All roles
+  - id: d
+    text: Only the admin role
+  correct: b
+  explanation: Workspace Admin/Edit/View roles auto-propagate to the equivalent Project Admin/Edit/View roles; other workspace roles are not automatically propagated.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.289
+    quote: By default, users are granted the Kommander Workspace Admin, Edit, or View roles. You are also granted the equivalent Kommander Project Admin, Edit, or View role… Other workspace roles are not automatically propagated…
+- id: q26
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which annotation controls automatic propagation of a KommanderWorkspaceRole to projects?
+  options:
+  - id: a
+    text: sync=true
+  - id: b
+    text: 'workspace.kommander.mesosphere.io/sync-to-project: "true"'
+  - id: c
+    text: 'propagate: yes'
+  - id: d
+    text: 'inherit: project'
+  correct: b
+  explanation: 'Propagation is controlled by the annotation workspace.kommander.mesosphere.io/sync-to-project: "true" on a KommanderWorkspaceRole (managed via CLI).'
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.289
+    quote: 'Automatic propagation is controlled using the annotation "workspace.kommander.mesosphere.io/sync-to-project": "true" on a KommanderWorkspaceRole resource.'
+- id: q27
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When you grant a user access to a workspace, what must you do for projects in that workspace?
+  options:
+  - id: a
+    text: Nothing — access is inherited automatically for all roles
+  - id: b
+    text: Manually grant access to the projects (add a RoleBinding to a kommander-project-(admin/edit/view) role per group/user)
+  - id: c
+    text: Recreate the workspace
+  - id: d
+    text: Delete the project
+  correct: b
+  explanation: You must manually grant access to the projects — add a RoleBinding to a kommander-project-(admin/edit/view) role for each workspace group/user.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.290
+    quote: when granting users access to a workspace, you must manually grant access to the projects within that workspace… add RoleBinding… prefixed with one of the roles kommander-project-(admin/edit/view).
+- id: q28
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you find the workspace_ID needed to build workspace-scoped subject names?
+  options:
+  - id: a
+    text: It is random and unknowable
+  - id: b
+    text: Run kubectl get workspaces — the workspace_ID is under the NAME column
+  - id: c
+    text: Check the license
+  - id: d
+    text: Read the node labels
+  correct: b
+  explanation: Run kubectl get workspaces — the workspace_ID is listed under the NAME column.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.289
+    quote: Run kubectl get workspaces to obtain a list of all existing workspaces. The workspace_ID is listed under the NAME column.
+- id: q29
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How is authorization for the NKP UI and Kommander-protected HTTP apps enforced?
+  options:
+  - id: a
+    text: By a custom firewall
+  - id: b
+    text: By the Kubernetes RBAC API — rules can also map to HTTP URIs/verbs via nonResourceURLs used by Kommander forward-auth
+  - id: c
+    text: By the identity provider only
+  - id: d
+    text: There is no authorization
+  correct: b
+  explanation: The NKP UI and Kommander forward-auth-protected apps are authorized by the Kubernetes RBAC API; rules can also map to HTTP URIs/verbs via nonResourceURLs.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.292
+    quote: The NKP UI and other HTTP applications protected by Kommander forward authentication, are also authorized by the Kubernetes RBAC API… define rules which map to HTTP URIs and HTTP verbs… nonResourceURLs.
+- id: q30
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Access to the Kubernetes dashboard at /dkp/kubernetes/ requires what?
+  options:
+  - id: a
+    text: No role
+  - id: b
+    text: A dkp role granting access to that URL path (e.g., dkp-kubernetes-dashboard-view/edit/admin); underlying resources are still protected by cluster RBAC
+  - id: c
+    text: cluster-admin only
+  - id: d
+    text: A license
+  correct: b
+  explanation: Access to /dkp/kubernetes/ requires a dkp role granting that URL path (e.g., dkp-kubernetes-dashboard-view/edit/admin); underlying resources remain protected by cluster RBAC.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.296
+    quote: Access to the Kubernetes dashboard at the /dkp/kubernetes/ URL requires an dkp role… NKP provides several pre-defined ClusterRoles… dkp-kubernetes-dashboard-view, dkp-kubernetes-dashboard-edit, and dkp-kubernetes-dashboard-admin.
+- id: q31
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do NKP access-control resources differ from plain Kubernetes RBAC?
+  options:
+  - id: a
+    text: They are unrelated
+  - id: b
+    text: They are similar to Kubernetes RBAC but let you define roles/bindings once and federate them to clusters within a given scope
+  - id: c
+    text: They replace RBAC entirely
+  - id: d
+    text: They only work on one cluster
+  correct: b
+  explanation: NKP access-control resources are similar to Kubernetes RBAC but let you define roles and bindings once and federate them to clusters within a given scope.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.287
+    quote: These resources are similar to Kubernetes RBAC but with crucial differences… make it possible to define the roles and role bindings once and federate them to clusters within a given scope.
+- id: q32
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Granting a user admin privileges on /dkp/* has what effect on sub-resources?
+  options:
+  - id: a
+    text: No effect on sub-resources
+  - id: b
+    text: It grants admin privileges to all sub-resources, even if bindings exist for sub-resources with fewer privileges
+  - id: c
+    text: It restricts sub-resources
+  - id: d
+    text: It only affects /dkp/kommander/
+  correct: b
+  explanation: Granting admin on /dkp/* grants admin to all sub-resources, even if bindings exist for sub-resources with fewer privileges.
+  source:
+    label: Access Control
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.292
+    quote: Granting user administrator privileges on /dkp/* grants admin privileges to all sub-resources, even if the bindings exist for sub-resources with fewer privileges.

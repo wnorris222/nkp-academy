@@ -1,0 +1,641 @@
+id: ncpcn-s1-cluster-info
+title: 1.6 Gather Cluster Build Information
+track: NCP-CN Section 1
+order: 16
+icon: star
+summary: 'Objective 1.6 covers the information you must gather before building an NKP cluster on a target provider: networking requirements (control-plane endpoint and port, default Pod/Service subnets and their non-overlap rules), connectivity details for Prism Central (endpoint, port, credentials), storage requirements (Nutanix CSI, raw storage, local-volume mounts), node sizing per license tier, supported operating systems and CPU architecture, and provider-specific parameters for pre-provisioned, Nutanix, AKS, and Azure deployments.
+
+  '
+questions:
+- id: q125
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the default control-plane endpoint port if not otherwise specified?
+  options:
+  - id: a
+    text: '443'
+  - id: b
+    text: '9440'
+  - id: c
+    text: '6443'
+  - id: d
+    text: '8443'
+  correct: c
+  explanation: The control-plane endpoint port defaults to 6443 unless a different port is specified.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.80
+    quote: --control-plane-endpoint-port <control plane endpoint port, if different than 6443>
+- id: q126
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the default Pod subnet CIDR used by NKP?
+  options:
+  - id: a
+    text: 10.96.0.0/12
+  - id: b
+    text: 192.168.0.0/16
+  - id: c
+    text: 172.16.0.0/16
+  - id: d
+    text: 10.0.0.0/12
+  correct: b
+  explanation: The default Pod subnet in NKP is 192.168.0.0/16.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.702
+    quote: 'The default subnets used in NKP are: … pods: cidrBlocks: - 192.168.0.0/16 … services: cidrBlocks: - 10.96.0.0/12'
+- id: q127
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the default Service subnet CIDR used by NKP?
+  options:
+  - id: a
+    text: 10.96.0.0/12
+  - id: b
+    text: 192.168.0.0/16
+  - id: c
+    text: 172.16.0.0/16
+  - id: d
+    text: 10.244.0.0/16
+  correct: a
+  explanation: The default Service subnet in NKP is 10.96.0.0/12.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.702
+    quote: 'services: cidrBlocks: - 10.96.0.0/12'
+- id: q128
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the rule regarding the Pod and Service subnets relative to node subnets?
+  options:
+  - id: a
+    text: They must exactly match the node subnet
+  - id: b
+    text: They must not overlap with subnets used by cluster Nodes (nor with LoadBalancer virtual-IP subnets)
+  - id: c
+    text: They must be public IPs
+  - id: d
+    text: They are irrelevant
+  correct: b
+  explanation: Pod and Service subnets must not overlap with subnets used by cluster Nodes; where virtual IPs are allocated for LoadBalancer Services, they must not overlap those either.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.701
+    quote: These subnets must not overlap with subnets used by cluster Nodes… the Pods and Services subnets must not overlap with the virtual IP subnets.
+- id: q129
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: If the default Pod or Service subnets overlap with node subnets, when must you change them?
+  options:
+  - id: a
+    text: Any time after deployment
+  - id: b
+    text: At cluster creation
+  - id: c
+    text: Only during upgrade
+  - id: d
+    text: They cannot be changed
+  correct: b
+  explanation: If the defaults overlap with node subnets, you must change the Pods or Services subnets at cluster creation.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.701
+    quote: If the default Pods or Services subnets overlap with any subnets used by cluster Nodes, you must change the Pods or Services subnets. You must do this at cluster creation.
+- id: q130
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For an on-prem / pre-provisioned control-plane endpoint, what are the two options?
+  options:
+  - id: a
+    text: NodePort or Ingress
+  - id: b
+    text: An external load balancer, or a virtual IP (kube-vip) via --virtual-ip-interface
+  - id: c
+    text: Only a public IP
+  - id: d
+    text: DNS round-robin only
+  correct: b
+  explanation: On-prem/pre-provisioned control-plane endpoints use either an external load balancer or a virtual IP provided by kube-vip (--virtual-ip-interface).
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.80
+    quote: This command uses the default external load balancer (LB) option (see alternative Step 1 for virtual IP)… ALTERNATIVE Virtual IP - if you don't have an external LB… use a VIRTUAL IP provided by kube-vip
+- id: q131
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: On Nutanix, which flags define the control-plane and worker subnets?
+  options:
+  - id: a
+    text: --cp-net / --worker-net
+  - id: b
+    text: --control-plane-subnets and --worker-subnets
+  - id: c
+    text: --subnet-a / --subnet-b
+  - id: d
+    text: --network
+  correct: b
+  explanation: On Nutanix, --control-plane-subnets and --worker-subnets define the control-plane and worker node subnets.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.20
+    quote: --control-plane-subnets=${NUTANIX_SUBNET} … --worker-subnets=${NUTANIX_SUBNET}
+- id: q132
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: On Nutanix, which flag sets the LoadBalancer IP range for Kubernetes services?
+  options:
+  - id: a
+    text: --lb-range
+  - id: b
+    text: --kubernetes-service-load-balancer-ip-range
+  - id: c
+    text: --metallb-range
+  - id: d
+    text: --service-cidr
+  correct: b
+  explanation: On Nutanix, --kubernetes-service-load-balancer-ip-range sets the LoadBalancer IP range for services.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.20
+    quote: --kubernetes-service-load-balancer-ip-range="${LOAD_BALANCER_IP_RANGE}"
+- id: q133
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the default Prism Central port?
+  options:
+  - id: a
+    text: '6443'
+  - id: b
+    text: '443'
+  - id: c
+    text: '9440'
+  - id: d
+    text: '8443'
+  correct: c
+  explanation: The default Prism Central port is 9440.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.56
+    quote: Replace Prism Central port with the custom port number for Prism Central. The default value is 9440.
+- id: q134
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which variable/flag provides the Prism Central endpoint URL?
+  options:
+  - id: a
+    text: NUTANIX_ENDPOINT (--endpoint)
+  - id: b
+    text: PC_HOST
+  - id: c
+    text: PRISM_URL
+  - id: d
+    text: CLUSTER_ENDPOINT
+  correct: a
+  explanation: NUTANIX_ENDPOINT (the --endpoint flag) provides the Prism Central endpoint URL; the NKP CLI uses the Prism Central API hosted there.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.56
+    quote: export NUTANIX_ENDPOINT=URL of Prism Central Endpoint… The NKP CLI uses the Prism Central API to create the OS image, and this API is hosted at the Prism Central endpoint.
+- id: q135
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which credentials are used to connect to Prism Central?
+  options:
+  - id: a
+    text: AWS_ACCESS_KEY / SECRET
+  - id: b
+    text: NUTANIX_USER(NAME) and NUTANIX_PASSWORD
+  - id: c
+    text: SSH_USER / SSH_KEY
+  - id: d
+    text: kubeadmin token
+  correct: b
+  explanation: Connect to Prism Central with NUTANIX_USER(NAME) and NUTANIX_PASSWORD.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.56
+    quote: 'Provide the Prism Central credentials: export NUTANIX_USER=Prism Central Username … export NUTANIX_PASSWORD=Prism Central Password'
+- id: q136
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What Prism Central account requirement applies when building a Nutanix cluster?
+  options:
+  - id: a
+    text: Any read-only account
+  - id: b
+    text: A Prism Central account with the required roles and permissions
+  - id: c
+    text: A local Linux account
+  - id: d
+    text: No account is needed
+  correct: b
+  explanation: You need a Nutanix Prism Central account with the required roles and permissions.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.48
+    quote: A Nutanix Prism Central account credentials with the required roles and permissions.
+- id: q137
+  type: multiple_choice
+  difficulty: advanced
+  points: 15
+  prompt: What are the operator/host requirements for building a cluster? (Select all that apply)
+  options:
+  - id: a
+    text: x86_64-based Linux or macOS (cgroups v2 enabled on Linux)
+  - id: b
+    text: Docker 27.4.0 or Podman 4.0+ container runtime
+  - id: c
+    text: A container registry to store/manage images
+  - id: d
+    text: A Windows Server host
+  correct:
+  - a
+  - b
+  - c
+  explanation: The host must be x86_64 Linux/macOS (cgroups v2 on Linux), have Docker 27.4.0 or Podman 4.0+, and have a container registry to store/manage images.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.47
+    quote: Your host must be a x86_64-based Linux or macOS machine… cgroups v2 is required… A Docker or Podman container runtime is required… Your environment must include a container registry…
+- id: q138
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In a pre-provisioned environment, how does NKP learn how to reach your cluster hosts?
+  options:
+  - id: a
+    text: Cloud provider API
+  - id: b
+    text: Through inventory resources (PreprovisionedInventory) that define a control plane and at least one worker pool
+  - id: c
+    text: DHCP discovery
+  - id: d
+    text: Manual kubectl join
+  correct: b
+  explanation: In pre-provisioned environments, inventory resources (PreprovisionedInventory) define a control plane and at least one worker pool so NKP knows how to access the hosts.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.76
+    quote: you must define the cluster hosts and infrastructure using the inventory resources. For the initial cluster creation, define a control plane and at least one worker pool.
+- id: q139
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is required of the SSH user for pre-provisioned hosts?
+  options:
+  - id: a
+    text: Must be a non-privileged user
+  - id: b
+    text: Must be root, or able to use sudo without a password (sshConfig port defaults to 22)
+  - id: c
+    text: Must use password auth only
+  - id: d
+    text: Must be the 'nutanix' user
+  correct: b
+  explanation: The SSH user must be root or able to use sudo without a password; the inventory sshConfig port defaults to 22.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.77
+    quote: 'This user must be root or have the ability to use sudo without a password… sshConfig: port: 22'
+- id: q140
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which variables provide the SSH user and private-key secret for the inventory?
+  options:
+  - id: a
+    text: SSH_LOGIN / SSH_CERT
+  - id: b
+    text: SSH_USER and SSH_PRIVATE_KEY_SECRET_NAME
+  - id: c
+    text: USER / KEYFILE
+  - id: d
+    text: ANSIBLE_USER / ANSIBLE_KEY
+  correct: b
+  explanation: SSH_USER and SSH_PRIVATE_KEY_SECRET_NAME provide the SSH user and the private-key secret referenced by the inventory.
+  source:
+    label: 'Pre-provisioned: Defining the Infrastructure'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
+    page: p.76
+    quote: export SSH_USER=<ssh-user> … export SSH_PRIVATE_KEY_SECRET_NAME="$CLUSTER_NAME-ssh-key"
+- id: q141
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the default storage provider used by NKP?
+  options:
+  - id: a
+    text: Longhorn
+  - id: b
+    text: The Nutanix Container Storage Interface (CSI) Volume Driver 3.0
+  - id: c
+    text: Local-path provisioner
+  - id: d
+    text: AWS EBS CSI
+  correct: b
+  explanation: NKP uses the Nutanix CSI Volume Driver 3.0 as the default storage provider.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.48
+    quote: NKP uses the Nutanix Container Storage Interface (CSI) Volume Driver 3.0 as the default storage provider.
+- id: q142
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How much raw storage must you add to each worker node?
+  options:
+  - id: a
+    text: At least 20 GB
+  - id: b
+    text: At least 40 GB of raw storage
+  - id: c
+    text: At least 100 GB
+  - id: d
+    text: None required
+  correct: b
+  explanation: Add at least 40 GB of raw storage to each of your cluster worker nodes.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.52
+    quote: Ensure that you add at least 40 GB of raw storage to each of your cluster worker nodes.
+- id: q143
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For local volume provisioning (persistent volumes), what must you mount on each machine?
+  options:
+  - id: a
+    text: One volume of 40 GiB
+  - id: b
+    text: At least four volumes to /mnt/disks/, each with at least 100 GiB of capacity
+  - id: c
+    text: A single 80 GiB volume
+  - id: d
+    text: NFS shares only
+  correct: b
+  explanation: For local volume provisioning you must mount at least four volumes to /mnt/disks/ on each machine, each with at least 100 GiB of capacity.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.75
+    quote: you must mount at least four volumes to the /mnt/disks/ mount point on each machine. Each volume must have at least 100 GiB of capacity.
+- id: q144
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What storage does the Nutanix CSI driver use?
+  options:
+  - id: a
+    text: Local disk only
+  - id: b
+    text: The storage container associated with the Prism Central cluster
+  - id: c
+    text: An external NFS server
+  - id: d
+    text: S3 object storage
+  correct: b
+  explanation: The Nutanix CSI driver uses the storage container associated with the Prism Central cluster.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.718
+    quote: The Nutanix CSI driver uses the storage container associated with the Prism Central cluster.
+- id: q145
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: For Rook Ceph in Block mode, your disks must meet the resource requirements specified in the requirements table.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'true'
+  explanation: For Rook Ceph in Block mode, your disk must meet the resource requirements specified in the requirements table.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.75
+    quote: Ensure your disk meets the resource requirements for Rook Ceph in Block mode for ObjectStorageDaemons as specified in the requirements table.
+- id: q146
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: On the root/OS filesystem, what disk-usage threshold must nodes stay under?
+  options:
+  - id: a
+    text: Below 50%
+  - id: b
+    text: Below 70%
+  - id: c
+    text: Below 85%
+  - id: d
+    text: Below 95%
+  correct: c
+  explanation: Node root-volume disk usage must remain below 85%.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.719
+    quote: Root volume — Disk usage must be below 85%.
+- id: q147
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For production deployments, what is the minimum node count?
+  options:
+  - id: a
+    text: 1 control plane and 1 worker
+  - id: b
+    text: At least 3 control plane nodes and a minimum of 4 worker nodes
+  - id: c
+    text: 3 control plane and 2 workers
+  - id: d
+    text: 5 control plane and 5 workers
+  correct: b
+  explanation: Production deployments need at least three control plane nodes and a minimum of four worker nodes.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.718
+    quote: For production deployments, you need at least three control plane nodes and a minimum of four worker nodes.
+- id: q148
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For Pro and Ultimate clusters, what is the recommended control-plane node sizing (vCPU / memory)?
+  options:
+  - id: a
+    text: 2 vCPU / 8 GiB
+  - id: b
+    text: 4 vCPU / 16 GiB
+  - id: c
+    text: 8 vCPU / 32 GiB
+  - id: d
+    text: 4 vCPU / 8 GiB
+  correct: b
+  explanation: Pro/Ultimate clusters recommend control-plane nodes at 4 vCPU and 16 GiB memory.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.720
+    quote: 'Table 67: General Resource Requirements for Pro and Ultimate Clusters — Control Plane Node: vCPU count 4, Memory 16 GiB.'
+- id: q149
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For Pro and Ultimate clusters, what is the recommended worker node sizing (vCPU / memory)?
+  options:
+  - id: a
+    text: 4 vCPU / 16 GiB
+  - id: b
+    text: 8 vCPU / 32 GiB
+  - id: c
+    text: 2 vCPU / 8 GiB
+  - id: d
+    text: 8 vCPU / 16 GiB
+  correct: b
+  explanation: Pro/Ultimate clusters recommend worker nodes at 8 vCPU and 32 GiB memory.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.720
+    quote: 'Table 67 — Worker Node: vCPU count 8, Memory 32 GiB.'
+- id: q150
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For a Starter management cluster, what are the control-plane and worker node minimums (vCPU/memory)?
+  options:
+  - id: a
+    text: CP 2 vCPU / 8 GiB, Worker 4 vCPU / 8 GiB (3 control plane, 2 workers)
+  - id: b
+    text: CP 4 vCPU / 16 GiB, Worker 8 vCPU / 32 GiB
+  - id: c
+    text: CP 1 vCPU / 4 GiB, Worker 2 vCPU / 4 GiB
+  - id: d
+    text: CP 8 vCPU / 32 GiB, Worker 8 vCPU / 32 GiB
+  correct: a
+  explanation: A Starter management cluster minimum is 3 control-plane nodes (2 vCPU / 8 GiB) and 2 worker nodes (4 vCPU / 8 GiB).
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.719
+    quote: 'Table 65: Resource Requirements for Management Cluster — Control Plane: 3 nodes, 2 vCPU, 8 GiB; Worker: 2 nodes, 4 vCPU, 8 GiB.'
+- id: q151
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which CPU architecture is supported by NKP?
+  options:
+  - id: a
+    text: Arm/aarch64 only
+  - id: b
+    text: Only x86/amd64 (Arm-based systems are not supported)
+  - id: c
+    text: Both x86 and Arm
+  - id: d
+    text: PowerPC
+  correct: b
+  explanation: Only x86/amd64 architectures are supported; Arm-based systems are not supported.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.12
+    quote: Arm-based systems are not supported. Only x86/amd64 architectures are supported.
+- id: q152
+  type: multiple_choice
+  difficulty: advanced
+  points: 15
+  prompt: Which operating systems are supported on Nutanix infrastructure? (Select all that apply)
+  options:
+  - id: a
+    text: Rocky Linux 9.6
+  - id: b
+    text: Ubuntu 22.04 and Ubuntu 24.04
+  - id: c
+    text: RHEL 8.10 and RHEL 9.6
+  - id: d
+    text: Windows Server 2022
+  correct:
+  - a
+  - b
+  - c
+  explanation: On Nutanix infrastructure, supported OSes include Rocky Linux 9.6, Ubuntu 22.04, Ubuntu 24.04, RHEL 8.10, and RHEL 9.6. Windows is not supported.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.12
+    quote: 'Table 2 (Nutanix): Rocky Linux 9.6, Ubuntu 22.04, Ubuntu 24.04, RHEL 8.10, RHEL 9.6.'
+- id: q153
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What do the AKS Installation Options provide?
+  options:
+  - id: a
+    text: A way to build custom AKS images
+  - id: b
+    text: Environment-variable-based installation options to deploy on Azure Kubernetes Service (AKS) for common scenarios
+  - id: c
+    text: A bastion host template
+  - id: d
+    text: A license key generator
+  correct: b
+  explanation: AKS Installation Options provide environment-variable-based install options to get you operative on Azure Kubernetes Service for common scenarios.
+  source:
+    label: AKS Installation Options
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-aks-install-options-c.html
+    page: p.262
+    quote: For an environment that is on the Azure Kubernetes Service (AKS) Infrastructure, installation options based on those environment variables are provided for you…
+- id: q154
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: By default, what VM and volumes does NKP on Azure deploy for the control plane?
+  options:
+  - id: a
+    text: Standard_D2s_v3 with a 40 GiB volume
+  - id: b
+    text: A Standard_D4s_v3 VM with a 128 GiB OS volume and an 80 GiB etcd volume
+  - id: c
+    text: Standard_D8s_v3 with 256 GiB
+  - id: d
+    text: A1_v2 with 20 GiB
+  correct: b
+  explanation: NKP on Azure defaults to a Standard_D4s_v3 VM with a 128 GiB OS volume and an 80 GiB etcd volume for the control plane.
+  source:
+    label: General Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
+    page: p.721
+    quote: NKP on Azure by default deploys a Standard_D4s_v3 VM with a 128 GiB volume for the operating system and an 80 GiB volume for etcd storage…

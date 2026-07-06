@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nkp-academy
+  namespace: nkp-academy
+  labels:
+    app.kubernetes.io/name: nkp-academy
+  annotations:
+    # NKP ships Traefik as its default ingress controller. The IngressClass is
+    # named "kommander-traefik" — verify with: kubectl get ingressclass
+    kubernetes.io/ingress.class: kommander-traefik
+spec:
+  ingressClassName: kommander-traefik
+  rules:
+    - host: nkp-academy.example.com  # change to your NKP cluster domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nkp-academy
+                port:
+                  number: 80
+  # Enable TLS once cert-manager (bundled with NKP) has issued a certificate:
+  # tls:
+  #   - hosts: ["nkp-academy.example.com"]
+  #     secretName: nkp-academy-tls

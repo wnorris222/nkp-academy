@@ -1,0 +1,681 @@
+id: ncpcn-s4-attach
+title: 4.3 Attach Clusters
+track: NCP-CN Section 4
+order: 43
+icon: refresh
+summary: 'Attaching an existing Kubernetes cluster (created by the NKP CLI or another platform such as EKS/AKS/GKE) to a workspace so NKP manages its applications while it stays on its own infrastructure. Covers basic and provider-specific requirements, tunneled attachment for network-restricted clusters, and the default StorageClass needed to deploy platform services.
+
+  '
+questions:
+- id: q65
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What can you attach to NKP?
+  options:
+  - id: a
+    text: Only NKP-CLI-created clusters
+  - id: b
+    text: An existing Kubernetes cluster — whether created with the NKP CLI or by another platform
+  - id: c
+    text: Only cloud clusters
+  - id: d
+    text: Only bare-metal clusters
+  correct: b
+  explanation: You can attach an existing Kubernetes cluster — whether it was created with the NKP CLI or by another platform.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.478
+    quote: You can attach an existing cluster (whether it is a cluster created with the NKP CLI or by means of another platform) to NKP.
+- id: q66
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the purpose/benefit of attaching a cluster?
+  options:
+  - id: a
+    text: To delete the cluster
+  - id: b
+    text: To gain NKP's multi-cluster management and monitoring benefits while keeping the cluster on its current provider and infrastructure
+  - id: c
+    text: To rebuild it
+  - id: d
+    text: To convert it to the management cluster
+  correct: b
+  explanation: Attaching gives you NKP's multi-cluster management and monitoring benefits while keeping the cluster on its current provider and infrastructure.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.482
+    quote: This enables you to access the multi-cluster management and monitoring benefits that NKP provides, while keeping your existing cluster on its current provider and infrastructure.
+- id: q67
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What happens on the target cluster at the time of attachment?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: Certain namespaces are created and workspace platform applications are deployed automatically into them
+  - id: c
+    text: The cluster is wiped
+  - id: d
+    text: Only a label is added
+  correct: b
+  explanation: At attachment, certain namespaces are created on the cluster and workspace platform applications are deployed automatically into them.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.478
+    quote: At the time of attachment, certain namespaces are created on the cluster, and workspace platform applications are deployed automatically into the newly-created namespaces.
+- id: q68
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do NKP-CLI-created clusters vs. AKS/EKS/GKE clusters differ on attachment?
+  options:
+  - id: a
+    text: Both become Managed
+  - id: b
+    text: A NKP-CLI-created cluster becomes a Managed cluster; an AKS/EKS/GKE (or other external) cluster becomes an Attached cluster
+  - id: c
+    text: Both become Attached
+  - id: d
+    text: Neither is supported
+  correct: b
+  explanation: A NKP-CLI-created cluster becomes a Managed cluster on attachment; an AKS/EKS/GKE or other external cluster becomes an Attached cluster.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.479
+    quote: a NKP-CLI-created cluster (which will become a Managed cluster upon attachment), or another Kubernetes cluster like AKS, EKS, or GKE (which will become an Attached cluster upon attachment).
+- id: q69
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What architecture is supported for cluster attachment?
+  options:
+  - id: a
+    text: ARM only
+  - id: b
+    text: All Kubernetes Conformant clusters, but only x86-64 architecture (not ARM)
+  - id: c
+    text: Both x86 and ARM
+  - id: d
+    text: PowerPC
+  correct: b
+  explanation: NKP supports attaching all Kubernetes Conformant clusters, but only x86-64 architecture — ARM is not supported.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.478
+    quote: NKP supports the attachment of all Kubernetes Conformant clusters, but only x86-64 architecture is supported, not ARM.
+- id: q70
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which license tier is required for Attached Clusters?
+  options:
+  - id: a
+    text: Starter
+  - id: b
+    text: NKP Ultimate
+  - id: c
+    text: Pro
+  - id: d
+    text: Any tier
+  correct: b
+  explanation: Attached Clusters require NKP Ultimate.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.19
+    quote: 'Attached Cluster (NKP Ultimate only): This is a type of managed cluster that is created outside of NKP but is then connected to the NKP Management Cluster...'
+- id: q71
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the basic networking requirement to attach a cluster in the UI?
+  options:
+  - id: a
+    text: The target cluster must reach the internet
+  - id: b
+    text: The Application Management cluster must be able to reach the services and the api-server of the target cluster
+  - id: c
+    text: No connectivity is needed
+  - id: d
+    text: The clusters must share a subnet
+  correct: b
+  explanation: To attach in the UI, the Application Management cluster must be able to reach the services and the api-server of the target cluster.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.478
+    quote: To attach an existing cluster in the UI, the Application Management cluster must be able to reach the services and the api-server of the target cluster.
+- id: q72
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What must be configured on the target cluster to deploy many attached services?
+  options:
+  - id: a
+    text: A GPU
+  - id: b
+    text: A default StorageClass
+  - id: c
+    text: A load balancer only
+  - id: d
+    text: FIPS mode
+  correct: b
+  explanation: A default StorageClass must be configured on the target cluster to deploy many of the attached services.
+  source:
+    label: Creating a Default StorageClass
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-default-storageclass-t.html
+    page: p.479
+    quote: To deploy many of the services on the attached cluster, a default StorageClass must be configured.
+- id: q73
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What must you create before attaching clusters?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: One or more Workspaces (and, recommended, Projects within them)
+  - id: c
+    text: A new license
+  - id: d
+    text: A bastion host
+  correct: b
+  explanation: Before attaching, create one or more Workspaces (and, recommended, Projects within them) to group clusters and push common configuration.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.479
+    quote: Before you attach clusters, you need to create one or more Workspaces, and we recommend that you also create Projects within your Workspaces.
+- id: q74
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Into which workspace must you NOT attach a cluster?
+  options:
+  - id: a
+    text: The default workspace
+  - id: b
+    text: The 'Management Cluster Workspace' (reserved for the Application Management cluster)
+  - id: c
+    text: Any custom workspace
+  - id: d
+    text: A project workspace
+  correct: b
+  explanation: Do not attach a cluster into the 'Management Cluster Workspace' — it is reserved for the Application Management cluster only.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.479
+    quote: Do not attach a cluster in the 'Management Cluster Workspace' workspace. This is reserved for your Application Management cluster only.
+- id: q75
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Why must you create a separate service account when attaching AKS, EKS, or GKE clusters?
+  options:
+  - id: a
+    text: For billing
+  - id: b
+    text: Their kubeconfig files aren't usable pre-built (they call aws/azure/gcloud CLIs and use local tokens); a service account also isolates access from Kommander
+  - id: c
+    text: To enable GPUs
+  - id: d
+    text: It is optional
+  correct: b
+  explanation: AKS/EKS/GKE kubeconfigs aren't usable pre-built (they call aws/azure/gcloud CLIs and use locally-obtained tokens), so you create a separate service account — which also isolates access from Kommander.
+  source:
+    label: Requirements for Attaching Existing AKS, EKS, and GKE Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-requirements-for-attaching-existing-aks-eks-and-gke-clusters-c.html
+    page: p.479
+    quote: You must create a separate service account when attaching existing AKS, EKS, or Google GKE Kubernetes clusters.
+- id: q76
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the UI steps to attach a cluster without networking restrictions?
+  options:
+  - id: a
+    text: Edit etcd
+  - id: b
+    text: Add Cluster (Actions menu) > Attach Cluster > No additional networking restrictions card > paste/upload kubeconfig > select context > Create
+  - id: c
+    text: kubectl attach
+  - id: d
+    text: Reinstall NKP
+  correct: b
+  explanation: 'In the UI: Add Cluster (Actions menu) > Attach Cluster > select the ''No additional networking restrictions'' card > paste or upload the kubeconfig > select an admin context > Create.'
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.482
+    quote: Select the No additional networking restrictions card... paste your kubeconfig file into the field... Select Create to attach your cluster.
+- id: q77
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Scenario: the target cluster is behind a firewall / network restrictions. How do you attach it?'
+  options:
+  - id: a
+    text: It cannot be attached
+  - id: b
+    text: 'Use a tunneled attachment (Cluster Attachment with Networking Restrictions): create a tunnel gateway on the management cluster and apply the generated manifest on the target cluster'
+  - id: c
+    text: Disable the firewall permanently
+  - id: d
+    text: Attach it to the management workspace
+  correct: b
+  explanation: 'For a network-restricted target, use a tunneled attachment (Cluster Attachment with Networking Restrictions): create a tunnel gateway on the management cluster and apply the generated manifest on the target cluster.'
+  source:
+    label: Prerequisites for a Tunneled Attachment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prerequisite-for-a-tunneled-attachment-t.html
+    page: p.499
+    quote: Create a tunnel gateway on the Management cluster to listen for tunnel agents on remote clusters.
+- id: q78
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When applying the tunnel manifest for a network-restricted attachment, what must you include?
+  options:
+  - id: a
+    text: --force
+  - id: b
+    text: --kubeconfig=<managed_cluster_kubeconfig.conf> so the command runs on the Attached/Managed cluster
+  - id: c
+    text: --insecure
+  - id: d
+    text: Nothing extra
+  correct: b
+  explanation: Apply the tunnel manifest with --kubeconfig=<managed_cluster_kubeconfig.conf> so it runs on the Attached/Managed cluster.
+  source:
+    label: Prerequisites for a Tunneled Attachment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prerequisite-for-a-tunneled-attachment-t.html
+    page: p.498
+    quote: ensure you use the --kubeconfig=<managed_cluster_kubeconfig.conf> flag to run the command on the Attached or Managed cluster.
+- id: q79
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is deployed to an attached cluster to extend its functionality?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: Workspace platform applications (e.g., ready-to-use logging and monitoring stacks)
+  - id: c
+    text: Only a CNI
+  - id: d
+    text: A new control plane
+  correct: b
+  explanation: Workspace platform applications (e.g., ready-to-use logging and monitoring stacks) are deployed to extend the attached cluster's functionality.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.478
+    quote: Platform applications extend the functionality of Kubernetes and provide ready-to-use logging and monitoring stacks. Platform applications are deployed when a cluster is attached to Kommander.
+- id: q80
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Does NKP manage an attached cluster's lifecycle?
+  options:
+  - id: a
+    text: Yes, fully
+  - id: b
+    text: No — NKP manages the attached cluster's applications, but not its lifecycle
+  - id: c
+    text: Only its nodes
+  - id: d
+    text: Only its storage
+  correct: b
+  explanation: NKP manages an attached cluster's applications, but not its lifecycle.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.19
+    quote: Attached Cluster (NKP Ultimate only)... connected to the NKP Management Cluster so that NKP can manage it's applications. The lifecycle will not be managed by NKP.
+- id: q81
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What benefits does attaching provide once complete?
+  options:
+  - id: a
+    text: None
+  - id: b
+    text: Centralized multi-cluster management and monitoring, with federated add-ons and platform services
+  - id: c
+    text: Only backups
+  - id: d
+    text: Only a dashboard link
+  correct: b
+  explanation: Once attached, you get centralized multi-cluster management and monitoring, with federated add-ons and platform services.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.482
+    quote: multi-cluster management and monitoring benefits... the attachment, federated add-ons, and platform services will still need to be completed.
+- id: q82
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For a network-restricted attached cluster, how do you enable kubectl access and dashboard observability from the management cluster?
+  options:
+  - id: a
+    text: Open all firewall ports
+  - id: b
+    text: Activate a proxied access
+  - id: c
+    text: It is impossible
+  - id: d
+    text: Use SSH tunneling manually
+  correct: b
+  explanation: Activate a proxied access to enable kubectl access and dashboard observability for a network-restricted cluster from the management cluster.
+  source:
+    label: Prerequisites for a Tunneled Attachment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prerequisite-for-a-tunneled-attachment-t.html
+    page: p.490
+    quote: '(Optional) Enable a Proxied Access: Activate a proxied access to enable kubectl access and dashboard observability for the network-restricted cluster from the Management cluster.'
+- id: q83
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What resource condition must an attached cluster meet?
+  options:
+  - id: a
+    text: None
+  - id: b
+    text: It must have sufficient resources for the workspace platform applications; otherwise the federated resources fail to install
+  - id: c
+    text: Exactly 3 nodes
+  - id: d
+    text: A public IP
+  correct: b
+  explanation: An attached cluster must have sufficient resources for the workspace platform applications; otherwise the federated resources fail to install.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.490
+    quote: If a cluster has limited resources to deploy all the federated platform services, the installation of the federated resources will fail, and the cluster may become unreachable in the NKP UI.
+- id: q84
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: You attach a cluster that already has cert-manager installed. What happens, and what should you do?
+  options:
+  - id: a
+    text: Attachment fails permanently
+  - id: b
+    text: The NKP cert-manager HelmRelease fails to deploy; if the existing cert-manager works, you can safely ignore this failure
+  - id: c
+    text: cert-manager is deleted
+  - id: d
+    text: You must uninstall NKP
+  correct: b
+  explanation: If the target already has cert-manager, the NKP cert-manager HelmRelease fails to deploy; as long as the existing cert-manager works, you can safely ignore that failure.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.480
+    quote: If you are attaching clusters that already have cert-manager installed, the cert-manager HelmRelease provided by NKP will fail to deploy... you can ignore this failure.
+- id: q85
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: An attached cluster is stuck in 'Pending' or 'Error' when detaching/deleting. What are the likely causes?
+  options:
+  - id: a
+    text: The license expired
+  - id: b
+    text: The wrong kubeconfig file was used, or the cluster is not reachable
+  - id: c
+    text: Too many nodes
+  - id: d
+    text: The workspace is full
+  correct: b
+  explanation: A stuck 'Pending'/'Error' state usually means the wrong kubeconfig file was used or the cluster is not reachable.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.545
+    quote: This can happen because the wrong kubeconfig file is used or the cluster is just not reachable.
+- id: q86
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you force-remove a stuck attached cluster so it no longer shows in the UI?
+  options:
+  - id: a
+    text: Reboot the management cluster
+  - id: b
+    text: Delete the KommanderCluster resource (kubectl -n WORKSPACE_NAMESPACE delete kommandercluster CLUSTER_NAME)
+  - id: c
+    text: Delete the namespace
+  - id: d
+    text: Reinstall Kommander
+  correct: b
+  explanation: 'Delete the backing KommanderCluster resource: kubectl -n WORKSPACE_NAMESPACE delete kommandercluster CLUSTER_NAME.'
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.545
+    quote: Determine the KommanderCluster resource backing the cluster... kubectl -n WORKSPACE_NAMESPACE delete kommandercluster CLUSTER_NAME.
+- id: q87
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After attachment, the cluster becomes unreachable in the UI with limited resources. Why?
+  options:
+  - id: a
+    text: The kubeconfig expired
+  - id: b
+    text: The cluster lacks resources to deploy all the federated platform services, so their installation fails — check for pods not getting required resources
+  - id: c
+    text: The license is invalid
+  - id: d
+    text: DNS failed
+  correct: b
+  explanation: If the cluster lacks resources to deploy all the federated platform services, their installation fails and the cluster can become unreachable — check for pods not getting required resources.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.490
+    quote: If this happens, check whether any pods are not getting the resources required.
+- id: q88
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you confirm a tunneled/network-restricted attachment has connected?
+  options:
+  - id: a
+    text: Ping the cluster
+  - id: b
+    text: Use 'Verify Connection to Cluster' in the UI (the Cluster Details page appears automatically when the connection completes)
+  - id: c
+    text: Check the license
+  - id: d
+    text: Restart the tunnel
+  correct: b
+  explanation: Use 'Verify Connection to Cluster' in the UI to refresh the connection; the Cluster Details page appears automatically when the connection completes.
+  source:
+    label: Prerequisites for a Tunneled Attachment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prerequisite-for-a-tunneled-attachment-t.html
+    page: p.498
+    quote: (Optional) Select Verify Connection to Cluster to send a request to Kommander to refresh the connection information... the Cluster Details page displays automatically when the connection is complete.
+- id: q89
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which Kubernetes resource backs an attached cluster in NKP?
+  options:
+  - id: a
+    text: A Deployment
+  - id: b
+    text: A KommanderCluster resource
+  - id: c
+    text: A Secret only
+  - id: d
+    text: A ConfigMap
+  correct: b
+  explanation: An attached cluster is backed by a KommanderCluster resource.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.545
+    quote: Determine the KommanderCluster resource backing the cluster you tried to attach/detach.
+- id: q90
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you deploy application with a custom configuration to a cluster as it is attached?
+  options:
+  - id: a
+    text: You cannot
+  - id: b
+    text: Customize the application configuration for the cluster prior to attachment (per-cluster override on the management cluster) so it deploys with that config on attachment
+  - id: c
+    text: Edit the container image
+  - id: d
+    text: Only after attachment
+  correct: b
+  explanation: Customize the application configuration for the cluster prior to attachment (a per-cluster override on the management cluster) so it deploys with that config on attachment.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.378
+    quote: You can customize the application configuration for a cluster prior to its attachment, so that the application is deployed with this custom configuration on attachment.
+- id: q91
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Why customize an app at attachment rather than after?
+  options:
+  - id: a
+    text: It's required
+  - id: b
+    text: It avoids redeploying the app with an updated configuration later, which may cause downtime
+  - id: c
+    text: It's faster to type
+  - id: d
+    text: There is no difference
+  correct: b
+  explanation: Customizing at attachment avoids redeploying the app with an updated configuration afterward, which may cause downtime.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.378
+    quote: This is preferable, if you do not want to redeploy the application with an updated configuration after it has been initially installed, which may cause downtime.
+- id: q92
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What happens to workloads when you detach a cluster?
+  options:
+  - id: a
+    text: They are deleted
+  - id: b
+    text: Detaching removes the cluster from the NKP UI but does not alter its running state — workloads, platform services, and other resources are not cleaned up
+  - id: c
+    text: The cluster is wiped
+  - id: d
+    text: Nodes are drained
+  correct: b
+  explanation: Detaching removes the cluster from the NKP UI but does not alter its running state — workloads, platform services, and other Kubernetes resources are not cleaned up.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.544
+    quote: This does not alter the cluster's running state but simply removes it from the NKP UI. User workloads, platform services, and other Kubernetes resources are not cleaned up at detach.
+- id: q93
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After detaching a cluster, what must you do manually?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: Disconnect the attached cluster's Flux installation from the management Git repository (otherwise workspace app changes still reflect on the detached cluster)
+  - id: c
+    text: Delete the workspace
+  - id: d
+    text: Reboot the nodes
+  correct: b
+  explanation: After detaching, manually disconnect the attached cluster's Flux installation from the management Git repository — otherwise workspace app changes still reflect on the detached cluster.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.544
+    quote: After successfully detaching the cluster, manually disconnect the attached cluster's Flux installation from the management Git repository.
+- id: q94
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Can you disconnect a managed cluster that was created with Kommander?
+  options:
+  - id: a
+    text: Yes, detach it
+  - id: b
+    text: No — you cannot disconnect it; you delete it (recommended through the NKP UI), which removes the cluster and its cloud assets
+  - id: c
+    text: Only via CLI
+  - id: d
+    text: Only with Ultimate
+  correct: b
+  explanation: You cannot disconnect a Kommander-created managed cluster — you delete it (recommended through the NKP UI), which removes the cluster and all its cloud assets.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.545
+    quote: If you created a managed cluster with Kommander, you cannot disconnect it, but you can delete it. This completely removes the cluster and all of its cloud assets.
+- id: q95
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you organize attached clusters so Kommander pushes a common configuration?
+  options:
+  - id: a
+    text: One cluster per namespace
+  - id: b
+    text: Group them into Kommander Workspaces and Projects (a Project defines clusters as a group that receives common configuration)
+  - id: c
+    text: Manually per node
+  - id: d
+    text: It is not possible
+  correct: b
+  explanation: Group attached clusters into Kommander Workspaces and Projects; a Project defines clusters as a group to which Kommander pushes a common configuration.
+  source:
+    label: Basic Requirements for Attaching Existing Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
+    page: p.479
+    quote: Projects let you define one or more clusters as a group to which Kommander pushes a common configuration.
+- id: q96
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How are platform applications configured/updated across attached clusters in a workspace?
+  options:
+  - id: a
+    text: Edit each cluster's pods
+  - id: b
+    text: Enable/override platform applications at the workspace (and per-cluster) level; Kommander federates the configuration to the workspace's clusters
+  - id: c
+    text: Reinstall NKP each time
+  - id: d
+    text: Only via SSH
+  correct: b
+  explanation: Enable/override platform applications at the workspace (and per-cluster) level; Kommander federates the configuration to the workspace's clusters — the same mechanism updates attached clusters.
+  source:
+    label: Attaching an Existing Kubernetes Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
+    page: p.479
+    quote: Grouping your existing clusters in Kommander projects and workspaces makes managing their platform services and resources easier...

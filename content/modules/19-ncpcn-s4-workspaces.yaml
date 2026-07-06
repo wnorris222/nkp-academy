@@ -1,0 +1,732 @@
+id: ncpcn-s4-workspaces
+title: 4.1 Configure Workspaces
+track: NCP-CN Section 4
+order: 41
+icon: book
+summary: 'Covers creating and deleting workspaces, configuring infrastructure providers, and deploying workspace applications across all clusters. Also addresses NKP multi-tenancy, dedicated per-tenant login URLs, workspace-level access control and role bindings, and using NKP Insights for predictive anomaly detection.
+
+  '
+questions:
+- id: q1
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is a workspace in NKP?
+  options:
+  - id: a
+    text: A single Kubernetes namespace
+  - id: b
+    text: A logical grouping of clusters that maintain a similar configuration, with certain configurations automatically federated to those clusters
+  - id: c
+    text: A node pool
+  - id: d
+    text: A storage class
+  correct: b
+  explanation: A workspace is a logical grouping of clusters that maintain a similar configuration, with certain configurations automatically federated to those clusters.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.371
+    quote: Workspaces are a logical grouping of clusters that maintain a similar configuration, with certain configurations automatically federated to those clusters.
+- id: q2
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the three UI/role levels in NKP?
+  options:
+  - id: a
+    text: Admin, Edit, View
+  - id: b
+    text: Global, Workspace, and Project
+  - id: c
+    text: Dev, Test, Prod
+  - id: d
+    text: Cluster, Node, Pod
+  correct: b
+  explanation: 'The UI is accessible at three levels: Global (all clusters/workspaces), Workspace (clusters within a workspace), and Project.'
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.371
+    quote: 'Global: … manage all clusters across all workspaces. Workspace: … manage multiple clusters within a workspace.'
+- id: q3
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: Which are valid use cases for creating workspaces? (Select all that apply)
+  options:
+  - id: a
+    text: Separate clusters by department
+  - id: b
+    text: Separate clusters by product
+  - id: c
+    text: Separate clusters by business function
+  - id: d
+    text: Separate individual pods
+  correct:
+  - a
+  - b
+  - c
+  explanation: Workspaces let you separate clusters according to departments, products, or business functions.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.371
+    quote: you can create workspaces to separate clusters according to departments, products, or business functions.
+- id: q4
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Can you get started without creating a new workspace?
+  options:
+  - id: a
+    text: 'No'
+  - id: b
+    text: Yes — you can use the default workspace deployed in NKP
+  - id: c
+    text: Only with Ultimate
+  - id: d
+    text: Only on AWS
+  correct: b
+  explanation: You can use the default workspace deployed in NKP to get started immediately.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.371
+    quote: To get started immediately, you can use the default workspace deployed in NKP.
+- id: q5
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you create a workspace?
+  options:
+  - id: a
+    text: kubectl create workspace
+  - id: b
+    text: From the workspace selection dropdown in the top menu bar, select Create Workspace, enter a name and description, then Save
+  - id: c
+    text: nkp create workspace
+  - id: d
+    text: Edit a YAML file
+  correct: b
+  explanation: Create a workspace from the workspace selection dropdown (Create Workspace), enter a name and description, and click Save.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.371
+    quote: From the workspace selection dropdown list in the top menu bar, select Create Workspace… Type a name and description. Click Save.
+- id: q6
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When can a workspace be deleted?
+  options:
+  - id: a
+    text: Anytime
+  - id: b
+    text: Only if all the clusters in the workspace have been deleted or detached
+  - id: c
+    text: Never
+  - id: d
+    text: Only by Nutanix support
+  correct: b
+  explanation: A workspace can only be deleted if all clusters in it have been deleted or detached.
+  source:
+    label: Deleting a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-delete-a-workspace-c.html
+    page: p.372
+    quote: Workspaces can only be deleted if all the clusters in the workspace have been deleted or detached.
+- id: q7
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Can you move a cluster from one workspace to another after it is created or attached?
+  options:
+  - id: a
+    text: Yes, anytime
+  - id: b
+    text: No — you cannot move clusters from one workspace to another after creating/attaching them
+  - id: c
+    text: Only within 24 hours
+  - id: d
+    text: Only with a support ticket
+  correct: b
+  explanation: You cannot move clusters from one workspace to another after creating or attaching them — assignment is permanent.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.371
+    quote: you cannot move clusters from one workspace to another after creating/attaching them.
+- id: q8
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Scenario: a Managed Service Provider (MSP) manages several clients. How should clusters be assigned?'
+  options:
+  - id: a
+    text: All clients in one workspace
+  - id: b
+    text: One workspace per tenant/client (each tenant is represented by a workspace)
+  - id: c
+    text: One workspace per cluster
+  - id: d
+    text: No workspaces needed
+  correct: b
+  explanation: For an MSP, assign one workspace per tenant/client — in NKP each tenant is represented by a workspace.
+  source:
+    label: Multi-Tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
+    page: p.415
+    quote: In NKP, each tenant system is represented by a workspace… a workspace is assigned to a tenant.
+- id: q9
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Scenario: departments need strictly isolated environments and differentiated access. How do you assign clusters?'
+  options:
+  - id: a
+    text: Put them all in the default workspace
+  - id: b
+    text: Assign each department its own workspace (tenant), optionally with a per-workspace identity provider
+  - id: c
+    text: Use one cluster for everyone
+  - id: d
+    text: It is not possible
+  correct: b
+  explanation: Assign each department its own workspace (tenant), optionally isolated with a per-workspace identity provider for differentiated access.
+  source:
+    label: Multi-Tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
+    page: p.415
+    quote: Tenants can also be divisions within an organization that require a strict isolation from other divisions, for example, through differentiated access control.
+- id: q10
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is automatically federated/applied to all clusters in a workspace?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: Certain configurations, plus workspace labels/annotations and workspace-enabled platform applications
+  - id: c
+    text: Only the license
+  - id: d
+    text: Only the node count
+  correct: b
+  explanation: Certain configurations are automatically federated to all clusters in a workspace; workspace labels/annotations apply to all clusters, and an app enabled at the workspace deploys to all its clusters.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.371
+    quote: certain configurations automatically federated to those clusters.
+- id: q11
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which infrastructure providers can NKP configure?
+  options:
+  - id: a
+    text: Only Nutanix
+  - id: b
+    text: Nutanix, AWS, Azure, and vSphere
+  - id: c
+    text: Only cloud providers
+  - id: d
+    text: Only on-premises
+  correct: b
+  explanation: NKP can configure Nutanix, AWS, Azure, and vSphere infrastructure providers.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.310
+    quote: Infrastructure providers, such as Nutanix, AWS, Azure, and vSphere, provide the infrastructure for your management clusters.
+- id: q12
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where are infrastructure provider credentials configured?
+  options:
+  - id: a
+    text: Globally only
+  - id: b
+    text: In each workspace (and the provider name must be unique across namespaces)
+  - id: c
+    text: On each node
+  - id: d
+    text: In the license file
+  correct: b
+  explanation: Infrastructure provider credentials are configured in each workspace, and the assigned name must be unique across the other namespaces in your cluster.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.310
+    quote: Infrastructure provider credentials are configured in each workspace. The name you assign must be unique across all the other namespaces in your cluster.
+- id: q13
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How does infrastructure-provider support differ by license tier?
+  options:
+  - id: a
+    text: All tiers support all providers
+  - id: b
+    text: Starter = Nutanix only; Pro = single management cluster with attached/managed clusters of the same provider; Ultimate = multiple infrastructure providers
+  - id: c
+    text: Only Ultimate supports Nutanix
+  - id: d
+    text: Starter supports all providers
+  correct: b
+  explanation: Starter supports Nutanix only; Pro supports a single management cluster with attached/managed clusters of the same provider; Ultimate supports multiple infrastructure providers.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.310
+    quote: NKP Ultimate supports a multi-cluster environment… of multiple infrastructure providers.
+- id: q14
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does a Nutanix infrastructure provider contain?
+  options:
+  - id: a
+    text: SSH keys
+  - id: b
+    text: Prism Central credentials (endpoint, username, password, and trust bundle)
+  - id: c
+    text: A license key
+  - id: d
+    text: Node images
+  correct: b
+  explanation: A Nutanix infrastructure provider contains your Prism Central credentials — endpoint URL, username, password, and the trust bundle.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.311
+    quote: In the Prism Central Endpoint field, enter the endpoint URL of Prism Central… In the Password field… upload the trust bundle.
+- id: q15
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the UI path to add an infrastructure provider?
+  options:
+  - id: a
+    text: Clusters > Add Provider
+  - id: b
+    text: Administration > Infrastructure Providers > Add Infrastructure Provider
+  - id: c
+    text: Settings > Licensing
+  - id: d
+    text: Projects > Providers
+  correct: b
+  explanation: Add a provider via Administration > Infrastructure Providers > Add Infrastructure Provider (selecting the target workspace).
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.311
+    quote: From the left navigation pane, click Administration > Infrastructure Providers. Click Add Infrastructure Provider.
+- id: q16
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the required format for the Prism Central Endpoint field?
+  options:
+  - id: a
+    text: http://<IP>:80
+  - id: b
+    text: https://<Prism Central IP Address or FQDN>:9440
+  - id: c
+    text: tcp://<IP>:6443
+  - id: d
+    text: <IP> only
+  correct: b
+  explanation: The Prism Central Endpoint must be https://<Prism Central IP Address or FQDN>:9440.
+  source:
+    label: Creating a Workspace
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
+    page: p.311
+    quote: The Prism Central endpoint must be in the format https://<Prism Central IP Address or FQDN>:9440.
+- id: q17
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How is each tenant's access isolated in a multi-tenant environment?
+  options:
+  - id: a
+    text: By node
+  - id: b
+    text: By configuring an identity provider per workspace/tenant
+  - id: c
+    text: By IP allow-list only
+  - id: d
+    text: By separate clusters only
+  correct: b
+  explanation: Multi-tenancy isolates each tenant by configuring an identity provider per workspace/tenant, keeping workspaces separate and isolated.
+  source:
+    label: Multi-Tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
+    page: p.415
+    quote: multi-tenancy allows you to configure an identity provider per workspace or tenant… NKP keeps all workspaces and tenants separate and isolated.
+- id: q18
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Who manages tenant access at the workspace level, and where can a tenant further narrow access?
+  options:
+  - id: a
+    text: The tenant manages everything
+  - id: b
+    text: The global administrator manages access at the Workspace level; a tenant can further adapt access at the Project level
+  - id: c
+    text: Nutanix support manages it
+  - id: d
+    text: Access cannot be narrowed
+  correct: b
+  explanation: The global administrator manages tenant access at the Workspace level; a tenant can further adapt user access at the Project level.
+  source:
+    label: Multi-Tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
+    page: p.415
+    quote: You, as a global administrator, manage tenant access at the Workspace level. A tenant can further adapt user access at the Project level.
+- id: q19
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In a multi-tenant system, what does a workspace represent?
+  options:
+  - id: a
+    text: A node pool
+  - id: b
+    text: A tenant (workspaces and tenants are synonymous)
+  - id: c
+    text: A namespace only
+  - id: d
+    text: A license
+  correct: b
+  explanation: In a multi-tenant system, workspaces and tenants are synonymous — a workspace represents a tenant.
+  source:
+    label: Multi-Tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
+    page: p.416
+    quote: 'Workspaces: In a multi-tenant system, workspaces and tenants are synonymous.'
+- id: q20
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How does each tenant get its own isolated UI login?
+  options:
+  - id: a
+    text: Shared admin login
+  - id: b
+    text: Generate a dedicated Login URL for each tenant (workspace-specific SSO login and kubectl token generation)
+  - id: c
+    text: A separate cluster
+  - id: d
+    text: Email invitations only
+  correct: b
+  explanation: Generate a dedicated Login URL for each tenant — a workspace-specific page for SSO login and creating kubectl API tokens; other tenants' configs aren't visible.
+  source:
+    label: Generating a Dedicated Login URL for Each Tenant
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-generate-a-dedicated-url-login-for-each-tenant-t.html
+    page: p.416
+    quote: generate a dedicated Login URL so each tenant has its own user access… Other tenants and their SSO configurations are not visible.
+- id: q21
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which license is required for multi-tenancy?
+  options:
+  - id: a
+    text: Starter
+  - id: b
+    text: NKP Ultimate (a single Ultimate instance serves multiple tenants/workspaces)
+  - id: c
+    text: Pro
+  - id: d
+    text: Any license
+  correct: b
+  explanation: Multi-tenancy requires NKP Ultimate — a single Ultimate instance serves multiple tenants (workspaces), all under one Ultimate license.
+  source:
+    label: Multi-Tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
+    page: p.415
+    quote: Multi-tenancy in NKP is an architecture model where a single NKP Ultimate instance serves multiple organization's divisions, customers or tenants.
+- id: q22
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: Which steps are part of enabling multi-tenancy? (Select all that apply)
+  options:
+  - id: a
+    text: Configure an identity provider globally or per workspace
+  - id: b
+    text: Create NKP identity provider groups with the correct prefixes to map existing IdP groups
+  - id: c
+    text: Create a dedicated login URL for each tenant
+  - id: d
+    text: Disable RBAC
+  correct:
+  - a
+  - b
+  - c
+  explanation: Enable multi-tenancy by configuring an IdP (global or per workspace), creating NKP IdP groups with the correct prefixes, and creating a dedicated login URL for each tenant.
+  source:
+    label: Multi-Tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
+    page: p.417
+    quote: Configure an Identity Provider globally… or per workspace… Create a dedicated login URL for each tenant.
+- id: q23
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the two application types you can use with NKP?
+  options:
+  - id: a
+    text: System and User
+  - id: b
+    text: Platform Applications (integrated into NKP) and Catalog Applications (pre-packaged from the Nutanix Application Catalog or custom)
+  - id: c
+    text: Helm and Docker
+  - id: d
+    text: Static and dynamic
+  correct: b
+  explanation: The two types are Platform Applications (integrated into NKP) and Catalog Applications (pre-packaged from the Nutanix Application Catalog or custom apps you maintain).
+  source:
+    label: Workspace Applications
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspace-applications-c.html
+    page: p.372
+    quote: 'Catalog Applications: are either pre-packaged applications from the Nutanix Application Catalog or custom applications that you maintain…'
+- id: q24
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What happens when you enable an application for a workspace?
+  options:
+  - id: a
+    text: It deploys to one node
+  - id: b
+    text: It deploys the application to all clusters within that workspace
+  - id: c
+    text: It deploys only to the management cluster
+  - id: d
+    text: Nothing until you restart
+  correct: b
+  explanation: Enabling an application for a workspace deploys it to all clusters within that workspace.
+  source:
+    label: Workspace Applications
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspace-applications-c.html
+    page: p.373
+    quote: When you enable an application for a workspace, you deploy this application to all clusters within that workspace.
+- id: q25
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the NKP Pro limitation for deploying applications in a workspace?
+  options:
+  - id: a
+    text: Pro cannot deploy apps
+  - id: b
+    text: NKP Pro can configure and deploy applications to a single cluster within a workspace
+  - id: c
+    text: Pro deploys to all clusters
+  - id: d
+    text: Pro requires the CLI only
+  correct: b
+  explanation: NKP Pro users can only configure and deploy applications to a single cluster within a workspace.
+  source:
+    label: Workspace Applications
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspace-applications-c.html
+    page: p.373
+    quote: NKP Pro users are only be able to configure and deploy applications to a single cluster within a workspace.
+- id: q26
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you deploy an application to specific clusters via the UI?
+  options:
+  - id: a
+    text: Edit etcd
+  - id: b
+    text: Applications > the app tile's triple-dot icon > Enable > select the target cluster(s) > Enable
+  - id: c
+    text: kubectl apply only
+  - id: d
+    text: It is automatic
+  correct: b
+  explanation: In the UI, go to Applications, select the app tile's triple-dot icon > Enable, choose the target cluster(s), then select Enable.
+  source:
+    label: Enabling an Application Per Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enable-an-existing-app-c.html
+    page: p.373
+    quote: Select the triple dot vertical icon in the desired application's tile and select Enable… Select the cluster(s) that you want to deploy the application to.
+- id: q27
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After you enable an application at the workspace level, what happens to newly created/attached clusters?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: NKP automatically enables that app on any other cluster you create or attach
+  - id: c
+    text: They are deleted
+  - id: d
+    text: You must re-enable manually every time
+  correct: b
+  explanation: Once you enable an app at the workspace level, NKP automatically enables it on any other cluster you create or attach.
+  source:
+    label: Enabling an Application Per Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enable-an-existing-app-c.html
+    page: p.374
+    quote: Once you enable an application at the workspace level, NKP automatically enables that app on any other cluster you create or attach.
+- id: q28
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you customize an application differently per cluster?
+  options:
+  - id: a
+    text: You cannot
+  - id: b
+    text: Use the two editors — Workspace Application Configuration (applies to the whole workspace) and Cluster Application Configuration Override (per-cluster, merges with the workspace config)
+  - id: c
+    text: Edit the container image
+  - id: d
+    text: Use a separate workspace
+  correct: b
+  explanation: 'Use the two editors: Workspace Application Configuration (applies to the whole workspace) and Cluster Application Configuration Override (per-cluster, which merges with the workspace configuration).'
+  source:
+    label: Enabling an Application Per Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enable-an-existing-app-c.html
+    page: p.374
+    quote: 'Cluster Application Configuration Override: A cluster-scoped code editor… These customizations will merge with the workspace application configuration.'
+- id: q29
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is NKP Insights?
+  options:
+  - id: a
+    text: A logging aggregator
+  - id: b
+    text: A predictive analytics solution that detects current and future anomalies in workload configurations or Kubernetes clusters
+  - id: c
+    text: A backup tool
+  - id: d
+    text: A load balancer
+  correct: b
+  explanation: NKP Insights is a predictive analytics solution that detects current and future anomalies in workload configurations or Kubernetes clusters.
+  source:
+    label: Nutanix Kubernetes Platform Insights Overview
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-overview-nkp-insights-c.html
+    page: p.1104
+    quote: NKP Insights is a predictive analytics solution that detects current and future anomalies in workload configurations or Kubernetes clusters that can or could occur.
+- id: q30
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the two components of NKP Insights?
+  options:
+  - id: a
+    text: UI and CLI
+  - id: b
+    text: NKP Insights Management (runs on the management cluster) and NKP Insights Engine (runs on each attached/managed cluster, or on the management cluster for Pro single-cluster environments)
+  - id: c
+    text: Prometheus and Grafana
+  - id: d
+    text: Loki and Fluentd
+  correct: b
+  explanation: 'Insights has two components: Insights Management (on the management cluster) and Insights Engine (on each attached/managed cluster, or on the management cluster for Pro single-cluster environments).'
+  source:
+    label: Nutanix Kubernetes Platform Insights Overview
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-overview-nkp-insights-c.html
+    page: p.1104
+    quote: NKP Insights Engine runs on each Attached or Managed Kubernetes cluster or on the NKP Management cluster for NKP Pro…
+- id: q31
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When Insights detects an anomaly, what does the alert provide?
+  options:
+  - id: a
+    text: Only a timestamp
+  - id: b
+    text: An anomaly description, root cause analysis, and recommended steps to resolve it (lowering MTTR)
+  - id: c
+    text: A backup
+  - id: d
+    text: A new node
+  correct: b
+  explanation: An Insight alert provides the anomaly description, root cause analysis, and recommended steps to resolve it — reducing Mean Time To Repair (MTTR).
+  source:
+    label: Nutanix Kubernetes Platform Insights Overview
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-overview-nkp-insights-c.html
+    page: p.1104
+    quote: An Insight alert details… provide the anomaly description, root cause analysis, and recommended steps to resolve the anomaly at a much lower Mean Time To Repair (MTTR)…
+- id: q32
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: Which routine tasks does NKP Insights assist with? (Select all that apply)
+  options:
+  - id: a
+    text: Resolving common anomalies
+  - id: b
+    text: Checking security issues
+  - id: c
+    text: Verifying whether workloads follow best practices
+  - id: d
+    text: Provisioning bare-metal servers
+  correct:
+  - a
+  - b
+  - c
+  explanation: Insights assists with resolving common anomalies, checking security issues, and verifying whether workloads follow best practices.
+  source:
+    label: Nutanix Kubernetes Platform Insights Overview
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-overview-nkp-insights-c.html
+    page: p.1104
+    quote: 'NKP Insights assists Kubernetes Administrators or Application Owners with routine tasks such as: Resolving common anomalies… Checking security issues…'
+- id: q33
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What severity levels can Insights alerts be filtered by?
+  options:
+  - id: a
+    text: High, Medium, Low
+  - id: b
+    text: Critical, Warning, and Notice
+  - id: c
+    text: P1, P2, P3
+  - id: d
+    text: Red, Yellow, Green
+  correct: b
+  explanation: 'Insights alerts can be filtered by severity: Critical, Warning, and Notice.'
+  source:
+    label: Nutanix Kubernetes Platform Insights Overview
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-overview-nkp-insights-c.html
+    page: p.1105
+    quote: 'You can also filter insight alerts in the Alerts table for each Severity level: Critical… Warning… Notice.'
+- id: q34
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where is NKP Insights Management enabled, and what must you do per cluster?
+  options:
+  - id: a
+    text: Enabled everywhere automatically
+  - id: b
+    text: Insights Management is enabled by default on the Management Cluster; you must enable the Insights Engine on each managed or attached cluster you want to monitor
+  - id: c
+    text: It runs only on worker nodes
+  - id: d
+    text: It cannot be enabled
+  correct: b
+  explanation: Insights Management is enabled by default on the Management Cluster; you must explicitly enable the Insights Engine on each managed or attached cluster you want to monitor.
+  source:
+    label: Installing NKP Insights Ultimate License
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-setup-insights-install-ultimate-license-t.html
+    page: p.1105
+    quote: You must enable NKP Insights on each managed or attached cluster that you want to monitor.

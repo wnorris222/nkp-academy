@@ -1,0 +1,729 @@
+id: ncpcn-s4-projects
+title: 4.5 Configure Projects
+track: NCP-CN Section 4
+order: 45
+icon: badge
+summary: 'Configure NKP Projects: create projects and their federated namespaces, manage access with project role bindings, and run continuous deployment via Flux/GitOps. Add clusters by manual selection or dynamic labels, federate resources, and set project quotas and limit ranges.
+
+  '
+questions:
+- id: q117
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is a Project in NKP?
+  options:
+  - id: a
+    text: A single namespace on one cluster
+  - id: b
+    text: A pre-defined subset group of Kubernetes clusters (under NKP management) that receives a common, federated configuration
+  - id: c
+    text: A node pool
+  - id: d
+    text: A backup schedule
+  correct: b
+  explanation: A Project is a pre-defined subset group of Kubernetes clusters under NKP management that receives a common, federated configuration.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: This pre-defined subset group of Kubernetes clusters is called a Project.
+- id: q118
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What can Projects manage across their clusters?
+  options:
+  - id: a
+    text: Only pods
+  - id: b
+    text: ConfigMaps, continuous deployments, secrets, services, quotas, RBAC, and multi-tenant logging via federated resources
+  - id: c
+    text: Only storage
+  - id: d
+    text: Only licenses
+  correct: b
+  explanation: Projects manage configMaps, continuous deployments, secrets, services, quotas, role-based access control, and multi-tenant logging by leveraging federated resources.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: Projects support the management of configMaps, continuous deployments, secrets, services, quotas, and role-based access control and multi-tenant logging by leveraging federated resources.
+- id: q119
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which technology does NKP leverage to coordinate configuration across a Project's clusters?
+  options:
+  - id: a
+    text: Ansible
+  - id: b
+    text: Kubernetes Cluster Federation (KubeFed)
+  - id: c
+    text: Terraform
+  - id: d
+    text: Helm only
+  correct: b
+  explanation: NKP leverages Kubernetes Cluster Federation (KubeFed) to coordinate the configuration of multiple clusters in a Project.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: Using Projects, NKP leverages Kubernetes Cluster Federation (KubeFed) to coordinate the configuration of multiple Kubernetes clusters.
+- id: q120
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is a primary use case for Projects?
+  options:
+  - id: a
+    text: Deleting clusters
+  - id: b
+    text: Letting central IT or a business unit share Kubernetes clusters among several teams and deploy configs/services consistently
+  - id: c
+    text: Building images
+  - id: d
+    text: Licensing
+  correct: b
+  explanation: Projects let central IT or a business unit share their Kubernetes clusters among several teams and deploy configurations/services consistently.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: Projects enable central IT or a business unit to share their Kubernetes clusters among several teams… enable teams to deploy their configurations and services to clusters in a consistent way.
+- id: q121
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is a Project Namespace?
+  options:
+  - id: a
+    text: A cloud region
+  - id: b
+    text: A Kommander federated namespace created on all clusters matching the project labels, isolating configurations across clusters
+  - id: c
+    text: A node label
+  - id: d
+    text: A storage class
+  correct: b
+  explanation: A Project Namespace is a Kommander federated namespace created on all clusters matching the project labels; it isolates configurations across clusters.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: Project Namespaces isolate configurations across clusters and are created on all clusters matching the project labels.
+- id: q122
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How does Kommander determine which clusters belong to a Project?
+  options:
+  - id: a
+    text: By IP address
+  - id: b
+    text: By labels — you select clusters manually or define labels for dynamic association
+  - id: c
+    text: By node count
+  - id: d
+    text: Randomly
+  correct: b
+  explanation: Kommander uses labels — you select clusters manually or define labels for dynamic association — to determine a Project's clusters.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: Kommander allows a user to use labels to select, manually or dynamically, the Kubernetes clusters associated with a Project.
+- id: q123
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which cluster-selection method is recommended when creating a Project, and why?
+  options:
+  - id: a
+    text: Manual, for control
+  - id: b
+    text: Label-based (dynamic), so clusters you deploy later are automatically associated with the Project based on their labels
+  - id: c
+    text: Neither
+  - id: d
+    text: By region only
+  correct: b
+  explanation: Label-based (dynamic) selection is recommended because clusters you deploy later are automatically associated with the Project based on their labels.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: define labels that Kommander will use to dynamically add clusters. The latter is recommended because it will allow you to deploy additional Kubernetes clusters later.
+- id: q124
+  type: scenario
+  difficulty: core
+  points: 15
+  prompt: 'Scenario: you will add more clusters later and want them auto-included in a Project. What do you configure?'
+  options:
+  - id: a
+    text: A manual list only
+  - id: b
+    text: A label selector so matching clusters are added dynamically
+  - id: c
+    text: A new workspace
+  - id: d
+    text: A quota
+  correct: b
+  explanation: Configure a label selector so matching clusters are added dynamically — future clusters with matching labels join automatically.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: define labels that Kommander will use to dynamically add clusters… to have them automatically associated with Projects based on their labels.
+- id: q125
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the Project object (YAML), which field selects the clusters?
+  options:
+  - id: a
+    text: spec.clusters.list
+  - id: b
+    text: spec.placement.clusterSelector.matchLabels
+  - id: c
+    text: metadata.labels
+  - id: d
+    text: spec.nodes
+  correct: b
+  explanation: In the Project object, spec.placement.clusterSelector.matchLabels selects the clusters.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.419
+    quote: 'kind: Project … spec: workspaceRef: … placement: clusterSelector: matchLabels: cluster: prod.'
+- id: q126
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is created on each cluster whose labels match a Project?
+  options:
+  - id: a
+    text: A new control plane
+  - id: b
+    text: The Project's federated namespace
+  - id: c
+    text: A load balancer
+  - id: d
+    text: A bootstrap cluster
+  correct: b
+  explanation: When a cluster's labels match, the Project's federated namespace is created on it.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: When a Project is created, NKP creates a federated namespace that is propagated to the Kubernetes clusters associated with this Project… created on all clusters matching the project labels.
+- id: q127
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What do Project Role Bindings do?
+  options:
+  - id: a
+    text: Create namespaces
+  - id: b
+    text: Assign a specific project role to a specific group of users, providing controlled access to project resources
+  - id: c
+    text: Delete clusters
+  - id: d
+    text: Enable CD
+  correct: b
+  explanation: Project role bindings assign a specific project role to a specific group of users, providing controlled access to project resources.
+  source:
+    label: Managing Access to Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.446
+    quote: Project role bindings assign a specific project role to a specific group of users, providing controlled access to the project resources.
+- id: q128
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What must exist before you create a Project Role Binding?
+  options:
+  - id: a
+    text: A quota
+  - id: b
+    text: A Kommander Group (containing one or more identity provider users or groups)
+  - id: c
+    text: A GitOps source
+  - id: d
+    text: A second cluster
+  correct: b
+  explanation: Before creating a Project Role Binding, create a Kommander Group that includes one or more identity provider users or groups.
+  source:
+    label: Managing Access to Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.446
+    quote: Before creating a binding, you create a Kommander group that includes one or more identity provider users or groups.
+- id: q129
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the UI path to create a Project Role Binding?
+  options:
+  - id: a
+    text: Global > Licensing
+  - id: b
+    text: Projects > select project > Role Bindings tab > Add Roles (next to the group) > select role > Save
+  - id: c
+    text: Clusters > Delete
+  - id: d
+    text: Administration > Providers
+  correct: b
+  explanation: 'In the UI: Projects > select your project > Role Bindings tab > Add Roles (next to the group) > select the Role > Save.'
+  source:
+    label: Managing Access to Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.446
+    quote: From the Projects page, select your project. Select the Role Bindings tab, then select Add Roles next to the group you want. Select the Role you want from the dropdown list, and then click Save.
+- id: q130
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which CLI object creates a Project Role Binding?
+  options:
+  - id: a
+    text: RoleBinding
+  - id: b
+    text: VirtualGroupProjectRoleBinding
+  - id: c
+    text: ClusterRoleBinding
+  - id: d
+    text: ProjectPolicy
+  correct: b
+  explanation: The CLI object is a VirtualGroupProjectRoleBinding.
+  source:
+    label: Managing Access to Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.446
+    quote: 'kind: VirtualGroupProjectRoleBinding … spec: projectRoleRef: name: ${projectrole} … virtualGroupRef: name: ${virtualgroup}.'
+- id: q131
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Can a Project Role Binding bind to a WorkspaceRole?
+  options:
+  - id: a
+    text: 'No'
+  - id: b
+    text: Yes — in certain instances you can bind a project role to a WorkspaceRole (via the CLI)
+  - id: c
+    text: Only for admins
+  - id: d
+    text: Only in the UI
+  correct: b
+  explanation: Yes — in certain instances you can create a Project role binding that binds a project role to a WorkspaceRole (via the CLI).
+  source:
+    label: Managing Access to Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
+    page: p.446
+    quote: Using the NKP CLI, you can configure bindings directly and, for a specific instance, bind a project role to a WorkspaceRole… Configure Project Role Bindings to Bind to WorkspaceRoles Using the CLI.
+- id: q132
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which application types can you use at the Project level?
+  options:
+  - id: a
+    text: Only Platform Applications
+  - id: b
+    text: Catalog Applications (NKP or custom, from the Nutanix Application Catalog) and Platform Applications
+  - id: c
+    text: Only Helm charts
+  - id: d
+    text: Only Docker images
+  correct: b
+  explanation: At the Project level you can use Catalog Applications (NKP or custom, from the Nutanix Application Catalog) and Platform Applications.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.419
+    quote: 'Application types are: Workspace Catalog Applications… (pre-packaged from the Nutanix Application Catalog or custom applications)… Platform Applications.'
+- id: q133
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where are project applications deployed?
+  options:
+  - id: a
+    text: Only the management cluster
+  - id: b
+    text: To the clusters associated with the Project (into the Project's federated namespace)
+  - id: c
+    text: Only worker nodes
+  - id: d
+    text: To the bootstrap cluster
+  correct: b
+  explanation: Project applications are deployed to the clusters associated with the Project, into the Project's federated namespace.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: NKP creates a federated namespace that is propagated to the Kubernetes clusters associated with this Project.
+- id: q134
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are Catalog Applications?
+  options:
+  - id: a
+    text: System pods
+  - id: b
+    text: Pre-packaged applications from the Nutanix Application Catalog, or custom applications you maintain for your teams
+  - id: c
+    text: Node images
+  - id: d
+    text: Backup jobs
+  correct: b
+  explanation: Catalog Applications are pre-packaged applications from the Nutanix Application Catalog, or custom applications you maintain for your teams/organization.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.419
+    quote: Workspace Catalog Applications… that are either pre-packaged applications from the Nutanix Application Catalog or custom applications that you maintain for your teams or organization.
+- id: q135
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How can you deploy project platform applications?
+  options:
+  - id: a
+    text: Only by editing etcd
+  - id: b
+    text: Using the NKP UI or CLI, which deploys them to the project's associated clusters
+  - id: c
+    text: Only via SSH
+  - id: d
+    text: They cannot be deployed
+  correct: b
+  explanation: Deploy project platform applications using the NKP UI or CLI; they are deployed to the project's associated clusters.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.419
+    quote: Deploying Project Platform Applications Using the CLI… (project apps deploy to the clusters associated with the project).
+- id: q136
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What backs Project CD (Continuous Deployment) in NKP?
+  options:
+  - id: a
+    text: Jenkins
+  - id: b
+    text: Flux (FluxCD) using GitOps processes
+  - id: c
+    text: ArgoCD only
+  - id: d
+    text: Cron jobs
+  correct: b
+  explanation: Project CD is backed by Flux (FluxCD), which continuously deploys applications using GitOps processes.
+  source:
+    label: Continuous Deployment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-deployment-c.html
+    page: p.435
+    quote: Use Project Deployments to manage GitOps based Continuous Deployments… This is backed by Flux, which enables software and applications to be continuously deployed (CD) using GitOps processes.
+- id: q137
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is GitOps?
+  options:
+  - id: a
+    text: A backup method
+  - id: b
+    text: A strategy where the configuration describing how an app is deployed is stored in Git and continuously synchronized to the cluster so its state matches the repo
+  - id: c
+    text: A monitoring tool
+  - id: d
+    text: A CNI
+  correct: b
+  explanation: GitOps stores the configuration describing how an app is deployed in a Git repo and continuously synchronizes it to the cluster so the cluster's state always matches the repo.
+  source:
+    label: Continuous Delivery with GitOps
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-delivery-with-gitops-c.html
+    page: p.436
+    quote: The configuration that describes how your application is deployed to a cluster are stored in a Git repository. The configuration is continuously synchronized from the Git repository to the cluster…
+- id: q138
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: Which are benefits of a GitOps deployment strategy? (Select all that apply)
+  options:
+  - id: a
+    text: A familiar, collaborative change/review process (branches, pull requests, reviews)
+  - id: b
+    text: A clear change log and audit trail (Git commit log + Kubernetes Events)
+  - id: c
+    text: Avoiding configuration drift with a single source of truth
+  - id: d
+    text: Eliminating the need for RBAC
+  correct:
+  - a
+  - b
+  - c
+  explanation: 'GitOps benefits: a familiar collaborative change/review process, a clear change log and audit trail (Git log + Kubernetes Events), and avoiding configuration drift via a single source of truth.'
+  source:
+    label: Continuous Delivery with GitOps
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-delivery-with-gitops-c.html
+    page: p.436
+    quote: Familiar, collaborative change and review process… Clear change log and audit trail… Avoid configuration drift… a single source of truth for cluster and application configuration.
+- id: q139
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Where do you configure CD in the NKP UI, and what do you create first?
+  options:
+  - id: a
+    text: Global > Licensing; a token
+  - id: b
+    text: The Continuous Deployment (CD) tab under your Project — create a secret first, then a GitOps source that uses it
+  - id: c
+    text: Clusters > Delete
+  - id: d
+    text: Administration > Providers
+  correct: b
+  explanation: Configure CD in the Continuous Deployment (CD) tab under your Project — create a secret first, then a GitOps source that the secret accesses.
+  source:
+    label: Continuous Deployment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-deployment-c.html
+    page: p.442
+    quote: Nutanix recommends that you create a secret first then create a GitOps source accessed by the secret.
+- id: q140
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which authentication methods can a Kommander CD secret use?
+  options:
+  - id: a
+    text: Only HTTPS
+  - id: b
+    text: HTTPS authentication, HTTPS self-signed certificates, or SSH authentication
+  - id: c
+    text: Only SSH
+  - id: d
+    text: LDAP only
+  correct: b
+  explanation: A Kommander CD secret supports HTTPS authentication, HTTPS self-signed certificates, or SSH authentication.
+  source:
+    label: Continuous Deployment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-deployment-c.html
+    page: p.442
+    quote: 'Kommander secrets (for CD) can be configured to support any of the following three authentication methods: HTTPS Authentication… HTTPS self-signed certificates… SSH Authentication.'
+- id: q141
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: For live debugging of an incident, how do you temporarily stop GitOps from reverting your changes?
+  options:
+  - id: a
+    text: Delete the repo
+  - id: b
+    text: Disable the auto sync feature — Flux stops synchronizing cluster state from the GitOps repo so you can use kubectl/helm
+  - id: c
+    text: Uninstall Flux
+  - id: d
+    text: Delete the cluster
+  correct: b
+  explanation: Disable the auto sync feature — Flux stops synchronizing the cluster state from the GitOps repo, letting you use kubectl/helm to resolve the incident.
+  source:
+    label: Continuous Delivery with GitOps
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-delivery-with-gitops-c.html
+    page: p.436
+    quote: Kommander's CD strategy supports this scenario by letting you disable the auto sync feature. After auto sync is disabled, Flux will stop synchronizing the cluster state from the GitOps git repository.
+- id: q142
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What security is automatically applied when using the Project CD feature?
+  options:
+  - id: a
+    text: None
+  - id: b
+    text: A dedicated service account (named after the Project) with namespace-restricted RBAC is automatically generated, isolating tenant access to their namespace
+  - id: c
+    text: Full cluster-admin
+  - id: d
+    text: A firewall rule
+  correct: b
+  explanation: When you use the Project CD feature, a dedicated service account named after the Project is automatically generated with namespace-restricted RBAC, isolating tenant access to their namespace.
+  source:
+    label: Continuous Deployment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-deployment-c.html
+    page: p.436
+    quote: This service account with the same name as the Project name is configured with limited RBAC permissions, restricting its access solely to the namespace where the resources are provisioned.
+- id: q143
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Do you need a secret to use a public GitHub repository as a CD source?
+  options:
+  - id: a
+    text: Yes, always
+  - id: b
+    text: No — if you use a public GitHub repository, you do not need to use a secret
+  - id: c
+    text: Only for SSH
+  - id: d
+    text: Only for GitLab
+  correct: b
+  explanation: No — if you use a public GitHub repository, you do not need to use a secret.
+  source:
+    label: Continuous Deployment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-deployment-c.html
+    page: p.442
+    quote: 'Warning: If you are using a public GitHub repository, you do not need to use a secret.'
+- id: q144
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How do you add clusters to an existing Project?
+  options:
+  - id: a
+    text: Reinstall NKP
+  - id: b
+    text: Select clusters manually, or (recommended) apply/adjust labels so matching clusters are added dynamically
+  - id: c
+    text: Delete the project
+  - id: d
+    text: You cannot add clusters after creation
+  correct: b
+  explanation: Add clusters by selecting them manually or (recommended) applying/adjusting labels so matching clusters are added dynamically.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: you can either select manually existing clusters or define labels that Kommander will use to dynamically add clusters.
+- id: q145
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What happens when a cluster's labels start matching a Project's selector?
+  options:
+  - id: a
+    text: The cluster is deleted
+  - id: b
+    text: The cluster is added to the Project and the Project's federated namespace is created on it
+  - id: c
+    text: Nothing
+  - id: d
+    text: The workspace is deleted
+  correct: b
+  explanation: When a cluster's labels match the Project selector, the cluster is added and the Project's federated namespace is created on it.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: a federated namespace that is propagated to the Kubernetes clusters associated with this Project… created on all clusters matching the project labels.
+- id: q146
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the two ways to associate clusters with a Project?
+  options:
+  - id: a
+    text: By IP or by MAC
+  - id: b
+    text: Manual selection of existing clusters, or dynamic label-based selection (recommended)
+  - id: c
+    text: By node or by pod
+  - id: d
+    text: By license or by region
+  correct: b
+  explanation: The two ways to associate clusters are manual selection of existing clusters, or dynamic label-based selection (recommended).
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: you can either select manually existing clusters or define labels that Kommander will use to dynamically add clusters. The latter is recommended…
+- id: q147
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does 'federation' mean in the context of NKP Projects?
+  options:
+  - id: a
+    text: Combining clusters into one
+  - id: b
+    text: A common configuration is pushed out from a central location (NKP) to all clusters, or a pre-defined subset group (a Project)
+  - id: c
+    text: Deleting resources
+  - id: d
+    text: Encrypting traffic
+  correct: b
+  explanation: Federation means a common configuration is pushed from a central location (NKP) to all clusters, or a pre-defined subset group (a Project), under NKP management.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: Federation in this context means that a common configuration is pushed out from a central location (NKP) to all Kubernetes clusters, or a pre-defined subset group, under NKP management.
+- id: q148
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: Which resources can be federated across a Project's clusters? (Select all that apply)
+  options:
+  - id: a
+    text: ConfigMaps and Secrets
+  - id: b
+    text: Services and quotas
+  - id: c
+    text: RBAC and multi-tenant logging
+  - id: d
+    text: Physical disks
+  correct:
+  - a
+  - b
+  - c
+  explanation: Federated resources include configMaps, secrets, services, quotas, RBAC, and multi-tenant logging.
+  source:
+    label: Creating a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
+    page: p.418
+    quote: Projects support the management of configMaps, continuous deployments, secrets, services, quotas, and role-based access control and multi-tenant logging by leveraging federated resources.
+- id: q149
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: How are Project Quotas and Limit Ranges applied?
+  options:
+  - id: a
+    text: To one cluster only
+  - id: b
+    text: To all of the Project's clusters (they limit the resources the project team uses)
+  - id: c
+    text: To the management cluster only
+  - id: d
+    text: Per node manually
+  correct: b
+  explanation: Project Quotas and Limit Ranges are applied to all of the Project's clusters, limiting the resources the project team uses.
+  source:
+    label: Project Quotas and Limit Ranges
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-project-quotas-and-limit-ranges-t.html
+    page: p.455
+    quote: Project Quotas and Limit Ranges can be set up to limit the number of resources the Project team uses and are applied to all project clusters.
+- id: q150
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which Kubernetes object defines Project Quotas?
+  options:
+  - id: a
+    text: ResourceQuota
+  - id: b
+    text: A FederatedResourceQuota named 'kommander'
+  - id: c
+    text: LimitRange only
+  - id: d
+    text: A ConfigMap
+  correct: b
+  explanation: Project Quotas are defined using a Kubernetes FederatedResourceQuota named 'kommander'.
+  source:
+    label: Project Quotas and Limit Ranges
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-project-quotas-and-limit-ranges-t.html
+    page: p.455
+    quote: All the Project Quotas are defined using a Kubernetes FederatedResourceQuota called kommander which you can also create/update using kubectl.

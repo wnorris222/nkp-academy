@@ -1,0 +1,520 @@
+id: ncpcn-s1-registry
+title: 1.1 Seed a Private Registry
+track: NCP-CN Section 1
+order: 11
+icon: book
+summary: 'Objective 1.1 covers seeding a local/private registry for air-gapped NKP deployments: why the registry must be pre-loaded, the nkp push bundle command and its parameters (REGISTRY_URL, REGISTRY_CA, credentials), the extraction and push workflow, network reachability requirements, and troubleshooting seeding issues for Harbor, JFrog, Nexus, and ECR registries.
+
+  '
+questions:
+- id: q1
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In an air-gapped NKP deployment, what is the primary reason you must seed a local registry before creating the cluster?
+  options:
+  - id: a
+    text: To license the NKP binary
+  - id: b
+    text: To load all required container images locally so cluster nodes can pull them without internet access
+  - id: c
+    text: To generate SSH keys for the bastion host
+  - id: d
+    text: To configure MetalLB load balancing
+  correct: b
+  explanation: Before creating an air-gapped cluster you must load required images into a local registry so the Konvoy (and Kommander) components can pull them without internet.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1031
+    quote: Before creating an air-gapped Kubernetes cluster, you must load the required images in a local registry for the Konvoy component.
+- id: q2
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: The NKP air-gapped bundle can only be used in a fully air-gapped environment.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: The complete air-gapped bundle is needed for air-gapped installs but can also be used to serve a local registry in a non-air-gapped environment.
+  source:
+    label: 'Nutanix Air-gapped: Loading the Registry'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-load-reg-t.html
+    page: p.92
+    quote: The complete NKP air-gapped bundle is needed for an air-gapped environment but can also be used in a non-air-gapped environment.
+- id: q3
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: 'NKP describes two registry types for providing image/chart access in air-gapped setups. Match each to its description: (a) Local Registry Mirror (b) Internal Registry Mirror — (1) hosted on an NKP cluster and managed by NKP, populated using an air-gapped bundle; (2) network-accessible repository populated by pulling images from public registries and storing them locally.'
+  options:
+  - id: a
+    text: a->2, b->1
+  - id: b
+    text: a->1, b->2
+  - id: c
+    text: a->1, b->1
+  - id: d
+    text: a->2, b->2
+  correct: a
+  explanation: Local Registry Mirror = network-accessible repo populated from public registries. Internal Registry Mirror = hosted on/managed by an NKP cluster, populated from the air-gapped bundle.
+  source:
+    label: Air-gapped vs. Non-air-gapped Environments
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mt-ag-vs-non-ag-env-c.html
+    page: p.22
+    quote: Local Registry Mirror… network-accessible container image repository populated by pulling images from public registries… Internal Registry Mirror… hosted on an NKP cluster managed by NKP… populated using an air-gapped bundle.
+- id: q4
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: A partner asks why they can't just point an air-gapped cluster at Docker Hub "since it's only sometimes offline." Which statement best explains the requirement?
+  options:
+  - id: a
+    text: Air-gapped clusters allow outbound but not inbound traffic, so Docker Hub works intermittently
+  - id: b
+    text: Air-gapped environments need local repositories (e.g., JFrog, Harbor, Nexus) to store images, charts, and artifacts because there's no reliable internet path
+  - id: c
+    text: Docker Hub is not a supported upstream for NKP
+  - id: d
+    text: Seeding is optional if the cluster has a bastion host
+  correct: b
+  explanation: Air-gapped environments need local repositories (JFrog, Harbor, Nexus) for images, charts, and artifacts — there is no reliable internet path.
+  source:
+    label: Air-gapped vs. Non-air-gapped Environments
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mt-ag-vs-non-ag-env-c.html
+    page: p.24
+    quote: in an air-gapped environment, you need local repositories to store Helm charts, docker images, and other artifacts. Tools such as JFrog, Harbor, and Nexus…
+- id: q5
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'Fill in the blank. The command used to seed the air-gapped image bundle into a private registry is: nkp ______ ______ --bundle ./container-images/konvoy-image-bundle-nkp-version.tar --to-registry=${REGISTRY_URL} ...'
+  options:
+  - id: a
+    text: push bundle
+  - id: b
+    text: load images
+  - id: c
+    text: seed registry
+  - id: d
+    text: upload bundle
+  correct: a
+  explanation: The seeding command is nkp push bundle, pointing --bundle at the konvoy image tar and --to-registry at the registry URL.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1031
+    quote: nkp push bundle --bundle ./container-images/konvoy-image-bundle-nkp-version.tar --to-registry=${REGISTRY_URL}
+- id: q6
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: Which flags authenticate the nkp push bundle command against a private registry that requires credentials? (Select two)
+  options:
+  - id: a
+    text: --to-registry-username
+  - id: b
+    text: --registry-login
+  - id: c
+    text: --to-registry-password
+  - id: d
+    text: --auth-token
+  correct:
+  - a
+  - c
+  explanation: Authentication uses --to-registry-username and --to-registry-password (paired with --to-registry).
+  source:
+    label: 'Nutanix Air-gapped: Loading the Registry'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-load-reg-t.html
+    page: p.93
+    quote: --to-registry-username=${REGISTRY_USERNAME} --to-registry-password=${REGISTRY_PASSWORD}
+- id: q7
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: 'Match each environment variable to its purpose: (a) REGISTRY_URL (b) REGISTRY_CA (c) REGISTRY_USERNAME (d) REGISTRY_PASSWORD — (1) path on the bastion to the registry CA, only for a self-signed cert not already trusted; (2) address (<scheme>://<address>:<port>) of the local registry; (3) a user with pull access; (4) optional if the username is not set.'
+  options:
+  - id: a
+    text: a->2, b->1, c->3, d->4
+  - id: b
+    text: a->1, b->2, c->3, d->4
+  - id: c
+    text: a->2, b->1, c->4, d->3
+  - id: d
+    text: a->3, b->1, c->2, d->4
+  correct: a
+  explanation: The four registry variables map to URL, CA path, pull user, and password respectively.
+  source:
+    label: 'Nutanix Air-gapped: Loading the Registry'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-load-reg-t.html
+    page: p.96
+    quote: 'REGISTRY_URL: the address of an existing registry… REGISTRY_CA: (optional) the path… to the registry CA… REGISTRY_USERNAME: optional, set to a user that has pull access… REGISTRY_PASSWORD: optional if the username is not set.'
+- id: q8
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: REGISTRY_CA is always required when seeding a private registry.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: REGISTRY_CA is optional — needed only when the registry uses a self-signed cert the nodes/AMIs don't already trust.
+  source:
+    label: 'Nutanix Air-gapped: Loading the Registry'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-load-reg-t.html
+    page: p.96
+    quote: 'REGISTRY_CA: (optional)… This value is only needed if the registry is using a self-signed certificate and the AMIs are not already configured to trust this CA.'
+- id: q9
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: A partner deploying to AWS wants to seed images into ECR instead of a self-hosted registry. Which two statements are correct? (Select two)
+  options:
+  - id: a
+    text: Set REGISTRY_URL to the ECR registry URI
+  - id: b
+    text: You must always pass --to-registry-password with a static ECR password
+  - id: c
+    text: The environment running nkp push must be authenticated with AWS to load images into ECR
+  - id: d
+    text: ECR is unsupported for air-gapped seeding
+  correct:
+  - a
+  - c
+  explanation: Set REGISTRY_URL to the ECR URI and ensure the push environment is authenticated with AWS. No static ECR credentials are supplied.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1029
+    quote: 'set an environment variable with your registry address for ECR: export REGISTRY_URL=<ecr-registry-URI>… The environment where you are running the NKP push command must be authenticated with AWS to load your images into ECR.'
+- id: q10
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Besides konvoy-image-bundle, which additional image bundle must be pushed so the Kommander component can install in an air-gapped environment?
+  options:
+  - id: a
+    text: kommander-image-bundle-nkp-version.tar
+  - id: b
+    text: nib-image-bundle.tar
+  - id: c
+    text: bootstrap-image-bundle.tar
+  - id: d
+    text: No additional bundle is needed
+  correct: a
+  explanation: kommander-image-bundle-nkp-version.tar must also be pushed so Kommander images are present in the registry.
+  source:
+    label: 'Nutanix Air-gapped: Loading the Registry'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-load-reg-t.html
+    page: p.93
+    quote: nkp push bundle --bundle ./container-images/kommander-image-bundle-nkp-version.tar --to-registry=${REGISTRY_URL}…
+- id: q11
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: 'Put the air-gapped registry-seeding workflow in the correct order: (1) cd nkp-nkp-version (2) export REGISTRY_URL=... and other registry variables (3) tar -xzvf nkp-air-gapped-bundle_...tar.gz (4) nkp push bundle ... konvoy-image-bundle ... (5) push the Kommander image bundle.'
+  options:
+  - id: a
+    text: 3 -> 1 -> 2 -> 4 -> 5
+  - id: b
+    text: 1 -> 2 -> 3 -> 4 -> 5
+  - id: c
+    text: 3 -> 2 -> 1 -> 4 -> 5
+  - id: d
+    text: 1 -> 3 -> 2 -> 5 -> 4
+  correct: a
+  explanation: Extract the bundle, cd into the version directory, export registry vars, push the Konvoy bundle, then push the Kommander bundle.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1031
+    quote: download the air-gapped bundle… extract the tarball… cd nkp-nkp-version… export REGISTRY_URL… nkp push bundle… konvoy-image-bundle…
+- id: q12
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which bundle file must you download and extract to seed the registry?
+  options:
+  - id: a
+    text: nkp_nkp-version_linux_amd64.tar.gz (CLI-only)
+  - id: b
+    text: nkp-air-gapped-bundle_nkp-version_linux_amd64.tar.gz
+  - id: c
+    text: konvoy-bootstrap-image.tar
+  - id: d
+    text: kommander-applications.tar
+  correct: b
+  explanation: The complete air-gapped bundle nkp-air-gapped-bundle_nkp-version_linux_amd64.tar.gz is downloaded and extracted to seed the registry.
+  source:
+    label: Prerequisites for Installation
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
+    page: p.50
+    quote: 'Ensure to download the complete NKP air-gapped bundle: nkp-air-gapped-bundle_nkp-version_linux_amd64.tar.gz'
+- id: q13
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After extraction, in which subdirectory do the konvoy-image-bundle, kommander-image-bundle, and nkp-insights-image-bundle .tar files live?
+  options:
+  - id: a
+    text: application-charts/
+  - id: b
+    text: application-repositories/
+  - id: c
+    text: container-images/
+  - id: d
+    text: nib/
+  correct: c
+  explanation: The image bundles live under container-images/ in the extracted directory tree.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1032
+    quote: container-images / … konvoy-image-bundle… kommander-image-bundle… nkp-insights-image-bundle…
+- id: q14
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: The seeded registry must be reachable only from the machine running nkp push — it does not need to be reachable by the cluster nodes.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: The registry must be reachable from both the bastion host and the cluster nodes.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1031
+    quote: This registry must be accessible from both the… Bastion Host… and either the Amazon EC2 instances… or other machines that will be created for the Kubernetes cluster.
+- id: q15
+  type: scenario
+  difficulty: core
+  points: 15
+  prompt: 'Scenario: A partner successfully runs nkp push bundle for the Konvoy bundle, then immediately tries to create the cluster and the Kommander install fails pulling images. What did they most likely skip?'
+  options:
+  - id: a
+    text: Pushing the Kommander image bundle — Konvoy images alone aren't enough; Kommander requires its own images (kommander-image-bundle) in the registry
+  - id: b
+    text: Setting REGISTRY_CA for the Konvoy push
+  - id: c
+    text: Downloading the CLI-only bundle
+  - id: d
+    text: Configuring MetalLB before seeding
+  correct: a
+  explanation: Konvoy images alone aren't enough — Kommander requires its own images (kommander-image-bundle) in the registry.
+  source:
+    label: 'Nutanix Air-gapped: Loading the Registry'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-load-reg-t.html
+    page: p.93
+    quote: a local container registry containing all the necessary installation images, including the Kommander images, is required.
+- id: q16
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: 'During seeding to a Harbor registry, a partner sees: "UNAUTHORIZED: project not found, name: mesosphere". Per NKP documentation, what is the correct interpretation?'
+  options:
+  - id: a
+    text: Their credentials are wrong; regenerate the registry password
+  - id: b
+    text: This is a known false-positive (NKP binaries newer than 2.14.0) that can be safely ignored for Harbor
+  - id: c
+    text: The bundle is corrupt; re-download it
+  - id: d
+    text: Harbor is unsupported
+  correct: b
+  explanation: Known false-positive on Harbor for NKP binaries newer than 2.14.0; safe to ignore.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1030
+    quote: is a false positive error message. This will only affect the… NKP binary newer than NKP 2.14.0… You can safely ignore these error messages.
+- id: q17
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: The Harbor "project not found" false-positive message also affects Nexus and JFrog Artifactory registries.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: The false-positive affects only Harbor; it does not affect Nexus or Artifactory.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1030
+    quote: This does not affect any other Local Registry solution, such as Nexus or Artifactory.
+- id: q18
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: A partner uses JFrog Artifactory as their private registry and seeding behaves erratically. Which requirement should you check first?
+  options:
+  - id: a
+    text: Artifactory must be older than v7.11
+  - id: b
+    text: Artifactory must be a build newer than version 7.11
+  - id: c
+    text: Artifactory requires MetalLB
+  - id: d
+    text: Artifactory only works with ECR
+  correct: b
+  explanation: JFrog Artifactory / JFrog Container Registry must be a build newer than v7.11; older versions are not compatible.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1030
+    quote: Use a build newer than version 7.11; older versions are not compatible.
+- id: q19
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: A partner reports nkp push bundle is running for a very long time with no error. What is the most likely, benign explanation per the docs?
+  options:
+  - id: a
+    text: The registry is down
+  - id: b
+    text: Pushing all images takes time depending on network performance between the push machine and the registry
+  - id: c
+    text: The bundle version doesn't match the CLI
+  - id: d
+    text: REGISTRY_CA is missing
+  correct: b
+  explanation: Long push times are expected and depend on network performance between the push machine and the registry.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1032
+    quote: NKP takes some time to push all the images to your image registry, depending on the performance of the network between the machine you are running the script on and the registry.
+- id: q20
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Seeding fails with a TLS/certificate trust error against a registry using a self-signed certificate. Which variable/flag addresses this?
+  options:
+  - id: a
+    text: REGISTRY_PASSWORD
+  - id: b
+    text: REGISTRY_CA (path to the CA on the bastion)
+  - id: c
+    text: --insecure-skip-verify only
+  - id: d
+    text: REGISTRY_URL scheme change to http
+  correct: b
+  explanation: Provide REGISTRY_CA (path to the CA on the bastion); NKP configures nodes to trust it — specifically for self-signed certs.
+  source:
+    label: 'Nutanix Air-gapped: Loading the Registry'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-load-reg-t.html
+    page: p.96
+    quote: REGISTRY_CA… NKP will configure the cluster nodes to trust this CA. This value is only needed if the registry is using a self-signed certificate…
+- id: q21
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: For an air-gapped cluster, from which machines must the seeded registry be network-accessible? (Select all that apply)
+  options:
+  - id: a
+    text: The bastion host
+  - id: b
+    text: The cluster nodes (EC2 instances or other machines created for the cluster)
+  - id: c
+    text: Docker Hub
+  - id: d
+    text: GitHub
+  correct:
+  - a
+  - b
+  explanation: The registry must be network-accessible from the bastion host and the cluster nodes. Docker Hub/GitHub are not reachable in air-gapped.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1031
+    quote: accessible from both the… Bastion Host… and either the Amazon EC2 instances… or other machines…
+- id: q22
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: A network-restricted cluster is the same as an air-gapped cluster.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: A network-restricted cluster is explicitly not the same as an air-gapped cluster.
+  source:
+    label: Air-gapped vs. Non-air-gapped Environments
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mt-ag-vs-non-ag-env-c.html
+    page: p.21
+    quote: A network-restricted cluster is not the same as an air-gapped cluster.
+- id: q23
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which statement correctly distinguishes the two?
+  options:
+  - id: a
+    text: Network-restricted clusters block all ingress and egress; air-gapped allow egress
+  - id: b
+    text: Network-restricted clusters restrict but permit some controlled traffic; air-gapped clusters do not allow ingress or egress
+  - id: c
+    text: They are identical in traffic behavior
+  - id: d
+    text: Air-gapped clusters require internet; network-restricted do not
+  correct: b
+  explanation: Network-restricted clusters can reach external networks but aren't reachable from outside; air-gapped clusters allow no ingress or egress.
+  source:
+    label: Air-gapped vs. Non-air-gapped Environments
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mt-ag-vs-non-ag-env-c.html
+    page: p.21
+    quote: network-restricted clusters can reach external networks (like the Internet), but their services or ingresses cannot be accessed from outside. Air-gapped clusters, however, do not allow ingress or egress traffic.
+- id: q24
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In an air-gapped deployment, what role does the bastion host play relative to the registry?
+  options:
+  - id: a
+    text: It replaces the need for a registry
+  - id: b
+    text: It acts as a secure gateway with access to the infra provider's API and hosts/accesses the registry and NKP bundles
+  - id: c
+    text: It stores SSH keys only
+  - id: d
+    text: It runs the Kommander UI
+  correct: b
+  explanation: The bastion is a secure gateway with access to the infra provider's API; it hosts/accesses the Konvoy bundles, images, and local registry.
+  source:
+    label: Seeding the Registry for an Air-gapped Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    page: p.1030
+    quote: the bastion Virtual Machine (VM) hosts the installation of the… Konvoy bundles, images, and the Docker or other local registry… must have access to the infrastructure provider's… API.
+- id: q25
+  type: scenario
+  difficulty: core
+  points: 15
+  prompt: 'Scenario (short answer): A partner sets REGISTRY_URL="https://registry.local:5000" but cluster nodes fail to pull images during cluster creation, even though seeding succeeded from the bastion. Name two network-related things you''d verify.'
+  options:
+  - id: a
+    text: Node-to-registry routing/firewall on the registry port, and node trust of the registry CA (REGISTRY_CA if self-signed)
+  - id: b
+    text: The bastion's SSH key and the Kommander UI port
+  - id: c
+    text: The CLI version and the bundle checksum
+  - id: d
+    text: MetalLB configuration and Docker Hub reachability
+  correct: a
+  explanation: The registry must be routable from the nodes (DNS + firewall/security-group on the port) and the nodes must trust its CA; the mirror flags are set at cluster-create time.
+  source:
+    label: 'Nutanix Air-gapped: Loading the Registry'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-load-reg-t.html
+    page: p.96
+    quote: 'REGISTRY_URL: the address of an existing registry accessible in the VPC that the new cluster nodes will be configured to use… REGISTRY_CA… NKP will configure the cluster nodes to trust this CA.'

@@ -1,0 +1,466 @@
+id: ncpcn-s1-bootstrap
+title: 1.2 Create a Bootstrap Cluster
+track: NCP-CN Section 1
+order: 12
+icon: refresh
+summary: 'A bootstrap cluster is a temporary local Kubernetes-in-Docker (Kind) cluster that hosts the Cluster API (CAPI) controllers used to provision a management cluster. Once the management cluster is created, CAPI resources are pivoted (moved) to it so it becomes self-managed, then the bootstrap is deleted. Objective 1.2 covers the create/move/delete workflow, proxy flags (--http-proxy, --https-proxy, --no-proxy), kubeconfig handling, and troubleshooting bootstrap creation.
+
+  '
+questions:
+- id: q26
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the primary purpose of a bootstrap cluster in an NKP deployment?
+  options:
+  - id: a
+    text: It is the permanent management cluster that runs your workloads
+  - id: b
+    text: It is a temporary local (Kind) cluster that hosts the Cluster API controllers used to provision the management cluster, before resources are pivoted to it
+  - id: c
+    text: It stores the private registry images
+  - id: d
+    text: It is the load balancer for the control plane
+  correct: b
+  explanation: The bootstrap cluster is a temporary Kubernetes-in-Docker (Kind) cluster that hosts the CAPI controllers which provision and manage the new cluster; once the target cluster is self-managed, the bootstrap is deleted.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.21
+    quote: CAPI makes use of a bootstrap cluster for provisioning and managing clusters.
+- id: q27
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: Per CAPI concepts, which actions does a bootstrap cluster handle? (Select all that apply)
+  options:
+  - id: a
+    text: Generating the cluster certificates if not otherwise specified
+  - id: b
+    text: Initializing the control plane and managing creation of other nodes until complete
+  - id: c
+    text: Joining control plane and worker nodes to the cluster
+  - id: d
+    text: Installing and configuring the CNI, CSI volume provisioners, cluster Autoscaler, and core Kubernetes components
+  correct:
+  - a
+  - b
+  - c
+  - d
+  explanation: 'CAPI documentation lists all four as bootstrap-cluster responsibilities: generating certificates, initializing the control plane and other nodes, joining nodes, and installing/configuring CNI, CSI, Autoscaler, and core components.'
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.21
+    quote: 'A bootstrap cluster handles the following actions: Generating the cluster certificates… Initializing the control plane… Joining control plane and worker nodes… Installing and configuring the networking plugin (CNI), CSI volume provisioners, cluster Autoscaler, and core Kubernetes components.'
+- id: q28
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is a "pivot" in the NKP/CAPI workflow?
+  options:
+  - id: a
+    text: Rebooting the control plane nodes
+  - id: b
+    text: Moving the CAPI resources from the bootstrap cluster to the management cluster, making it self-managed
+  - id: c
+    text: Switching the registry mirror URL
+  - id: d
+    text: Upgrading the Kubernetes version
+  correct: b
+  explanation: A pivot moves the CAPI Custom Resource objects from the bootstrap cluster to the management cluster, making it self-managed.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.21
+    quote: Pivots CAPI resources from the bootstrap cluster to the management cluster, making it self-managed.
+- id: q29
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: A self-managed cluster is one in which the CAPI resources and controllers that describe and manage it run on the same cluster they are managing.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'true'
+  explanation: A self-managed cluster runs the CAPI resources and controllers that describe and manage it on the same cluster they manage.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.20
+    quote: A self-managed cluster is one in which the CAPI resources and controllers that describe and manage it run on the same cluster they are managing.
+- id: q30
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After the management cluster becomes self-managed, what happens to the bootstrap cluster?
+  options:
+  - id: a
+    text: It is promoted to a worker node
+  - id: b
+    text: It is kept running as a backup control plane
+  - id: c
+    text: It is deleted (nkp delete bootstrap)
+  - id: d
+    text: It becomes the registry mirror
+  correct: c
+  explanation: The final step of the self-managed workflow deletes the temporary bootstrap cluster with nkp delete bootstrap.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.21
+    quote: 'Deletes the bootstrap cluster. Run the following command: nkp delete bootstrap'
+- id: q31
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which command creates a bootstrap cluster?
+  options:
+  - id: a
+    text: nkp init bootstrap
+  - id: b
+    text: nkp create bootstrap
+  - id: c
+    text: nkp bootstrap create
+  - id: d
+    text: kind create cluster --bootstrap
+  correct: b
+  explanation: The bootstrap cluster is created with nkp create bootstrap.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.20
+    quote: 'Creates a bootstrap cluster. Run the following command: nkp create bootstrap'
+- id: q32
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What container technology does NKP use to stand up the bootstrap cluster, and what host software is therefore required?
+  options:
+  - id: a
+    text: containerd; requires nerdctl
+  - id: b
+    text: Kubernetes-in-Docker (Kind); requires Docker installed
+  - id: c
+    text: Podman machine; requires CRI-O
+  - id: d
+    text: LXC; requires snapd
+  correct: b
+  explanation: NKP uses Kubernetes-in-Docker (Kind) to create the bootstrap cluster, so Docker must be installed on the host.
+  source:
+    label: NKP Prerequisites
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-nkp-prerequisites-c.html
+    page: p.28
+    quote: Docker installed — NKP uses Kubernetes-in-Docker (Kind) to create a bootstrap cluster for creating Management clusters, and thus Docker installation is required.
+- id: q33
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: In a proxied environment, which three flags must you include when creating the bootstrap cluster? (Select three)
+  options:
+  - id: a
+    text: --http-proxy
+  - id: b
+    text: --proxy-ca
+  - id: c
+    text: --https-proxy
+  - id: d
+    text: --no-proxy
+  correct:
+  - a
+  - c
+  - d
+  explanation: A bootstrap cluster in a proxied environment requires --http-proxy, --https-proxy, and --no-proxy.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.692
+    quote: 'To create a bootstrap server in a proxied environment, you need to include the following flags: --http-proxy… --https-proxy… --no-proxy…'
+- id: q34
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When supplying multiple values within a proxy flag, what is the correct delimiter?
+  options:
+  - id: a
+    text: A space
+  - id: b
+    text: A semicolon
+  - id: c
+    text: A comma (,) with no space following it
+  - id: d
+    text: A pipe (|)
+  correct: c
+  explanation: The delimiter between each proxy value within a flag is a comma with no trailing space.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.693
+    quote: the delimiter between each proxy value within a flag is a comma (,) with no space character following it.
+- id: q35
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which flag lets you point nkp create bootstrap at an explicit kubeconfig path (recommended to avoid using the wrong kubeconfig)?
+  options:
+  - id: a
+    text: --config
+  - id: b
+    text: --kubeconfig (e.g., --kubeconfig $HOME/.kube/config)
+  - id: c
+    text: --context-file
+  - id: d
+    text: --admin-conf
+  correct: b
+  explanation: Use --kubeconfig to target an explicit kubeconfig path (e.g., --kubeconfig $HOME/.kube/config), recommended to avoid using the wrong kubeconfig.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.805
+    quote: 'nkp create bootstrap --kubeconfig $HOME/.kube/config … Note: To avoid using the wrong kubeconfig, the following steps use explicit kubeconfig paths and contexts.'
+- id: q36
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: Docker is used to run your Management and managed clusters after deployment.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: Docker/Kind is only used to stand up the bootstrap cluster; it is not used to run your Management or managed clusters.
+  source:
+    label: NKP Prerequisites
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-nkp-prerequisites-c.html
+    page: p.28
+    quote: Docker is not used to run your Management or managed clusters.
+- id: q37
+  type: multiple_choice
+  difficulty: core
+  points: 15
+  prompt: 'Put the high-level self-managed cluster creation workflow in the correct order: (1) nkp create capi-components (2) nkp create bootstrap (3) nkp delete bootstrap (4) nkp move capi-resources (pivot) (5) nkp create cluster (management cluster).'
+  options:
+  - id: a
+    text: 2 -> 5 -> 1 -> 4 -> 3
+  - id: b
+    text: 1 -> 2 -> 3 -> 4 -> 5
+  - id: c
+    text: 2 -> 1 -> 5 -> 4 -> 3
+  - id: d
+    text: 5 -> 2 -> 1 -> 3 -> 4
+  correct: a
+  explanation: Create the bootstrap cluster, create the management cluster, deploy CAPI components on it, pivot (move) CAPI resources to it, then delete the bootstrap cluster.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.20
+    quote: Creates a bootstrap cluster… Creates a management cluster… Deploys CAPI controllers… Pivots CAPI resources from the bootstrap cluster to the management cluster… Deletes the bootstrap cluster.
+- id: q38
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After the management cluster is created, which command exports its kubeconfig to a file?
+  options:
+  - id: a
+    text: nkp export kubeconfig
+  - id: b
+    text: nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf
+  - id: c
+    text: kubectl config view > kube.conf
+  - id: d
+    text: nkp bootstrap kubeconfig
+  correct: b
+  explanation: After the cluster is created, export its kubeconfig with nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.20
+    quote: '# export kubeconfig of the cluster nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf'
+- id: q39
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the pivot (move capi-resources) command, which flag pairs specify the source and destination clusters?
+  options:
+  - id: a
+    text: --src / --dst
+  - id: b
+    text: --from-kubeconfig / --from-context and --to-kubeconfig / --to-context
+  - id: c
+    text: --input / --output
+  - id: d
+    text: --old / --new
+  correct: b
+  explanation: The move/pivot command uses --from-kubeconfig/--from-context for the source and --to-kubeconfig/--to-context for the destination.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.805
+    quote: nkp move capi-resources --from-kubeconfig ${CLUSTER_NAME}.conf --from-context … --to-kubeconfig $HOME/.kube/config --to-context kind-konvoy-capi-bootstrapper
+- id: q40
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When NKP creates the bootstrap cluster as a local Kind cluster, what is its kubectl context name (as seen in the pivot command)?
+  options:
+  - id: a
+    text: kind-bootstrap
+  - id: b
+    text: konvoy-bootstrap
+  - id: c
+    text: kind-konvoy-capi-bootstrapper
+  - id: d
+    text: capi-system
+  correct: c
+  explanation: The local Kind bootstrap cluster's context is kind-konvoy-capi-bootstrapper, as referenced by --to-context in the pivot command.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.805
+    quote: --to-context kind-konvoy-capi-bootstrapper
+- id: q41
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: (KB) The bootstrap cluster runs locally as a Kind cluster. Per the Nutanix KB, how do you obtain its kubeconfig for direct kubectl access?
+  options:
+  - id: a
+    text: It is impossible; the bootstrap cluster has no kubeconfig
+  - id: b
+    text: Output the Kind bootstrap cluster's kubeconfig to a file (e.g., via kind get kubeconfig for the konvoy-capi-bootstrapper cluster), per the KB
+  - id: c
+    text: Re-run nkp create cluster
+  - id: d
+    text: Copy /etc/kubernetes/admin.conf from a worker node
+  correct: b
+  explanation: Because the bootstrap runs as a local Kind cluster (context kind-konvoy-capi-bootstrapper), you export its kubeconfig to a file to interact with it directly, the procedure the Nutanix KB documents.
+  source:
+    label: KB – How to output the Bootstrap Cluster Kubeconfig to a File
+    url: https://portal.nutanix.com/page/documents/kbs/details?targetId=kA0VO0000001mab0AA
+    page: p.805
+    quote: How to output the Bootstrap Cluster Kubeconfig to a File.
+- id: q42
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: You should create the bootstrap cluster from within the same network where the new cluster will run.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'true'
+  explanation: Nutanix recommends creating the bootstrap cluster from within the same network where the new cluster will run.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.692
+    quote: For NKP installation, create the bootstrap cluster from within the same network where the new cluster will run.
+- id: q43
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: A partner creates the bootstrap cluster on a laptop that sits in a different network with different proxy settings than the target cluster. What is the documented risk?
+  options:
+  - id: a
+    text: No risk; location is irrelevant
+  - id: b
+    text: It can cause problems — Nutanix recommends creating the bootstrap from within the same (proxied) network/environment where the cluster will run
+  - id: c
+    text: The bootstrap will be faster
+  - id: d
+    text: It only affects the dashboard
+  correct: b
+  explanation: Creating the bootstrap from a laptop with different proxy settings or a different network can cause problems; create it from within the same proxied environment where the cluster will run.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.692
+    quote: Using a bootstrap cluster on a laptop with different proxy settings, for example, or residing in a different network, can cause problems.
+- id: q44
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In a proxied environment, nkp create cluster fails to build parts of the new cluster. Proxy flags were omitted. Why does this happen?
+  options:
+  - id: a
+    text: The license is invalid
+  - id: b
+    text: Without the proxy values on the relevant nkp create command, NKP cannot create the requisite parts of the cluster (true for management and managed clusters alike)
+  - id: c
+    text: Docker is not installed
+  - id: d
+    text: The registry CA is missing
+  correct: b
+  explanation: Without the proxy values on the relevant nkp create command, NKP cannot create the requisite parts of the new cluster — true for both management and managed clusters.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.692
+    quote: Without these values provided as part of the relevant nkp create command, NKP cannot create the requisite parts of your new cluster correctly. This is true of both management and managed clusters alike.
+- id: q45
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After cluster creation, which command lists all CAPI resources and their statuses to validate cluster health?
+  options:
+  - id: a
+    text: nkp status capi
+  - id: b
+    text: kubectl get cluster-api
+  - id: c
+    text: nkp validate bootstrap
+  - id: d
+    text: kubectl get pods -n kube-system
+  correct: b
+  explanation: kubectl get cluster-api lists all resources that comprise a cluster and their statuses to validate readiness and health.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.1041
+    quote: Gather a list of all resources that comprise a cluster and their statuses. kubectl get cluster-api
+- id: q46
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Some pods are not in Running or Completed state after installation. Which command does the documentation recommend to collect diagnostic information from pods and infrastructure?
+  options:
+  - id: a
+    text: nkp diagnose
+  - id: b
+    text: nkp logs dump
+  - id: c
+    text: kubectl describe all
+  - id: d
+    text: nkp reset
+  correct: a
+  explanation: Run nkp diagnose to collect information from pods and infrastructure (it feeds a support bundle) when pods aren't Running/Completed.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.1041
+    quote: If something has not been deployed properly or thoroughly, run the nkp diagnose command. This collects information from pods and infrastructure.
+- id: q47
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the bootstrap environment, why must the no-proxy/proxy configuration account for the fact that the API server does not yet exist?
+  options:
+  - id: a
+    text: Because the API server is created later, during cluster creation — it doesn't exist in the bootstrap environment beforehand
+  - id: b
+    text: Because Kind does not use an API server
+  - id: c
+    text: Because the API server runs on the registry
+  - id: d
+    text: Because proxies disable the API server
+  correct: a
+  explanation: The API server doesn't exist in the bootstrap environment beforehand because it is created during cluster creation — relevant when planning proxy/no-proxy settings.
+  source:
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: p.692
+    quote: The Application Programming Interface (API) server doesn't exist yet in the bootstrap environment before you install NKP because the API server is created during cluster creation.

@@ -1,0 +1,429 @@
+id: ncpcn-s4-detach
+title: 4.4 Detach or Delete Clusters
+track: NCP-CN Section 4
+order: 44
+icon: gauge
+summary: 'Disconnecting (detaching) an attached cluster removes it from the NKP UI without altering its running state, while deleting a Kommander-created managed cluster removes the cluster and all its cloud assets. You can delete an NKP cluster with a single command, and delete EKS clusters directly from the NKP UI, following the correct decommissioning order.
+
+  '
+questions:
+- id: q97
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the difference between detaching and deleting a cluster?
+  options:
+  - id: a
+    text: They are identical
+  - id: b
+    text: Detaching removes an attached cluster from the NKP UI without altering its running state; deleting removes a Kommander-created managed cluster and all its cloud assets
+  - id: c
+    text: Detaching wipes the cluster
+  - id: d
+    text: Deleting only removes a label
+  correct: b
+  explanation: Detaching removes an attached cluster from the NKP UI without altering its running state; deleting removes a Kommander-created managed cluster and all of its cloud assets.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.544
+    quote: you can later detach it. This does not alter the cluster's running state but simply removes it from the NKP UI.
+- id: q98
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What happens to workloads and resources when you detach a cluster?
+  options:
+  - id: a
+    text: They are deleted
+  - id: b
+    text: They are not cleaned up — user workloads, platform services, and other Kubernetes resources keep running; only the UI entry is removed
+  - id: c
+    text: Nodes are drained
+  - id: d
+    text: The cluster is reset
+  correct: b
+  explanation: At detach, user workloads, platform services, and other Kubernetes resources are not cleaned up — the cluster keeps running; only the UI entry is removed.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.544
+    quote: User workloads, platform services, and other Kubernetes resources are not cleaned up at detach.
+- id: q99
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Can you disconnect (detach) a managed cluster that was created with Kommander?
+  options:
+  - id: a
+    text: Yes, detach it
+  - id: b
+    text: No — you cannot disconnect it; you delete it instead (which removes the cluster and its cloud assets)
+  - id: c
+    text: Only via CLI
+  - id: d
+    text: Only with Ultimate
+  correct: b
+  explanation: You cannot disconnect a Kommander-created managed cluster; you delete it instead (recommended through the NKP UI), which removes the cluster and its cloud assets.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.545
+    quote: If you created a managed cluster with Kommander, you cannot disconnect it, but you can delete it. This completely removes the cluster and all of its cloud assets.
+- id: q100
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Can the Management Cluster be disconnected from the GUI?
+  options:
+  - id: a
+    text: 'Yes'
+  - id: b
+    text: No — the Management Cluster cannot be disconnected from the GUI, so the Management Cluster Workspace cannot be deleted from the GUI
+  - id: c
+    text: Only by support
+  - id: d
+    text: Only after upgrade
+  correct: b
+  explanation: The Management Cluster cannot be disconnected from the GUI, and therefore the Management Cluster Workspace cannot be deleted from the GUI.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.546
+    quote: The Management Cluster cannot be disconnected from the GUI like other attached clusters. Because of this, the Management Cluster Workspace cannot be deleted from the GUI
+- id: q101
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: After detaching an attached cluster, what manual step is required?
+  options:
+  - id: a
+    text: Nothing
+  - id: b
+    text: Manually disconnect the attached cluster's Flux installation from the management Git repository (otherwise workspace app changes still reflect on it)
+  - id: c
+    text: Delete the workspace
+  - id: d
+    text: Reboot the nodes
+  correct: b
+  explanation: After detaching, manually disconnect the attached cluster's Flux installation from the management Git repository — otherwise workspace app changes still reflect on the detached cluster.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.544
+    quote: After successfully detaching the cluster, manually disconnect the attached cluster's Flux installation from the management Git repository.
+- id: q102
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When decommissioning an entire environment, in what order do you delete?
+  options:
+  - id: a
+    text: Management cluster first
+  - id: b
+    text: Delete the Managed clusters before deleting the Management (Konvoy) cluster — otherwise you can't use Kommander to delete the Managed clusters
+  - id: c
+    text: Order doesn't matter
+  - id: d
+    text: Delete workspaces first
+  correct: b
+  explanation: Delete the Managed clusters before the Management (Konvoy) cluster first, you can't use Kommander to delete any Managed clusters it created.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.545
+    quote: If you delete the Management (Konvoy) cluster, you can not use Kommander to delete any Managed clusters created by Kommander
+- id: q103
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the recommended way to delete a managed cluster?
+  options:
+  - id: a
+    text: Delete cloud resources manually
+  - id: b
+    text: Through the NKP (Kommander) UI
+  - id: c
+    text: Power off the nodes
+  - id: d
+    text: Delete the namespace
+  correct: b
+  explanation: Delete a managed cluster through the NKP (Kommander) UI — that is the recommended method.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.545
+    quote: We recommend deleting a managed cluster through the NKP UI.
+- id: q104
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In the UI, how do you start deleting a cluster (EKS example)?
+  options:
+  - id: a
+    text: Settings > Delete
+  - id: b
+    text: Select Clusters in the left menu, select the cluster, click the triple-dot vertical icon (bottom-right), then select Delete
+  - id: c
+    text: Right-click the node
+  - id: d
+    text: Edit the KommanderCluster YAML
+  correct: b
+  explanation: In the UI, select Clusters in the left menu, choose the cluster, click the triple-dot vertical icon in the bottom-right, then select Delete.
+  source:
+    label: Deleting EKS Cluster from the NKP UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-eks-infra-delete-via-ui-t.html
+    page: p.846
+    quote: Open the dashboard and select Clusters in the left menu. Select the cluster you wish to delete and click the triple dot vertical icon in the bottom right corner.
+- id: q105
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What confirmation does the delete dialog require?
+  options:
+  - id: a
+    text: A checkbox only
+  - id: b
+    text: Copy the cluster's name and paste it into the box, then click Delete Cluster
+  - id: c
+    text: An admin password
+  - id: d
+    text: A support PIN
+  correct: b
+  explanation: The delete dialog requires you to copy the cluster's name and paste it into the box, then click the Delete Cluster button.
+  source:
+    label: Deleting EKS Cluster from the NKP UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-eks-infra-delete-via-ui-t.html
+    page: p.847
+    quote: When the next screen appears, copy the name of your cluster and paste it into the empty box… Now execute the deletion using the Delete Cluster button.
+- id: q106
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What status is shown after you initiate a cluster deletion in the UI?
+  options:
+  - id: a
+    text: Active
+  - id: b
+    text: '''Deleting'' (shown on the cluster card)'
+  - id: c
+    text: Pending Setup
+  - id: d
+    text: Joined
+  correct: b
+  explanation: After initiating deletion, the cluster card shows the 'Deleting' status.
+  source:
+    label: Deleting EKS Cluster from the NKP UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-eks-infra-delete-via-ui-t.html
+    page: p.848
+    quote: You will see the status as 'Deleting' in the top left corner of the cluster you selected for deletion.
+- id: q107
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does deleting a Kommander-created managed cluster remove?
+  options:
+  - id: a
+    text: Only the UI entry
+  - id: b
+    text: The cluster and all of its cloud assets (infrastructure)
+  - id: c
+    text: Only the workloads
+  - id: d
+    text: Only the node pools
+  correct: b
+  explanation: Deleting a Kommander-created managed cluster removes the cluster and all of its cloud assets (its infrastructure).
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.545
+    quote: you can delete it. This completely removes the cluster and all of its cloud assets.
+- id: q108
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which resource backs a cluster if you delete it via the CLI instead of the GUI?
+  options:
+  - id: a
+    text: A Deployment
+  - id: b
+    text: A KommanderCluster resource (kubectl -n WORKSPACE_NAMESPACE delete kommandercluster CLUSTER_NAME)
+  - id: c
+    text: A Secret
+  - id: d
+    text: A Service
+  correct: b
+  explanation: 'If deleting via the CLI, the cluster is backed by a KommanderCluster resource: kubectl -n WORKSPACE_NAMESPACE delete kommandercluster CLUSTER_NAME.'
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.545
+    quote: Delete the cluster. kubectl -n WORKSPACE_NAMESPACE delete kommandercluster CLUSTER_NAME.
+- id: q109
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What permission do you need to delete a cluster in the UI?
+  options:
+  - id: a
+    text: None
+  - id: b
+    text: Permission to delete the cluster (you must have created it and have delete permission)
+  - id: c
+    text: Only view access
+  - id: d
+    text: Cluster-admin on every node
+  correct: b
+  explanation: To delete a cluster in the UI you must have created it and have permission to delete.
+  source:
+    label: Deleting EKS Cluster from the NKP UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-eks-infra-delete-via-ui-t.html
+    page: p.846
+    quote: 'To delete a cluster in the UI, you must first… EKS: Creating an EKS Cluster from the UI… and have permission to delete.'
+- id: q110
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: An attached cluster is stuck in 'Pending' or 'Error' when detaching/deleting. What are the likely causes?
+  options:
+  - id: a
+    text: The license expired
+  - id: b
+    text: The wrong kubeconfig file was used, or the cluster is not reachable
+  - id: c
+    text: Too many labels
+  - id: d
+    text: The workspace is full
+  correct: b
+  explanation: A stuck 'Pending' or 'Error' state usually means the wrong kubeconfig file was used or the cluster is not reachable.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.545
+    quote: detaching or deleting a Kubernetes cluster causes that cluster to get stuck in a 'Pending' or 'Error' state.
+- id: q111
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: The KommanderCluster resource won't delete after a short time. How do you force it?
+  options:
+  - id: a
+    text: Reboot the cluster
+  - id: b
+    text: Remove its finalizers (kubectl -n WORKSPACE_NAMESPACE patch kommandercluster CLUSTER_NAME --type json -p '[{"op":"remove","path":"/metadata/finalizers"}]')
+  - id: c
+    text: Delete the namespace
+  - id: d
+    text: Reinstall Kommander
+  correct: b
+  explanation: If the KommanderCluster resource doesn't delete after a short time, remove its finalizers with a JSON patch to /metadata/finalizers — this removes the cluster from the NKP UI.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.545
+    quote: If the resource does not go after a short time, remove its finalizers. This removes the cluster from the NKP UI.
+- id: q112
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does the 'Error' cluster status indicate?
+  options:
+  - id: a
+    text: The cluster is healthy
+  - id: b
+    text: There has been an error connecting to the cluster or retrieving data from it
+  - id: c
+    text: The cluster is being created
+  - id: d
+    text: The cluster is disconnected cleanly
+  correct: b
+  explanation: '''Error'' means there has been an error connecting to the cluster or retrieving data from it.'
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.546
+    quote: Error — There has been an error connecting to the cluster or retrieving data from the cluster.
+- id: q113
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does the 'Deleting' cluster status indicate?
+  options:
+  - id: a
+    text: The cluster is idle
+  - id: b
+    text: The cluster and its resources are being removed from your cloud provider (this may take some time)
+  - id: c
+    text: The cluster is joining
+  - id: d
+    text: The cluster is attached
+  correct: b
+  explanation: '''Deleting'' means the cluster and its resources are being removed from your cloud provider (this may take some time).'
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.546
+    quote: Deleting — The cluster and its resources are being removed from your cloud provider. This process might take some time.
+- id: q114
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Your managed cluster is self-managed. What must you do before deleting it?
+  options:
+  - id: a
+    text: Nothing special
+  - id: b
+    text: A self-managed cluster cannot delete itself — first create a (temporary) bootstrap cluster and move the cluster lifecycle (CAPI) services to it, then delete the managed cluster
+  - id: c
+    text: Upgrade it first
+  - id: d
+    text: Detach it
+  correct: b
+  explanation: A self-managed cluster cannot delete itself — first create a temporary bootstrap cluster and move the cluster lifecycle (CAPI) services to it, then delete the managed cluster.
+  source:
+    label: Delete a NKP Cluster with One Command
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-delete-nkp-cluster-t.html
+    page: p.819
+    quote: A self-managed cluster cannot delete itself.
+- id: q115
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When deleting a self-managed cluster via the CLI, what does NKP remove before the cluster itself?
+  options:
+  - id: a
+    text: The nodes
+  - id: b
+    text: All Services of type LoadBalancer (each backed by a cloud load balancer / ELB)
+  - id: c
+    text: The namespaces
+  - id: d
+    text: Nothing
+  correct: b
+  explanation: Before deleting the cluster, NKP deletes all Services of type LoadBalancer — each backed by a cloud load balancer (e.g., an AWS Classic ELB).
+  source:
+    label: Delete a NKP Cluster with One Command
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-delete-nkp-cluster-t.html
+    page: p.806
+    quote: Before deleting the cluster, NKP deletes all Services of type LoadBalancer on the cluster. Each Service is backed by an AWS Classic ELB…
+- id: q116
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Is unregistering a cluster from NKP supported?
+  options:
+  - id: a
+    text: 'Yes'
+  - id: b
+    text: No — unregistering a cluster on NKP is not supported (use detach or delete)
+  - id: c
+    text: Only for EKS
+  - id: d
+    text: Only with Ultimate
+  correct: b
+  explanation: Unregistering a cluster on NKP is not supported — use detach or delete instead.
+  source:
+    label: Disconnecting or Deleting Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-disconnect-or-delete-clusters-t.html
+    page: p.546
+    quote: Unregistering a cluster on Nutanix Kubernetes Platform (NKP) is not supported.

@@ -1,0 +1,425 @@
+id: ncpcn-s1-bastion
+title: 1.4 Prepare a Bastion Host
+track: NCP-CN Section 1
+order: 14
+icon: gauge
+summary: 'In an air-gapped NKP deployment the bastion host is the VM that hosts the Konvoy bundles, images, and a Docker/local registry (Docker 27.4.0), acting as a secure gateway to download and seed artifacts offline. It needs 8 vCPU / 16 GB / 80 GB, kubectl, access to the infrastructure provider''s API, and SSH access via the BASTION_HOST/USERNAME/PRIVATE_KEY_FILE/PORT and REGISTRY_ADDRESS/REGISTRY_CA variables so cluster nodes can pull from a network-accessible local registry.
+
+  '
+questions:
+- id: q73
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In an air-gapped NKP deployment, what is the primary purpose of the bastion host?
+  options:
+  - id: a
+    text: It runs the production workloads
+  - id: b
+    text: It is the bastion VM that hosts the NKP Konvoy bundles, images, and the Docker/local registry needed to create and operate the cluster
+  - id: c
+    text: It is the cluster's control-plane load balancer
+  - id: d
+    text: It replaces the need for a private registry
+  correct: b
+  explanation: When creating an air-gapped cluster, the bastion VM hosts the NKP Konvoy bundles, images, and the Docker or other local registry needed to create and operate the cluster.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.703
+    quote: the bastion Virtual Machine (VM) hosts the installation of the… Konvoy bundles, images, and the Docker or other local registry are needed to create and operate your cluster.
+- id: q74
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Within an air-gapped setup, a bastion host acts as what?
+  options:
+  - id: a
+    text: A DNS server
+  - id: b
+    text: A secure gateway between the air-gapped environment and external networks, facilitating controlled downloads of updates, images, and installation files
+  - id: c
+    text: A backup target
+  - id: d
+    text: A container image scanner
+  correct: b
+  explanation: A bastion host acts as a secure gateway between the air-gapped environment and external networks, facilitating controlled downloads of updates, images, and installation files.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.23
+    quote: 'Bastion Host Setup: A bastion host acts as a secure gateway between the air-gapped environment and external networks, facilitating controlled downloads of updates, images, and installation files.'
+- id: q75
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In a given environment, the bastion VM must have access to what, in order to provision infrastructure?
+  options:
+  - id: a
+    text: The public Internet
+  - id: b
+    text: The infrastructure provider's API
+  - id: c
+    text: Docker Hub
+  - id: d
+    text: A GPU
+  correct: b
+  explanation: In a given environment, the bastion VM must have access to the infrastructure provider's API.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.703
+    quote: In a given environment, the bastion VM must have access to the infrastructure provider's Application Programming Interface (API).
+- id: q76
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: The bastion host connects directly to the Internet to pull cluster images.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'false'
+  explanation: The bastion VM host needs access to a local registry instead of an Internet connection to pull images.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.703
+    quote: This bastion VM host also needs access to a local registry instead of an Internet connection to pull images.
+- id: q77
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: To begin an air-gapped install, what must be loaded onto the bastion machine (e.g., via docker load)?
+  options:
+  - id: a
+    text: The Kommander UI
+  - id: b
+    text: The bootstrap image (konvoy-bootstrap-image-nkp-version.tar)
+  - id: c
+    text: The Grafana dashboards
+  - id: d
+    text: The vCenter appliance
+  correct: b
+  explanation: Load the bootstrap image onto the bastion machine, e.g., docker load -i konvoy-bootstrap-image-nkp-version.tar.
+  source:
+    label: Basic Installations by Infrastructure
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-installs-infra-c.html
+    page: p.91
+    quote: 'Load the bootstrap image on your bastion machine: docker load -i konvoy-bootstrap-image-nkp-version.tar'
+- id: q78
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: In a pre-provisioned air-gapped deployment, where must all artifacts first be placed?
+  options:
+  - id: a
+    text: On each worker node directly
+  - id: b
+    text: Onto the bastion host, then unpacked and distributed
+  - id: c
+    text: In the cloud provider's object storage
+  - id: d
+    text: On the management cluster
+  correct: b
+  explanation: All artifacts for pre-provisioned air-gapped must get onto the bastion host, where artifacts needed by nodes are unpacked and distributed before provisioning can proceed offline.
+  source:
+    label: Basic Installations by Infrastructure
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-installs-infra-c.html
+    page: p.90
+    quote: All artifacts for Pre-provisioned Air-gapped need to get onto the bastion host. Artifacts needed by nodes must be unpacked and distributed on the bastion…
+- id: q79
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What are the minimum resource requirements for the bastion host?
+  options:
+  - id: a
+    text: 4 vCPU, 8 GB memory, 40 GB disk
+  - id: b
+    text: 8 vCPU, 16 GB memory, 80 GB disk
+  - id: c
+    text: 2 vCPU, 4 GB memory, 20 GB disk
+  - id: d
+    text: 16 vCPU, 32 GB memory, 160 GB disk
+  correct: b
+  explanation: The bastion host resource requirements are vCPU Count 8, Memory 16 GB, and Disk Volume 80 GB.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.703
+    quote: 'You must have the following resource requirements: vCPU Count 8, Memory 16 GB, and Disk Volume 80 GB.'
+- id: q80
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which container engine (and version) must be installed on the host where the NKP Konvoy CLI runs?
+  options:
+  - id: a
+    text: Podman 4.0
+  - id: b
+    text: containerd 1.6
+  - id: c
+    text: Docker version 27.4.0 (or a local registry)
+  - id: d
+    text: CRI-O 1.28
+  correct: c
+  explanation: Docker version 27.4.0 (or a local registry) must be installed on the host where the NKP Konvoy CLI runs.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.703
+    quote: A local registry or Docker version 27.4.0 installed. You must install Docker on the host where the NKP Konvoy CLI runs.
+- id: q81
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: On macOS, Docker runs in a virtual machine that you must configure with at least how much memory?
+  options:
+  - id: a
+    text: 4 GB
+  - id: b
+    text: 8 GB
+  - id: c
+    text: 16 GB
+  - id: d
+    text: 2 GB
+  correct: b
+  explanation: On macOS, Docker runs in a virtual machine that you configure with at least 8GB of memory.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.703
+    quote: On macOS, Docker runs in a virtual machine that you configure with at least 8GB of memory.
+- id: q82
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which CLI tool must be installed on the bastion/host to interact with the running cluster?
+  options:
+  - id: a
+    text: helm
+  - id: b
+    text: kubectl
+  - id: c
+    text: terraform
+  - id: d
+    text: ansible
+  correct: b
+  explanation: Install kubectl on the host where the NKP Konvoy CLI runs to interact with the running cluster.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.703
+    quote: To interact with the running cluster, install kubectl on the host where the NKP Konvoy command line interface (CLI) runs.
+- id: q83
+  type: multiple_choice
+  difficulty: stretch
+  points: 15
+  prompt: Which of the following are documented bastion-host prerequisites? (Select all that apply)
+  options:
+  - id: a
+    text: Create a bastion VM host template for the cluster nodes to use within the air-gapped network
+  - id: b
+    text: Find and record the bastion VM's IP or hostname
+  - id: c
+    text: Download the required NKP Konvoy binaries and installation bundles
+  - id: d
+    text: A local registry or Docker installed, plus kubectl
+  correct:
+  - a
+  - b
+  - c
+  - d
+  explanation: The prerequisites include creating a bastion VM host template, recording its IP/hostname, downloading the NKP Konvoy binaries and bundles, and having a local registry or Docker plus kubectl installed.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.703
+    quote: Create a bastion VM host template… Find and record the bastion VM's IP or hostname… Download the following required NKP Konvoy binaries and installation bundles…
+- id: q84
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which environment variables configure SSH access to the bastion host?
+  options:
+  - id: a
+    text: SSH_HOST, SSH_USER, SSH_KEY, SSH_PORT
+  - id: b
+    text: BASTION_HOST, BASTION_USERNAME, BASTION_PRIVATE_KEY_FILE, BASTION_PORT
+  - id: c
+    text: HOST_IP, HOST_USER, HOST_KEY
+  - id: d
+    text: BASTION_URL, BASTION_TOKEN
+  correct: b
+  explanation: SSH access to the bastion is configured with BASTION_HOST, BASTION_USERNAME, BASTION_PRIVATE_KEY_FILE, and BASTION_PORT.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.72
+    quote: export BASTION_HOST=… BASTION_USERNAME=… BASTION_PRIVATE_KEY_FILE=… BASTION_PORT=22
+- id: q85
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What is the default Bastion SSH port (BASTION_PORT)?
+  options:
+  - id: a
+    text: '443'
+  - id: b
+    text: '6443'
+  - id: c
+    text: '22'
+  - id: d
+    text: '8080'
+  correct: c
+  explanation: The default Bastion SSH port is 22 (change BASTION_PORT only if different from the default).
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.72
+    quote: 22 with the Bastion SSH port, if it is different from the default port.
+- id: q86
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Which two exports enable the bastion to connect to an existing registry mirror for cluster creation?
+  options:
+  - id: a
+    text: REGISTRY_ADDRESS and REGISTRY_CA
+  - id: b
+    text: REGISTRY_USER and REGISTRY_PASS
+  - id: c
+    text: MIRROR_URL and MIRROR_TOKEN
+  - id: d
+    text: DOCKER_HOST and DOCKER_CERT
+  correct: a
+  explanation: Set REGISTRY_ADDRESS and REGISTRY_CA so the bastion connects to an existing registry mirror when the new cluster nodes pull images.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.704
+    quote: export REGISTRY_ADDRESS=<https/http>://<registry-address>:<registry-port> export REGISTRY_CA=<path to the CA on the bastion host>.
+- id: q87
+  type: multiple_choice
+  difficulty: stretch
+  points: 15
+  prompt: 'Order the air-gapped bastion setup process: (1) copy artifacts onto cluster hosts (2) extract and load the bootstrap image onto the bastion host (3) seed the registry with images locally (4) position GPU artifacts locally (if using a GPU).'
+  options:
+  - id: a
+    text: 1 -> 2 -> 3 -> 4
+  - id: b
+    text: 2 -> 1 -> 4 -> 3
+  - id: c
+    text: 3 -> 2 -> 1 -> 4
+  - id: d
+    text: 2 -> 3 -> 1 -> 4
+  correct: b
+  explanation: Extract/load the bootstrap image onto the bastion, copy artifacts onto the cluster hosts, position GPU artifacts locally (if any), then seed the registry with images locally.
+  source:
+    label: Basic Installations by Infrastructure
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-installs-infra-c.html
+    page: p.91
+    quote: 1. The bootstrap image must be extracted and loaded onto the bastion host. 2. Artifacts must be copied onto cluster hosts… 3. If using a GPU, those artifacts must be positioned locally. 4. Registry seeded with images locally.
+- id: q88
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: Instead of an Internet connection, what must the bastion host have access to in order to pull/serve images?
+  options:
+  - id: a
+    text: A local registry
+  - id: b
+    text: A public CDN
+  - id: c
+    text: Docker Hub
+  - id: d
+    text: A proxy to GitHub
+  correct: a
+  explanation: The bastion needs access to a local registry instead of an Internet connection to pull/export images.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.45
+    quote: The bastion host needs access to a local registry instead of an Internet connection to export images.
+- id: q89
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: The seeded local registry must be network-accessible from which machines?
+  options:
+  - id: a
+    text: The bastion host only
+  - id: b
+    text: The cluster nodes only
+  - id: c
+    text: Both the bastion host and the cluster nodes
+  - id: d
+    text: Only the management cluster
+  correct: c
+  explanation: The registry must be accessible from both the bastion host and the cluster nodes (the EC2 instances or other machines created for the cluster).
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.1031
+    quote: This registry must be accessible from both the… Bastion Host… and either the Amazon EC2 instances… or other machines that will be created for the Kubernetes cluster.
+- id: q90
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: What does the REGISTRY_ADDRESS variable specify?
+  options:
+  - id: a
+    text: The bastion's SSH endpoint
+  - id: b
+    text: The address of an existing registry accessible in the environment where the new cluster nodes are configured to use it as a mirror when pulling images
+  - id: c
+    text: The Prism Central endpoint
+  - id: d
+    text: The load balancer VIP
+  correct: b
+  explanation: REGISTRY_ADDRESS is the address of an existing registry accessible in the environment where the new cluster nodes are configured to use it as a mirror when pulling images.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.704
+    quote: 'REGISTRY_ADDRESS: The address of an existing registry accessible in the environment where the new cluster nodes will be configured to use a mirror registry when pulling images.'
+- id: q91
+  type: multiple_choice
+  difficulty: core
+  points: 10
+  prompt: When is the REGISTRY_CA value needed on the bastion?
+  options:
+  - id: a
+    text: Always
+  - id: b
+    text: Only if the registry uses a self-signed certificate and the VMs are not already configured to trust that CA
+  - id: c
+    text: Only for public cloud
+  - id: d
+    text: Only when using Podman
+  correct: b
+  explanation: REGISTRY_CA is only needed if the registry uses a self-signed certificate and the VMs are not already configured to trust that CA; Konvoy then configures the nodes to trust it.
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.704
+    quote: 'REGISTRY_CA: (Optional) path on the bastion host to the registry CA… only needed if the registry is using a self-signed certificate and the VMs are not already configured to trust this CA.'
+- id: q92
+  type: true_false
+  difficulty: core
+  points: 10
+  prompt: 'True/False: Each infrastructure provider (AWS, Azure, GCP, vSphere) has its own set of bastion host instructions.'
+  options:
+  - id: 'true'
+    text: 'True'
+  - id: 'false'
+    text: 'False'
+  correct: 'true'
+  explanation: Each infrastructure provider has its own set of bastion host instructions (AWS, Azure, GCP, vSphere).
+  source:
+    label: Creating a Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
+    page: p.704
+    quote: Each infrastructure provider has its own set of bastion host instructions. Refer to your own OS instructions to setup a bastion host like AWS Bastion, Azure, GCP, or vSphere.

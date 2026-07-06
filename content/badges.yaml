@@ -1,0 +1,189 @@
+# Badge catalog. Awarded automatically by app.scoring.evaluate_badges.
+# criteria_type: module_complete | track_complete | xp_threshold
+# criteria_value: module id | track name | XP integer
+badges:
+  - id: xp-100
+    name: "Century Club"
+    description: "Earned 100 XP."
+    icon: star
+    criteria_type: xp_threshold
+    criteria_value: 100
+
+  - id: xp-250
+    name: "NKP Champion"
+    description: "Earned 250 XP — you know your stuff."
+    icon: crown
+    criteria_type: xp_threshold
+    criteria_value: 250
+
+  # ---- NCP-CN Exam Prep · Section 1 ----
+  - id: ncpcn-registry-ace
+    name: "Registry Ace"
+    description: "Completed NCP-CN 1.1 — Seed a Private Registry."
+    icon: book
+    criteria_type: module_complete
+    criteria_value: ncpcn-s1-registry
+
+  - id: ncpcn-bootstrap-ace
+    name: "Bootstrap Builder"
+    description: "Completed NCP-CN 1.2 — Create a Bootstrap Cluster."
+    icon: refresh
+    criteria_type: module_complete
+    criteria_value: ncpcn-s1-bootstrap
+
+  - id: ncpcn-licensing-ace
+    name: "Licensing Expert"
+    description: "Completed NCP-CN 1.3 — Determine License Tiers."
+    icon: badge
+    criteria_type: module_complete
+    criteria_value: ncpcn-s1-licensing
+
+  - id: ncpcn-bastion-ace
+    name: "Bastion Boss"
+    description: "Completed NCP-CN 1.4 — Prepare a Bastion Host."
+    icon: gauge
+    criteria_type: module_complete
+    criteria_value: ncpcn-s1-bastion
+
+  - id: ncpcn-images-ace
+    name: "Image Smith"
+    description: "Completed NCP-CN 1.5 — Build Machine Images / Prepare Nodes."
+    icon: rocket
+    criteria_type: module_complete
+    criteria_value: ncpcn-s1-images
+
+  - id: ncpcn-clusterinfo-ace
+    name: "Cluster Cartographer"
+    description: "Completed NCP-CN 1.6 — Gather Cluster Build Information."
+    icon: star
+    criteria_type: module_complete
+    criteria_value: ncpcn-s1-cluster-info
+
+  - id: ncpcn-section1-graduate
+    name: "NCP-CN Section 1 Graduate"
+    description: "Completed all six objectives of NCP-CN Section 1."
+    icon: cap
+    criteria_type: track_complete
+    criteria_value: "NCP-CN Section 1"
+
+  # ---- NCP-CN Exam Prep · Section 2 ----
+  - id: ncpcn-deploy-ace
+    name: "Cluster Deployer"
+    description: "Completed NCP-CN 2.1 — Customize & Deploy Clusters."
+    icon: refresh
+    criteria_type: module_complete
+    criteria_value: ncpcn-s2-deploy-clusters
+
+  - id: ncpcn-kommander-ace
+    name: "Kommander Commander"
+    description: "Completed NCP-CN 2.2 — Deploy Kommander & Apply Licenses."
+    icon: crown
+    criteria_type: module_complete
+    criteria_value: ncpcn-s2-kommander
+
+  - id: ncpcn-section2-graduate
+    name: "NCP-CN Section 2 Graduate"
+    description: "Completed both objectives of NCP-CN Section 2."
+    icon: cap
+    criteria_type: track_complete
+    criteria_value: "NCP-CN Section 2"
+
+  # ---- NCP-CN Exam Prep · Section 3 (Day-2 Operations) ----
+  - id: ncpcn-authn-ace
+    name: "Access Guardian"
+    description: "Completed NCP-CN 3.1 — Authentication & Authorization."
+    icon: badge
+    criteria_type: module_complete
+    criteria_value: ncpcn-s3-authn
+
+  - id: ncpcn-logging-ace
+    name: "Log Wrangler"
+    description: "Completed NCP-CN 3.2 — Configure Logging."
+    icon: book
+    criteria_type: module_complete
+    criteria_value: ncpcn-s3-logging
+
+  - id: ncpcn-backup-ace
+    name: "Recovery Ranger"
+    description: "Completed NCP-CN 3.3 — Backup & Recovery."
+    icon: refresh
+    criteria_type: module_complete
+    criteria_value: ncpcn-s3-backup
+
+  - id: ncpcn-monitoring-ace
+    name: "Signal Watcher"
+    description: "Completed NCP-CN 3.4 — Monitoring & Health."
+    icon: gauge
+    criteria_type: module_complete
+    criteria_value: ncpcn-s3-monitoring
+
+  - id: ncpcn-autoscaling-ace
+    name: "Scale Master"
+    description: "Completed NCP-CN 3.5 — Cluster Autoscaling."
+    icon: rocket
+    criteria_type: module_complete
+    criteria_value: ncpcn-s3-autoscaling
+
+  - id: ncpcn-lifecycle-ace
+    name: "Upgrade Artisan"
+    description: "Completed NCP-CN 3.6 — Lifecycle Management."
+    icon: trophy
+    criteria_type: module_complete
+    criteria_value: ncpcn-s3-lifecycle
+
+  - id: ncpcn-section3-graduate
+    name: "NCP-CN Section 3 Graduate"
+    description: "Completed all six objectives of NCP-CN Section 3."
+    icon: cap
+    criteria_type: track_complete
+    criteria_value: "NCP-CN Section 3"
+
+  # ---- NCP-CN Exam Prep · Section 4 (Fleet Management) ----
+  - id: ncpcn-workspaces-ace
+    name: "Workspace Wrangler"
+    description: "Completed NCP-CN 4.1 — Configure Workspaces."
+    icon: book
+    criteria_type: module_complete
+    criteria_value: ncpcn-s4-workspaces
+
+  - id: ncpcn-deploy-workload-ace
+    name: "Fleet Deployer"
+    description: "Completed NCP-CN 4.2 — Deploy Workload Clusters."
+    icon: rocket
+    criteria_type: module_complete
+    criteria_value: ncpcn-s4-deploy-workload
+
+  - id: ncpcn-attach-ace
+    name: "Cluster Attacher"
+    description: "Completed NCP-CN 4.3 — Attach Clusters."
+    icon: refresh
+    criteria_type: module_complete
+    criteria_value: ncpcn-s4-attach
+
+  - id: ncpcn-detach-ace
+    name: "Clean Detacher"
+    description: "Completed NCP-CN 4.4 — Detach or Delete Clusters."
+    icon: gauge
+    criteria_type: module_complete
+    criteria_value: ncpcn-s4-detach
+
+  - id: ncpcn-projects-ace
+    name: "Project Planner"
+    description: "Completed NCP-CN 4.5 — Configure Projects."
+    icon: badge
+    criteria_type: module_complete
+    criteria_value: ncpcn-s4-projects
+
+  - id: ncpcn-platform-apps-ace
+    name: "Platform Pro"
+    description: "Completed NCP-CN 4.6 — Configure Platform Applications."
+    icon: star
+    criteria_type: module_complete
+    criteria_value: ncpcn-s4-platform-apps
+
+  - id: ncpcn-section4-graduate
+    name: "NCP-CN Section 4 Graduate"
+    description: "Completed all six objectives of NCP-CN Section 4."
+    icon: cap
+    criteria_type: track_complete
+    criteria_value: "NCP-CN Section 4"

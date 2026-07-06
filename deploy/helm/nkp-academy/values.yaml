@@ -1,0 +1,111 @@
+# Default values for the nkp-academy chart.
+# Deploy with:  helm install nkp-academy deploy/helm/nkp-academy -n nkp-academy --create-namespace
+
+replicaCount: 1
+
+image:
+  repository: wnorris22/nkp
+  tag: ""            # defaults to .Chart.AppVersion when empty
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# Non-secret config -> ConfigMap -> env (NKP_-prefixed Settings fields).
+config:
+  NKP_ENVIRONMENT: "production"
+  NKP_DEBUG: "false"
+  NKP_AUTO_SEED: "true"
+  NKP_STATIC_DIR: "/app/static"
+  NKP_CONTENT_DIR: "/app/content"
+  NKP_DATABASE_URL: "sqlite+aiosqlite:////data/nkp_academy.db"
+  NKP_CORS_ORIGINS: ""
+
+# Secret config -> Secret -> env. Use for DB URLs/passwords. Example:
+#   NKP_DATABASE_URL: "postgresql+asyncpg://nkp:pass@postgres:5432/nkp_academy"
+secrets: {}
+
+# Existing Secret to load env from instead of (or in addition to) `secrets`.
+existingSecret: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: kommander-traefik   # NKP's Traefik IngressClass (verify with: kubectl get ingressclass)
+  annotations: {}
+  host: nkp-academy.example.com
+  path: /
+  pathType: Prefix
+  tls:
+    enabled: false
+    secretName: nkp-academy-tls
+
+# SQLite persistence. Disable and use PostgreSQL to run multiple replicas.
+persistence:
+  enabled: true
+  storageClass: ""     # "" = cluster default (Nutanix CSI on NKP)
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  mountPath: /data
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false       # requires PostgreSQL (shared DB); see persistence note
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Hardened defaults — non-root, read-only rootfs, all caps dropped.
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+
+# Prometheus scrape annotations (NKP platform Prometheus).
+metrics:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
+
+probes:
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  liveness:
+    initialDelaySeconds: 10
+    periodSeconds: 20
+  startup:
+    periodSeconds: 5
+    failureThreshold: 12
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
