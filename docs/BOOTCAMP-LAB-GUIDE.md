@@ -24,9 +24,16 @@ in your browser. Budget **~15 minutes**.
 |---|---|
 | `kubectl` and `helm` | On your laptop. `helm version` should print v3.x. |
 | Kubeconfig for your HPOC NKP cluster | Provided by your instructor (a `*.conf` file or download from the Kommander UI). |
-| The `nkp-academy` repo | Cloned locally — your instructor will share the clone URL. |
+| The `nkp-academy` repo | Cloned locally (command below). |
 
 You do **not** need Docker or to build anything — the image is already published.
+
+### Get the app
+
+```bash
+git clone https://github.com/wnorris222/nkp-academy.git
+cd nkp-academy
+```
 
 ---
 
@@ -36,9 +43,9 @@ You do **not** need Docker or to build anything — the image is already publish
 
 1. **Confirm the image is public and pullable.** It lives at `wnorris22/nkp:1.8.1`.
    Verify the tag exists: `curl -s "https://hub.docker.com/v2/repositories/wnorris22/nkp/tags" | grep 1.8.1`.
-2. **Make the deployment assets available.** Push this repo to a Git host partners
-   can reach and share the clone URL, or hand out the packaged chart
-   (`helm package deploy/helm/nkp-academy`).
+2. **Deployment assets are public** at <https://github.com/wnorris222/nkp-academy> —
+   partners clone it in the "Get the app" step above. (It's a public repo, so no
+   access grants needed.)
 3. **Give each partner cluster access** — a kubeconfig for their HPOC NKP cluster.
 4. **Check egress.** HPOC clusters sometimes can't reach Docker Hub. If image pulls
    fail, load `wnorris22/nkp:1.8.1` into the cluster's internal registry (e.g. Harbor)
