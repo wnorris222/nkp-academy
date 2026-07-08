@@ -154,21 +154,21 @@ questions:
   type: multiple_choice
   difficulty: core
   points: 15
-  prompt: 'Put the air-gapped registry-seeding workflow in the correct order: (1) cd nkp-nkp-version (2) export REGISTRY_URL=... and other registry variables (3) tar -xzvf nkp-air-gapped-bundle_...tar.gz (4) nkp push bundle ... konvoy-image-bundle ... (5) push the Kommander image bundle.'
+  prompt: 'Put the air-gapped registry-seeding workflow in the correct order: (1) cd nkp-nkp-version (2) export REGISTRY_URL=... and other registry variables (3) tar -xzvf nkp-air-gapped-bundle_...tar.gz (4) nkp push bundle ... konvoy-image-bundle ...'
   options:
   - id: a
-    text: 3 -> 1 -> 2 -> 4 -> 5
+    text: 3 -> 1 -> 2 -> 4
   - id: b
-    text: 1 -> 2 -> 3 -> 4 -> 5
+    text: 1 -> 2 -> 3 -> 4
   - id: c
-    text: 3 -> 2 -> 1 -> 4 -> 5
+    text: 3 -> 2 -> 1 -> 4
   - id: d
-    text: 1 -> 3 -> 2 -> 5 -> 4
+    text: 1 -> 3 -> 2 -> 4
   correct: a
-  explanation: Extract the bundle, cd into the version directory, export registry vars, push the Konvoy bundle, then push the Kommander bundle.
+  explanation: Extract the bundle, cd into the version directory, export the registry variables, then push the Konvoy bundle.
   source:
-    label: Seeding the Registry for an Air-gapped Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    label: Registry Mirror Tools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mirror-tools-c.html
     page: p.1031
     quote: download the air-gapped bundle… extract the tarball… cd nkp-nkp-version… export REGISTRY_URL… nkp push bundle… konvoy-image-bundle…
 - id: q12
@@ -188,8 +188,8 @@ questions:
   correct: b
   explanation: The complete air-gapped bundle nkp-air-gapped-bundle_nkp-version_linux_amd64.tar.gz is downloaded and extracted to seed the registry.
   source:
-    label: Prerequisites for Installation
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
+    label: NKP Prerequisites
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-nkp-prerequisites-c.html
     page: p.50
     quote: 'Ensure to download the complete NKP air-gapped bundle: nkp-air-gapped-bundle_nkp-version_linux_amd64.tar.gz'
 - id: q13
@@ -230,8 +230,8 @@ questions:
   correct: b
   explanation: Long push times are expected and depend on network performance between the push machine and the registry.
   source:
-    label: Seeding the Registry for an Air-gapped Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    label: Registry Mirror Tools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mirror-tools-c.html
     page: p.1032
     quote: NKP takes some time to push all the images to your image registry, depending on the performance of the network between the machine you are running the script on and the registry.
 - id: q21
@@ -253,8 +253,8 @@ questions:
   - b
   explanation: The registry must be network-accessible from the bastion host and the cluster nodes. Docker Hub/GitHub are not reachable in air-gapped.
   source:
-    label: Seeding the Registry for an Air-gapped Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    label: Registry Mirror Tools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mirror-tools-c.html
     page: p.1031
     quote: accessible from both the… Bastion Host… and either the Amazon EC2 instances… or other machines…
 - id: q22
@@ -270,8 +270,8 @@ questions:
   correct: 'false'
   explanation: A network-restricted cluster is explicitly not the same as an air-gapped cluster.
   source:
-    label: Air-gapped vs. Non-air-gapped Environments
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mt-ag-vs-non-ag-env-c.html
+    label: Network-Restricted Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-network-restricted-cluster-c.html
     page: p.21
     quote: A network-restricted cluster is not the same as an air-gapped cluster.
 - id: q23
@@ -291,8 +291,8 @@ questions:
   correct: b
   explanation: Network-restricted clusters can reach external networks but aren't reachable from outside; air-gapped clusters allow no ingress or egress.
   source:
-    label: Air-gapped vs. Non-air-gapped Environments
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mt-ag-vs-non-ag-env-c.html
+    label: Network-Restricted Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-network-restricted-cluster-c.html
     page: p.21
     quote: network-restricted clusters can reach external networks (like the Internet), but their services or ingresses cannot be accessed from outside. Air-gapped clusters, however, do not allow ingress or egress traffic.
 - id: q24
@@ -312,7 +312,7 @@ questions:
   correct: b
   explanation: The bastion is a secure gateway with access to the infra provider's API; it hosts/accesses the Konvoy bundles, images, and local registry.
   source:
-    label: Seeding the Registry for an Air-gapped Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-air-gap-seed-reg-t.html
+    label: Bastion Host
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-reg-mt-bastion-c.html
     page: p.1030
     quote: the bastion Virtual Machine (VM) hosts the installation of the… Konvoy bundles, images, and the Docker or other local registry… must have access to the infrastructure provider's… API.
