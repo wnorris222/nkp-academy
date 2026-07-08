@@ -108,8 +108,8 @@ questions:
   correct: c
   explanation: The final step of the self-managed workflow deletes the temporary bootstrap cluster with nkp delete bootstrap.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Self-Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-self-managed-cluster-c.html
     page: p.21
     quote: 'Deletes the bootstrap cluster. Run the following command: nkp delete bootstrap'
 - id: q31
@@ -129,8 +129,8 @@ questions:
   correct: b
   explanation: The bootstrap cluster is created with nkp create bootstrap.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Self-Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-self-managed-cluster-c.html
     page: p.20
     quote: 'Creates a bootstrap cluster. Run the following command: nkp create bootstrap'
 - id: q32
@@ -209,8 +209,8 @@ questions:
   correct: a
   explanation: Create the bootstrap cluster, create the management cluster, deploy CAPI components on it, pivot (move) CAPI resources to it, then delete the bootstrap cluster.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Self-Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-self-managed-cluster-c.html
     page: p.20
     quote: Creates a bootstrap cluster… Creates a management cluster… Deploys CAPI controllers… Pivots CAPI resources from the bootstrap cluster to the management cluster… Deletes the bootstrap cluster.
 - id: q38
@@ -230,8 +230,8 @@ questions:
   correct: b
   explanation: After the cluster is created, export its kubeconfig with nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Self-Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-self-managed-cluster-c.html
     page: p.20
     quote: '# export kubeconfig of the cluster nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf'
 - id: q40
