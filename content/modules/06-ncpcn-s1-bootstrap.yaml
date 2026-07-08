@@ -150,8 +150,8 @@ questions:
   correct: b
   explanation: NKP uses Kubernetes-in-Docker (Kind) to create the bootstrap cluster, so Docker must be installed on the host.
   source:
-    label: NKP Prerequisites
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-nkp-prerequisites-c.html
+    label: Container Engine
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-container-engine-c.html
     page: p.28
     quote: Docker installed — NKP uses Kubernetes-in-Docker (Kind) to create a bootstrap cluster for creating Management clusters, and thus Docker installation is required.
 - id: q35
@@ -171,8 +171,8 @@ questions:
   correct: b
   explanation: Use --kubeconfig to target an explicit kubeconfig path (e.g., --kubeconfig $HOME/.kube/config), recommended to avoid using the wrong kubeconfig.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Self-Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-self-managed-cluster-c.html
     page: p.805
     quote: 'nkp create bootstrap --kubeconfig $HOME/.kube/config … Note: To avoid using the wrong kubeconfig, the following steps use explicit kubeconfig paths and contexts.'
 - id: q36
@@ -188,8 +188,8 @@ questions:
   correct: 'false'
   explanation: Docker/Kind is only used to stand up the bootstrap cluster; it is not used to run your Management or managed clusters.
   source:
-    label: NKP Prerequisites
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-nkp-prerequisites-c.html
+    label: Container Engine
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-container-engine-c.html
     page: p.28
     quote: Docker is not used to run your Management or managed clusters.
 - id: q37
@@ -251,8 +251,8 @@ questions:
   correct: c
   explanation: The local Kind bootstrap cluster's context is kind-konvoy-capi-bootstrapper, as referenced by --to-context in the pivot command.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Self-Managed Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-self-managed-cluster-c.html
     page: p.805
     quote: --to-context kind-konvoy-capi-bootstrapper
 - id: q42
@@ -268,8 +268,8 @@ questions:
   correct: 'true'
   explanation: Nutanix recommends creating the bootstrap cluster from within the same network where the new cluster will run.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Configuring an HTTP or HTTPS Proxy
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configuring-http-proxy-c.html
     page: p.692
     quote: For NKP installation, create the bootstrap cluster from within the same network where the new cluster will run.
 - id: q44
@@ -289,8 +289,8 @@ questions:
   correct: b
   explanation: Without the proxy values on the relevant nkp create command, NKP cannot create the requisite parts of the new cluster — true for both management and managed clusters.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Configuring an HTTP or HTTPS Proxy
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configuring-http-proxy-c.html
     page: p.692
     quote: Without these values provided as part of the relevant nkp create command, NKP cannot create the requisite parts of your new cluster correctly. This is true of both management and managed clusters alike.
 - id: q45
@@ -310,8 +310,8 @@ questions:
   correct: b
   explanation: kubectl get cluster-api lists all resources that comprise a cluster and their statuses to validate readiness and health.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Cluster and NKP Installation Verification
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-nkp-install-verification-c.html
     page: p.1041
     quote: Gather a list of all resources that comprise a cluster and their statuses. kubectl get cluster-api
 - id: q46
@@ -331,7 +331,7 @@ questions:
   correct: a
   explanation: Run nkp diagnose to collect information from pods and infrastructure (it feeds a support bundle) when pods aren't Running/Completed.
   source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    label: Cluster and NKP Installation Verification
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-nkp-install-verification-c.html
     page: p.1041
     quote: If something has not been deployed properly or thoroughly, run the nkp diagnose command. This collects information from pods and infrastructure.
