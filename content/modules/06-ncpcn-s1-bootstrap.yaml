@@ -154,51 +154,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-nkp-prerequisites-c.html
     page: p.28
     quote: Docker installed — NKP uses Kubernetes-in-Docker (Kind) to create a bootstrap cluster for creating Management clusters, and thus Docker installation is required.
-- id: q33
-  type: multiple_choice
-  difficulty: core
-  points: 15
-  prompt: In a proxied environment, which three flags must you include when creating the bootstrap cluster? (Select three)
-  options:
-  - id: a
-    text: --http-proxy
-  - id: b
-    text: --proxy-ca
-  - id: c
-    text: --https-proxy
-  - id: d
-    text: --no-proxy
-  correct:
-  - a
-  - c
-  - d
-  explanation: A bootstrap cluster in a proxied environment requires --http-proxy, --https-proxy, and --no-proxy.
-  source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
-    page: p.692
-    quote: 'To create a bootstrap server in a proxied environment, you need to include the following flags: --http-proxy… --https-proxy… --no-proxy…'
-- id: q34
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: When supplying multiple values within a proxy flag, what is the correct delimiter?
-  options:
-  - id: a
-    text: A space
-  - id: b
-    text: A semicolon
-  - id: c
-    text: A comma (,) with no space following it
-  - id: d
-    text: A pipe (|)
-  correct: c
-  explanation: The delimiter between each proxy value within a flag is a comma with no trailing space.
-  source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
-    page: p.693
-    quote: the delimiter between each proxy value within a flag is a comma (,) with no space character following it.
 - id: q35
   type: multiple_choice
   difficulty: core
@@ -279,27 +234,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
     page: p.20
     quote: '# export kubeconfig of the cluster nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf'
-- id: q39
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: In the pivot (move capi-resources) command, which flag pairs specify the source and destination clusters?
-  options:
-  - id: a
-    text: --src / --dst
-  - id: b
-    text: --from-kubeconfig / --from-context and --to-kubeconfig / --to-context
-  - id: c
-    text: --input / --output
-  - id: d
-    text: --old / --new
-  correct: b
-  explanation: The move/pivot command uses --from-kubeconfig/--from-context for the source and --to-kubeconfig/--to-context for the destination.
-  source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
-    page: p.805
-    quote: nkp move capi-resources --from-kubeconfig ${CLUSTER_NAME}.conf --from-context … --to-kubeconfig $HOME/.kube/config --to-context kind-konvoy-capi-bootstrapper
 - id: q40
   type: multiple_choice
   difficulty: core
@@ -321,27 +255,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
     page: p.805
     quote: --to-context kind-konvoy-capi-bootstrapper
-- id: q41
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: (KB) The bootstrap cluster runs locally as a Kind cluster. Per the Nutanix KB, how do you obtain its kubeconfig for direct kubectl access?
-  options:
-  - id: a
-    text: It is impossible; the bootstrap cluster has no kubeconfig
-  - id: b
-    text: Output the Kind bootstrap cluster's kubeconfig to a file (e.g., via kind get kubeconfig for the konvoy-capi-bootstrapper cluster), per the KB
-  - id: c
-    text: Re-run nkp create cluster
-  - id: d
-    text: Copy /etc/kubernetes/admin.conf from a worker node
-  correct: b
-  explanation: Because the bootstrap runs as a local Kind cluster (context kind-konvoy-capi-bootstrapper), you export its kubeconfig to a file to interact with it directly, the procedure the Nutanix KB documents.
-  source:
-    label: KB – How to output the Bootstrap Cluster Kubeconfig to a File
-    url: https://portal.nutanix.com/page/documents/kbs/details?targetId=kA0VO0000001mab0AA
-    page: p.805
-    quote: How to output the Bootstrap Cluster Kubeconfig to a File.
 - id: q42
   type: true_false
   difficulty: core
@@ -359,27 +272,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
     page: p.692
     quote: For NKP installation, create the bootstrap cluster from within the same network where the new cluster will run.
-- id: q43
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: A partner creates the bootstrap cluster on a laptop that sits in a different network with different proxy settings than the target cluster. What is the documented risk?
-  options:
-  - id: a
-    text: No risk; location is irrelevant
-  - id: b
-    text: It can cause problems — Nutanix recommends creating the bootstrap from within the same (proxied) network/environment where the cluster will run
-  - id: c
-    text: The bootstrap will be faster
-  - id: d
-    text: It only affects the dashboard
-  correct: b
-  explanation: Creating the bootstrap from a laptop with different proxy settings or a different network can cause problems; create it from within the same proxied environment where the cluster will run.
-  source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
-    page: p.692
-    quote: Using a bootstrap cluster on a laptop with different proxy settings, for example, or residing in a different network, can cause problems.
 - id: q44
   type: multiple_choice
   difficulty: core
@@ -443,24 +335,3 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
     page: p.1041
     quote: If something has not been deployed properly or thoroughly, run the nkp diagnose command. This collects information from pods and infrastructure.
-- id: q47
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: In the bootstrap environment, why must the no-proxy/proxy configuration account for the fact that the API server does not yet exist?
-  options:
-  - id: a
-    text: Because the API server is created later, during cluster creation — it doesn't exist in the bootstrap environment beforehand
-  - id: b
-    text: Because Kind does not use an API server
-  - id: c
-    text: Because the API server runs on the registry
-  - id: d
-    text: Because proxies disable the API server
-  correct: a
-  explanation: The API server doesn't exist in the bootstrap environment beforehand because it is created during cluster creation — relevant when planning proxy/no-proxy settings.
-  source:
-    label: CAPI Concepts and Terms
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
-    page: p.692
-    quote: The Application Programming Interface (API) server doesn't exist yet in the bootstrap environment before you install NKP because the API server is created during cluster creation.
