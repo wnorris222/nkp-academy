@@ -104,9 +104,9 @@ questions:
   correct: b
   explanation: Load the bootstrap image onto the bastion machine, e.g., docker load -i konvoy-bootstrap-image-nkp-version.tar.
   source:
-    label: Basic Installations by Infrastructure
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-installs-infra-c.html
-    page: p.91
+    label: 'Pre-provisioned Air-gapped: Configuring the Environment'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    page: ''
     quote: 'Load the bootstrap image on your bastion machine: docker load -i konvoy-bootstrap-image-nkp-version.tar'
 - id: q78
   type: multiple_choice
@@ -125,9 +125,9 @@ questions:
   correct: b
   explanation: All artifacts for pre-provisioned air-gapped must get onto the bastion host, where artifacts needed by nodes are unpacked and distributed before provisioning can proceed offline.
   source:
-    label: Basic Installations by Infrastructure
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-installs-infra-c.html
-    page: p.90
+    label: 'Pre-provisioned Air-gapped: Configuring the Environment'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    page: ''
     quote: All artifacts for Pre-provisioned Air-gapped need to get onto the bastion host. Artifacts needed by nodes must be unpacked and distributed on the bastion…
 - id: q79
   type: multiple_choice
@@ -234,9 +234,9 @@ questions:
   correct: b
   explanation: Extract/load the bootstrap image onto the bastion, copy artifacts onto the cluster hosts, position GPU artifacts locally (if any), then seed the registry with images locally.
   source:
-    label: Basic Installations by Infrastructure
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-installs-infra-c.html
-    page: p.91
+    label: 'Pre-provisioned Air-gapped: Configuring the Environment'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    page: ''
     quote: 1. The bootstrap image must be extracted and loaded onto the bastion host. 2. Artifacts must be copied onto cluster hosts… 3. If using a GPU, those artifacts must be positioned locally. 4. Registry seeded with images locally.
 - id: q88
   type: multiple_choice
