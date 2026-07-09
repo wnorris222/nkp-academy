@@ -450,27 +450,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
     page: p.27
     quote: You must be an administrator to add licenses to NKP. / Only NKP administrators can remove licenses.
-- id: q70
-  type: multiple_choice
-  difficulty: stretch
-  points: 10
-  prompt: For a cluster at a default license level versus one already using a non-default Nutanix license, which UI actions apply?
-  options:
-  - id: a
-    text: Both use Activate License
-  - id: b
-    text: Default level -> Activate License; non-default (e.g., Ultimate renewal or core-capacity increase) -> Update License
-  - id: c
-    text: Both use Update License
-  - id: d
-    text: Default -> Update; non-default -> Activate
-  correct: b
-  explanation: A cluster at a default license level uses Activate License, while one already using a non-default Nutanix license uses Update License (e.g., for renewal or capacity increase).
-  source:
-    label: Adding an NKP License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
-    page: p.27
-    quote: Default License… you must select Activate License… Non-default Nutanix License… use the Update License option to apply a new license.
 - id: q71
   type: multiple_choice
   difficulty: stretch
@@ -488,28 +467,7 @@ questions:
   correct: c
   explanation: To remove a license via kubectl, you delete the Secret and License objects (for example, in the kommander namespace).
   source:
-    label: Removing an NKP License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-delete-nkp-license-t.html
+    label: Removing an NKP License Through the CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_15:top-delete-nkp-license-cli-t.html
     page: p.30
     quote: To remove a license from NKP using kubectl, you have to delete the Secret and License objects.
-- id: q72
-  type: multiple_choice
-  difficulty: stretch
-  points: 10
-  prompt: Applying a Pro or Ultimate license key installs which application, and which application installs only with an Ultimate key?
-  options:
-  - id: a
-    text: Prometheus installs with Pro/Ultimate; Traefik only with Ultimate
-  - id: b
-    text: AI Navigator installs with Pro/Ultimate; Centralized Grafana only with Ultimate
-  - id: c
-    text: Insights installs with Pro/Ultimate; OpenCost only with Ultimate
-  - id: d
-    text: Nothing extra installs automatically
-  correct: b
-  explanation: Applying a Pro or Ultimate license key installs AI Navigator, while Centralized Grafana installs only with an Ultimate key.
-  source:
-    label: Adding an NKP License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
-    page: p.27
-    quote: if you apply Pro or Ultimate license key, NKP installs the AI Navigator App… NKP installs Centralized Grafana only when you apply an Ultimate license key.
