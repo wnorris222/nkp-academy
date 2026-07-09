@@ -19,6 +19,9 @@ class QuestionOut(BaseModel):
     options: list[OptionOut]
     points: int
     difficulty: str
+    # True when more than one option is correct ("select all that apply"). Lets
+    # the client render checkboxes; it does not reveal which options are correct.
+    multiple: bool = False
     # Correct answers/explanation are intentionally omitted here; they are only
     # returned in the grade response after the user submits.
 

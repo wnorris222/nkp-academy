@@ -19,6 +19,7 @@ export interface Question {
   options: Option[];
   points: number;
   difficulty: string;
+  multiple: boolean;
 }
 
 export interface ModuleSummary {

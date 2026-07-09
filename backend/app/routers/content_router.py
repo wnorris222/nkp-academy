@@ -63,6 +63,7 @@ async def get_module(
             options=[OptionOut(id=o.id, text=o.text) for o in q.options],
             points=q.points,
             difficulty=q.difficulty,
+            multiple=len(q.correct_set) > 1,
         )
         for q in module.questions
     ]

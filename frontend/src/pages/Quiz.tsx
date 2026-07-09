@@ -8,7 +8,7 @@ export default function Quiz() {
   const { moduleId } = useParams<{ moduleId: string }>();
   const [module, setModule] = useState<ModuleDetail | null>(null);
   const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -39,11 +39,21 @@ export default function Quiz() {
     }
   }, [question]);
 
+  function toggle(optId: string) {
+    if (!question) return;
+    setSelected((cur) => {
+      if (question.multiple) {
+        return cur.includes(optId) ? cur.filter((x) => x !== optId) : [...cur, optId];
+      }
+      return [optId];
+    });
+  }
+
   async function submit() {
-    if (!module || !question || !selected) return;
+    if (!module || !question || selected.length === 0) return;
     setSubmitting(true);
     try {
-      const res = await api.answer(module.id, question.id, [selected]);
+      const res = await api.answer(module.id, question.id, selected);
       setResult(res);
       setEarnedXp((x) => x + res.points_awarded);
       if (res.new_badges.length) {
@@ -56,7 +66,7 @@ export default function Quiz() {
   }
 
   function next() {
-    setSelected(null);
+    setSelected([]);
     setResult(null);
     setIndex((i) => i + 1);
   }
@@ -125,6 +135,11 @@ export default function Quiz() {
         <div className="mb-4 flex items-center gap-2">
           <span className="chip border-iris/40 text-iris-light">{typeLabel}</span>
           <DifficultyTag difficulty={question.difficulty} />
+          {question.multiple && (
+            <span className="chip border-amber-500/40 text-amber-300">
+              Select all that apply
+            </span>
+          )}
           <span className="ml-auto text-sm font-semibold text-slate-400">
             {question.points} XP
           </span>
@@ -134,7 +149,7 @@ export default function Quiz() {
 
         <div className="mt-6 space-y-3">
           {question.options.map((opt) => {
-            const isPicked = selected === opt.id;
+            const isPicked = selected.includes(opt.id);
             const isCorrect = result?.correct_options.includes(opt.id);
             const showAsCorrect = answered && isCorrect;
             const showAsWrong = answered && isPicked && !isCorrect;
@@ -149,11 +164,13 @@ export default function Quiz() {
               <button
                 key={opt.id}
                 disabled={answered}
-                onClick={() => setSelected(opt.id)}
+                onClick={() => toggle(opt.id)}
                 className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3.5 text-left transition-all disabled:cursor-default ${cls}`}
               >
                 <span
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold uppercase ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center border text-xs font-bold uppercase ${
+                    question.multiple ? "rounded-md" : "rounded-full"
+                  } ${
                     isPicked || showAsCorrect
                       ? "border-transparent bg-iris text-white"
                       : "border-charcoal-border text-slate-400"
@@ -193,7 +210,7 @@ export default function Quiz() {
           {!answered ? (
             <button
               onClick={submit}
-              disabled={!selected || submitting}
+              disabled={selected.length === 0 || submitting}
               className="btn-primary"
             >
               {submitting ? "Checking…" : "Submit answer"}
