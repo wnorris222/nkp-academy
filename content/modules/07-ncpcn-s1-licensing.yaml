@@ -366,23 +366,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
     page: p.24
     quote: NKP licenses are sold by core unit and apply to the vCPUs of all worker nodes in on-premises, public cloud, or edge deployments.
-- id: q65
-  type: true_false
-  difficulty: core
-  points: 10
-  prompt: 'True/False: You can downgrade a license after you register it for a cluster.'
-  options:
-  - id: 'true'
-    text: 'True'
-  - id: 'false'
-    text: 'False'
-  correct: 'false'
-  explanation: A license cannot be downgraded after it has been registered for a cluster.
-  source:
-    label: Adding an NKP License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-add-nkp-license-t.html
-    page: p.24
-    quote: You cannot downgrade a license after you register it for a cluster.
 - id: q66
   type: multiple_choice
   difficulty: core
