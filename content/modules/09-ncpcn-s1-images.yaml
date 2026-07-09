@@ -66,9 +66,9 @@ questions:
   correct: b
   explanation: Build a custom Nutanix image with nkp create image nutanix ${OS_TYPE} plus the required flags.
   source:
-    label: Konvoy Image Builder CLI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kib-cli-c.html
-    page: p.59
+    label: Creating a Nutanix VM Image
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-create-image-t.html
+    page: ''
     quote: 'Run NKP CLI to create an image: nkp create image nutanix ${OS_TYPE} --cluster … --endpoint … --subnet … --source-image …'
 - id: q96
   type: multiple_choice
@@ -108,8 +108,8 @@ questions:
   correct: b
   explanation: Pre-provisioned environments configure existing machines with nkp upload image-artifacts; other providers build images with nkp create image and NKP provisions machines from them.
   source:
-    label: 'Pre-provisioned Air-gapped: Configure Environment'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    label: Pre-provisioned Prerequisites and Environment Variables
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprov-prereq-envvar-c.html
     page: p.70
     quote: 'Pre-provisioned: You configure existing machines using nkp upload image-artifacts. Other providers: You build images using nkp create image command, and NKP provisions machines from those images.'
 - id: q98
@@ -192,8 +192,8 @@ questions:
   correct: b
   explanation: In a pre-provisioned environment, existing nodes are configured with the required artifacts using nkp upload image-artifacts.
   source:
-    label: 'Pre-provisioned Air-gapped: Configure Environment'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    label: Pre-provisioned Prerequisites and Environment Variables
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprov-prereq-envvar-c.html
     page: p.70
     quote: your existing nodes are configured with the required artifacts using the nkp upload image-artifacts command.
 - id: q102
@@ -213,8 +213,8 @@ questions:
   correct: b
   explanation: Set SSH_HOST to the host IP/hostname; for multiple hosts provide a comma-separated list (host1,host2,host3).
   source:
-    label: 'Pre-provisioned Air-gapped: Configure Environment'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    label: Pre-provisioned Prerequisites and Environment Variables
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprov-prereq-envvar-c.html
     page: p.70
     quote: 'export SSH_HOST=Host IP or hostname… For multiple hosts, provide a comma-separated list: host1,host2,host3.'
 - id: q103
@@ -234,8 +234,8 @@ questions:
   correct: b
   explanation: SSH private key (SSH_PRIVATE_KEY_FILE) is the recommended authentication method, strongly preferred over passwords for security.
   source:
-    label: 'Pre-provisioned Air-gapped: Configure Environment'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    label: Pre-provisioned Prerequisites and Environment Variables
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprov-prereq-envvar-c.html
     page: p.70
     quote: a. SSH private key (recommended)… Using SSH keys is strongly recommended over passwords for security reasons.
 - id: q104
@@ -255,8 +255,8 @@ questions:
   correct: c
   explanation: If SSH_PORT is not specified, the default port is 22.
   source:
-    label: 'Pre-provisioned Air-gapped: Configure Environment'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    label: Pre-provisioned Prerequisites and Environment Variables
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprov-prereq-envvar-c.html
     page: p.70
     quote: Replace the variable 22 with the SSH port of the remote host if you use a non-standard port. If not specified, the default port is 22.
 - id: q105
@@ -276,8 +276,8 @@ questions:
   correct: b
   explanation: Uploading artifacts configures existing machines with packages, container images, and GPU drivers so NKP forms a cluster quickly and consistently, reducing OS/package misconfiguration errors.
   source:
-    label: 'Pre-provisioned Air-gapped: Configure Environment'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprovAG-configure-env-c.html
+    label: Pre-provisioned Prerequisites and Environment Variables
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-preprov-prereq-envvar-c.html
     page: p.1048
     quote: Configure pre-provisioned hosts by uploading necessary artifacts such as packages, container images, and GPU drivers to existing nodes… reducing upgrade errors caused by OS image and package misconfiguration.
 - id: q106
@@ -409,9 +409,9 @@ questions:
   - d
   explanation: 'All are minimum base OS image requirements: qcow2/img format, sudo default user, SSH server, cloud-init, Python 3.x, at least 20 GB root disk, UEFI Boot, and no existing Kubernetes components.'
   source:
-    label: Konvoy Image Builder
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-konvoy-image-build-c.html
-    page: p.55
+    label: Nutanix Base OS Image Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-base-OS-image-c.html
+    page: ''
     quote: The source image must be in qcow2 or .img format… default user must have sudo… install and enable the SSH server… install and configure cloud-init… install Python version 3.x… at least 20 GB of disk space on the root file system… Image must use UEFI Boot type… no existing Kubernetes components are present.
 - id: q112
   type: multiple_choice
@@ -430,9 +430,9 @@ questions:
   correct: b
   explanation: At least 20 GB of disk space on the root filesystem is required.
   source:
-    label: Konvoy Image Builder
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-konvoy-image-build-c.html
-    page: p.55
+    label: Nutanix Base OS Image Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-base-OS-image-c.html
+    page: ''
     quote: Ensure at least 20 GB of disk space on the root file system is available.
 - id: q113
   type: multiple_choice
@@ -468,9 +468,9 @@ questions:
   correct: 'false'
   explanation: False. The base OS image must have no existing Kubernetes components present.
   source:
-    label: Konvoy Image Builder
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-konvoy-image-build-c.html
-    page: p.55
+    label: Nutanix Base OS Image Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-base-OS-image-c.html
+    page: ''
     quote: Ensure that no existing Kubernetes components are present.
 - id: q115
   type: multiple_choice
