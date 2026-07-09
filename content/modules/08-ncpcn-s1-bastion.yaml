@@ -171,27 +171,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
     page: p.703
     quote: A local registry or Docker version 27.4.0 installed. You must install Docker on the host where the NKP Konvoy CLI runs.
-- id: q81
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: On macOS, Docker runs in a virtual machine that you must configure with at least how much memory?
-  options:
-  - id: a
-    text: 4 GB
-  - id: b
-    text: 8 GB
-  - id: c
-    text: 16 GB
-  - id: d
-    text: 2 GB
-  correct: b
-  explanation: On macOS, Docker runs in a virtual machine that you configure with at least 8GB of memory.
-  source:
-    label: Creating a Bastion Host
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
-    page: p.703
-    quote: On macOS, Docker runs in a virtual machine that you configure with at least 8GB of memory.
 - id: q82
   type: multiple_choice
   difficulty: core
@@ -238,69 +217,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
     page: p.703
     quote: Create a bastion VM host template… Find and record the bastion VM's IP or hostname… Download the following required NKP Konvoy binaries and installation bundles…
-- id: q84
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: Which environment variables configure SSH access to the bastion host?
-  options:
-  - id: a
-    text: SSH_HOST, SSH_USER, SSH_KEY, SSH_PORT
-  - id: b
-    text: BASTION_HOST, BASTION_USERNAME, BASTION_PRIVATE_KEY_FILE, BASTION_PORT
-  - id: c
-    text: HOST_IP, HOST_USER, HOST_KEY
-  - id: d
-    text: BASTION_URL, BASTION_TOKEN
-  correct: b
-  explanation: SSH access to the bastion is configured with BASTION_HOST, BASTION_USERNAME, BASTION_PRIVATE_KEY_FILE, and BASTION_PORT.
-  source:
-    label: Creating a Bastion Host
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
-    page: p.72
-    quote: export BASTION_HOST=… BASTION_USERNAME=… BASTION_PRIVATE_KEY_FILE=… BASTION_PORT=22
-- id: q85
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: What is the default Bastion SSH port (BASTION_PORT)?
-  options:
-  - id: a
-    text: '443'
-  - id: b
-    text: '6443'
-  - id: c
-    text: '22'
-  - id: d
-    text: '8080'
-  correct: c
-  explanation: The default Bastion SSH port is 22 (change BASTION_PORT only if different from the default).
-  source:
-    label: Creating a Bastion Host
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
-    page: p.72
-    quote: 22 with the Bastion SSH port, if it is different from the default port.
-- id: q86
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: Which two exports enable the bastion to connect to an existing registry mirror for cluster creation?
-  options:
-  - id: a
-    text: REGISTRY_ADDRESS and REGISTRY_CA
-  - id: b
-    text: REGISTRY_USER and REGISTRY_PASS
-  - id: c
-    text: MIRROR_URL and MIRROR_TOKEN
-  - id: d
-    text: DOCKER_HOST and DOCKER_CERT
-  correct: a
-  explanation: Set REGISTRY_ADDRESS and REGISTRY_CA so the bastion connects to an existing registry mirror when the new cluster nodes pull images.
-  source:
-    label: Creating a Bastion Host
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
-    page: p.704
-    quote: export REGISTRY_ADDRESS=<https/http>://<registry-address>:<registry-port> export REGISTRY_CA=<path to the CA on the bastion host>.
 - id: q87
   type: multiple_choice
   difficulty: stretch
@@ -385,41 +301,3 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
     page: p.704
     quote: 'REGISTRY_ADDRESS: The address of an existing registry accessible in the environment where the new cluster nodes will be configured to use a mirror registry when pulling images.'
-- id: q91
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: When is the REGISTRY_CA value needed on the bastion?
-  options:
-  - id: a
-    text: Always
-  - id: b
-    text: Only if the registry uses a self-signed certificate and the VMs are not already configured to trust that CA
-  - id: c
-    text: Only for public cloud
-  - id: d
-    text: Only when using Podman
-  correct: b
-  explanation: REGISTRY_CA is only needed if the registry uses a self-signed certificate and the VMs are not already configured to trust that CA; Konvoy then configures the nodes to trust it.
-  source:
-    label: Creating a Bastion Host
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
-    page: p.704
-    quote: 'REGISTRY_CA: (Optional) path on the bastion host to the registry CA… only needed if the registry is using a self-signed certificate and the VMs are not already configured to trust this CA.'
-- id: q92
-  type: true_false
-  difficulty: core
-  points: 10
-  prompt: 'True/False: Each infrastructure provider (AWS, Azure, GCP, vSphere) has its own set of bastion host instructions.'
-  options:
-  - id: 'true'
-    text: 'True'
-  - id: 'false'
-    text: 'False'
-  correct: 'true'
-  explanation: Each infrastructure provider has its own set of bastion host instructions (AWS, Azure, GCP, vSphere).
-  source:
-    label: Creating a Bastion Host
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-bastion-host-t.html
-    page: p.704
-    quote: Each infrastructure provider has its own set of bastion host instructions. Refer to your own OS instructions to setup a bastion host like AWS Bastion, Azure, GCP, or vSphere.
