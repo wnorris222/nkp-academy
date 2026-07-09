@@ -234,7 +234,7 @@ questions:
   correct: a
   explanation: DRY_RUN=true runs the build without creating artifacts (or deletes them after), useful for validating configs and testing overrides.
   source:
-    label: Konvoy Image Builder CLI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kib-cli-c.html
-    page: p.60
+    label: 'Nutanix Image Builder: Advanced Options'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nib-advanced-options-nutanix-t.html
+    page: ''
     quote: 'Enable dry-run mode: export DRY_RUN=true. When set to true, the build process runs without creating artifacts, or deletes them after creating.'
