@@ -341,8 +341,8 @@ questions:
   correct: b
   explanation: The Nutanix provided Ubuntu OS Image is marked for Pro and Ultimate tiers only, not Starter.
   source:
-    label: NKP Pro License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.26
     quote: The NKP Ubuntu OS images are for NKP Pro and NKP Ultimate customers only… The NKP Pro Ubuntu OS images are supported only when using the AHV infrastructure provider.
 - id: q64
