@@ -45,8 +45,8 @@ questions:
   correct: c
   explanation: Attaching Workload Cluster is marked only in the Ultimate column; the Attached Cluster type is NKP Ultimate only.
   source:
-    label: NKP Ultimate License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: Attaching Workload Cluster … Ultimate. / Attached Cluster (NKP Ultimate only).
 - id: q50
@@ -66,8 +66,8 @@ questions:
   correct: c
   explanation: LCM of EKS Cluster and LCM of AKS Cluster are marked only in the Ultimate column.
   source:
-    label: NKP Ultimate License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: LCM of EKS Cluster … Ultimate; LCM of AKS Cluster … Ultimate.
 - id: q51
@@ -87,8 +87,8 @@ questions:
   correct: b
   explanation: NKP on AWS, Azure, GCP, and vSphere are marked for Pro and Ultimate (not Starter). Starter supports NKP on Nutanix AHV.
   source:
-    label: NKP Pro License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: NKP on AWS/Azure/GCP/vSphere … Pro, Ultimate.
 - id: q52
@@ -108,8 +108,8 @@ questions:
   correct: c
   explanation: Continuous Deployment (FluxCD) is marked Ultimate only; FluxCD as an application is Pro and Ultimate.
   source:
-    label: NKP Ultimate License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: Continuous Deployment (FluxCD) … Ultimate; FluxCD (as an application) … Pro, Ultimate.
 - id: q53
@@ -125,8 +125,8 @@ questions:
   correct: 'false'
   explanation: Insights (AI OPS) is marked only in the Ultimate column; it is not included in Pro. AI Navigator is Pro and Ultimate.
   source:
-    label: NKP Ultimate License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: Insights … Ultimate; AI Navigator … Pro, Ultimate.
 - id: q54
@@ -149,8 +149,8 @@ questions:
   - c
   explanation: Projects, Workspaces Management, Multi-tenant Logging, and Multi-Cloud/Hybrid Cloud are Ultimate-only; NKP CLI is available in all tiers.
   source:
-    label: NKP Ultimate License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: Projects, Workspaces Management, Multi-tenant Logging, and Multi-Cloud/Hybrid Cloud are marked Ultimate only; NKP CLI is marked for all tiers.
 - id: q55
@@ -170,8 +170,8 @@ questions:
   correct: b
   explanation: Policy control using Gatekeeper and FIPS Compliant Build are marked for Pro and Ultimate.
   source:
-    label: NKP Pro License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.26
     quote: Policy control using Gatekeeper … Pro, Ultimate; FIPS Compliant Build … Pro, Ultimate.
 - id: q56
@@ -194,8 +194,8 @@ questions:
   - c
   explanation: Air-Gapped Deployments, Single Sign On, and LCM of Management/Workload clusters are marked for all three tiers. Attaching Workload Cluster is Ultimate only.
   source:
-    label: NKP Starter License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-starter-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.26
     quote: Air-Gapped Deployments … Starter, Pro, Ultimate; Single Sign On … all tiers; LCM Management/Workload Clusters … all tiers.
 - id: q57
@@ -215,8 +215,8 @@ questions:
   correct: b
   explanation: Backup & Restore based on Velero and NVIDIA GPU are marked for Pro and Ultimate.
   source:
-    label: NKP Pro License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-pro-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: Backup & Restore based on Velero … Pro, Ultimate; NVIDIA GPU … Pro, Ultimate.
 - id: q58
@@ -236,8 +236,8 @@ questions:
   correct: a
   explanation: Starter supports NKP on Nutanix AHV with basic cluster lifecycle management, making it the most cost-appropriate tier for a single AHV cluster with minimal needs.
   source:
-    label: NKP Starter License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-starter-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.26
     quote: The default key is either a Starter for AHV installations or a Pro for all other infrastructure providers.
 - id: q59
@@ -257,8 +257,8 @@ questions:
   correct: c
   explanation: LCM of EKS/AKS clusters, Attaching Workload Cluster, and Multi-Cloud/Hybrid Cloud are all Ultimate-only features, so Ultimate is required.
   source:
-    label: NKP Ultimate License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: LCM of EKS/AKS, Attaching Workload Cluster, and Multi-Cloud/Hybrid Cloud are all marked Ultimate only.
 - id: q60
@@ -320,8 +320,8 @@ questions:
   correct: c
   explanation: Projects, Workspaces Management, and Multi-tenant Logging are Ultimate-only features, so Ultimate is required.
   source:
-    label: NKP Ultimate License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-ultimate-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.25
     quote: Projects, Workspaces Management, and Multi-tenant Logging are marked Ultimate only.
 - id: q63
