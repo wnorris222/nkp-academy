@@ -11,7 +11,7 @@ questions:
   type: multiple_choice
   difficulty: core
   points: 10
-  prompt: Which three NKP license tiers are defined in the Feature Support Matrix?
+  prompt: What are the three NKP license tiers?
   options:
   - id: a
     text: Free, Standard, Enterprise
@@ -24,8 +24,8 @@ questions:
   correct: b
   explanation: 'The Feature Support Matrix lists three tiers: NKP Starter, NKP Pro, and NKP Ultimate.'
   source:
-    label: NKP Starter License
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-starter-c.html
+    label: Feature Support Matrix
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_17:top-nkp-license-feature-support-matrix-r.html
     page: p.24
     quote: This table lists NKP Starter, Pro, and Ultimate license tiers. An X in a column indicates the feature is included for that tier.
 - id: q49
