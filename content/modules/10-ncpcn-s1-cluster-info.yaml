@@ -279,9 +279,9 @@ questions:
   - c
   explanation: The host must be x86_64 Linux/macOS (cgroups v2 on Linux), have Docker 27.4.0 or Podman 4.0+, and have a container registry to store/manage images.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.47
+    label: Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    page: ''
     quote: Your host must be a x86_64-based Linux or macOS machine… cgroups v2 is required… A Docker or Podman container runtime is required… Your environment must include a container registry…
 - id: q138
   type: multiple_choice
@@ -363,9 +363,9 @@ questions:
   correct: b
   explanation: NKP uses the Nutanix CSI Volume Driver 3.0 as the default storage provider.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.48
+    label: Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    page: ''
     quote: NKP uses the Nutanix Container Storage Interface (CSI) Volume Driver 3.0 as the default storage provider.
 - id: q142
   type: multiple_choice
@@ -384,9 +384,9 @@ questions:
   correct: b
   explanation: Add at least 40 GB of raw storage to each of your cluster worker nodes.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.52
+    label: Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    page: ''
     quote: Ensure that you add at least 40 GB of raw storage to each of your cluster worker nodes.
 - id: q143
   type: multiple_choice
@@ -426,9 +426,9 @@ questions:
   correct: b
   explanation: The Nutanix CSI driver uses the storage container associated with the Prism Central cluster.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.718
+    label: Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    page: ''
     quote: The Nutanix CSI driver uses the storage container associated with the Prism Central cluster.
 - id: q145
   type: true_false
@@ -485,9 +485,9 @@ questions:
   correct: b
   explanation: Production deployments need at least three control plane nodes and a minimum of four worker nodes.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.718
+    label: Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    page: ''
     quote: For production deployments, you need at least three control plane nodes and a minimum of four worker nodes.
 - id: q148
   type: multiple_choice
@@ -506,9 +506,9 @@ questions:
   correct: b
   explanation: Pro/Ultimate clusters recommend control-plane nodes at 4 vCPU and 16 GiB memory.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.720
+    label: Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    page: ''
     quote: 'Table 67: General Resource Requirements for Pro and Ultimate Clusters — Control Plane Node: vCPU count 4, Memory 16 GiB.'
 - id: q149
   type: multiple_choice
@@ -527,9 +527,9 @@ questions:
   correct: b
   explanation: Pro/Ultimate clusters recommend worker nodes at 8 vCPU and 32 GiB memory.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.720
+    label: Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    page: ''
     quote: 'Table 67 — Worker Node: vCPU count 8, Memory 32 GiB.'
 - id: q150
   type: multiple_choice
@@ -548,9 +548,9 @@ questions:
   correct: a
   explanation: A Starter management cluster minimum is 3 control-plane nodes (2 vCPU / 8 GiB) and 2 worker nodes (4 vCPU / 8 GiB).
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.719
+    label: Resource Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    page: ''
     quote: 'Table 65: Resource Requirements for Management Cluster — Control Plane: 3 nodes, 2 vCPU, 8 GiB; Worker: 2 nodes, 4 vCPU, 8 GiB.'
 - id: q151
   type: multiple_choice
@@ -593,9 +593,9 @@ questions:
   - c
   explanation: On Nutanix infrastructure, supported OSes include Rocky Linux 9.6, Ubuntu 22.04, Ubuntu 24.04, RHEL 8.10, and RHEL 9.6. Windows is not supported.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.12
+    label: Supported Infrastructure Operating Systems
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-supported-OS-c.html
+    page: ''
     quote: 'Table 2 (Nutanix): Rocky Linux 9.6, Ubuntu 22.04, Ubuntu 24.04, RHEL 8.10, RHEL 9.6.'
 - id: q153
   type: multiple_choice
