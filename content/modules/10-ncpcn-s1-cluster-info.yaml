@@ -24,9 +24,9 @@ questions:
   correct: c
   explanation: The control-plane endpoint port defaults to 6443 unless a different port is specified.
   source:
-    label: 'Pre-provisioned: Defining the Infrastructure'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
-    page: p.80
+    label: Configuring CIDR Values for the Pod Network and Kubernetes Services
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configure-cidr-values-for-pod-network-and-kubernetes-services-t.html
+    page: ''
     quote: --control-plane-endpoint-port <control plane endpoint port, if different than 6443>
 - id: q126
   type: multiple_choice
@@ -45,9 +45,9 @@ questions:
   correct: b
   explanation: The default Pod subnet in NKP is 192.168.0.0/16.
   source:
-    label: 'Pre-provisioned: Defining the Infrastructure'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
-    page: p.702
+    label: Creating a Nutanix VM Image
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-create-image-t.html
+    page: ''
     quote: 'The default subnets used in NKP are: … pods: cidrBlocks: - 192.168.0.0/16 … services: cidrBlocks: - 10.96.0.0/12'
 - id: q127
   type: multiple_choice
@@ -66,9 +66,9 @@ questions:
   correct: a
   explanation: The default Service subnet in NKP is 10.96.0.0/12.
   source:
-    label: 'Pre-provisioned: Defining the Infrastructure'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
-    page: p.702
+    label: Creating a Nutanix VM Image
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-create-image-t.html
+    page: ''
     quote: 'services: cidrBlocks: - 10.96.0.0/12'
 - id: q128
   type: multiple_choice
@@ -87,9 +87,9 @@ questions:
   correct: b
   explanation: Pod and Service subnets must not overlap with subnets used by cluster Nodes; where virtual IPs are allocated for LoadBalancer Services, they must not overlap those either.
   source:
-    label: 'Pre-provisioned: Defining the Infrastructure'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
-    page: p.701
+    label: Subnets for Pods
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-subnets-pods-t.html
+    page: ''
     quote: These subnets must not overlap with subnets used by cluster Nodes… the Pods and Services subnets must not overlap with the virtual IP subnets.
 - id: q129
   type: multiple_choice
@@ -108,9 +108,9 @@ questions:
   correct: b
   explanation: If the defaults overlap with node subnets, you must change the Pods or Services subnets at cluster creation.
   source:
-    label: 'Pre-provisioned: Defining the Infrastructure'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-preprov-define-infra-t.html
-    page: p.701
+    label: Subnets for Pods
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-subnets-pods-t.html
+    page: ''
     quote: If the default Pods or Services subnets overlap with any subnets used by cluster Nodes, you must change the Pods or Services subnets. You must do this at cluster creation.
 - id: q130
   type: multiple_choice
@@ -192,9 +192,9 @@ questions:
   correct: c
   explanation: The default Prism Central port is 9440.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.56
+    label: Creating a Nutanix VM Image
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-create-image-t.html
+    page: ''
     quote: Replace Prism Central port with the custom port number for Prism Central. The default value is 9440.
 - id: q134
   type: multiple_choice
@@ -213,9 +213,9 @@ questions:
   correct: a
   explanation: NUTANIX_ENDPOINT (the --endpoint flag) provides the Prism Central endpoint URL; the NKP CLI uses the Prism Central API hosted there.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.56
+    label: Creating a Nutanix VM Image
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-create-image-t.html
+    page: ''
     quote: export NUTANIX_ENDPOINT=URL of Prism Central Endpoint… The NKP CLI uses the Prism Central API to create the OS image, and this API is hosted at the Prism Central endpoint.
 - id: q135
   type: multiple_choice
@@ -234,9 +234,9 @@ questions:
   correct: b
   explanation: Connect to Prism Central with NUTANIX_USER(NAME) and NUTANIX_PASSWORD.
   source:
-    label: General Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-general-c.html
-    page: p.56
+    label: Creating a Nutanix VM Image
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-basic-ag-create-image-t.html
+    page: ''
     quote: 'Provide the Prism Central credentials: export NUTANIX_USER=Prism Central Username … export NUTANIX_PASSWORD=Prism Central Password'
 - id: q136
   type: multiple_choice
