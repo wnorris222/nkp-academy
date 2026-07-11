@@ -506,8 +506,8 @@ questions:
   correct: b
   explanation: Pro/Ultimate clusters recommend control-plane nodes at 4 vCPU and 16 GiB memory.
   source:
-    label: Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    label: Pro and Ultimate Cluster Minimum Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-pro-and-ultimate-cluster-min-r.html
     page: ''
     quote: 'Table 67: General Resource Requirements for Pro and Ultimate Clusters — Control Plane Node: vCPU count 4, Memory 16 GiB.'
 - id: q149
@@ -528,7 +528,7 @@ questions:
   explanation: Pro/Ultimate clusters recommend worker nodes at 8 vCPU and 32 GiB memory.
   source:
     label: Pro and Ultimate Cluster Minimum Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-resource-req-pro-and-ultimate-cluster-min-r.html
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-pro-and-ultimate-cluster-min-r.html
     page: ''
     quote: 'Table 67 — Worker Node: vCPU count 8, Memory 32 GiB.'
 - id: q150
@@ -549,7 +549,7 @@ questions:
   explanation: A Starter management cluster minimum is 3 control-plane nodes (2 vCPU / 8 GiB) and 2 worker nodes (4 vCPU / 8 GiB).
   source:
     label: Starter Cluster Minimum Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-resource-req-starter-cluster-min-r.html
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-starter-cluster-min-r.html
     page: ''
     quote: 'Table 65: Resource Requirements for Management Cluster — Control Plane: 3 nodes, 2 vCPU, 8 GiB; Worker: 2 nodes, 4 vCPU, 8 GiB.'
 - id: q151
