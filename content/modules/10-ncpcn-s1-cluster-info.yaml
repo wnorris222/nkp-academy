@@ -363,8 +363,8 @@ questions:
   correct: b
   explanation: NKP uses the Nutanix CSI Volume Driver 3.0 as the default storage provider.
   source:
-    label: Resource Requirements
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-resource-req-c.html
+    label: Default Storage Providers
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-default-storage-providers-c.html
     page: ''
     quote: NKP uses the Nutanix Container Storage Interface (CSI) Volume Driver 3.0 as the default storage provider.
 - id: q142
