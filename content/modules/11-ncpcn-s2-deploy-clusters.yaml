@@ -66,9 +66,9 @@ questions:
   correct: a
   explanation: Export the cluster kubeconfig with nkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf.
   source:
-    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
-    page: p.20
+    label: Starting an NKP Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-start-t.html
+    page: ''
     quote: '# export kubeconfig of the clusternkp get kubeconfig --cluster-name ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf'
 - id: q4
   type: multiple_choice
@@ -87,9 +87,9 @@ questions:
   correct: b
   explanation: --control-plane-replicas and --worker-replicas set the control-plane and worker counts.
   source:
-    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
-    page: p.20
+    label: Starting an NKP Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-start-t.html
+    page: ''
     quote: --control-plane-replicas=3 … --worker-replicas=4
 - id: q5
   type: multiple_choice
@@ -108,9 +108,9 @@ questions:
   correct: b
   explanation: Point the cluster at a registry mirror with --registry-mirror-url, --registry-mirror-username, --registry-mirror-password (and --registry-mirror-cacert for a self-signed CA).
   source:
-    label: Nutanix Air-gapped Installation
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-ag-install-c.html
-    page: p.20
+    label: Registry and Registry Mirrors
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-registry-and-registry-mirrors-c.html
+    page: ''
     quote: --registry-mirror-url=${REGISTRY_URL} --registry-mirror-username=${DOCKERHUB_USERNAME} --registry-mirror-password=${DOCKERHUB_PASSWORD}
 - id: q6
   type: multiple_choice
@@ -150,9 +150,9 @@ questions:
   correct: b
   explanation: A Machine is a declarative specification for a platform/infrastructure component that hosts a Kubernetes node as a bare metal server or VM.
   source:
-    label: Prerequisites for Installation
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
-    page: p.22
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: ''
     quote: A machine is a declarative specification for a platform or infrastructure component that hosts a Kubernetes node as a bare metal server or a VM.
 - id: q8
   type: multiple_choice
@@ -171,9 +171,9 @@ questions:
   correct: b
   explanation: 'Machine immutability: updating a machine spec (other than annotations, status, labels) causes the controller to delete the host and create a new one conforming to the latest spec.'
   source:
-    label: Prerequisites for Installation
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
-    page: p.22
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: ''
     quote: When you update a machine spec other than for specific values, such as annotations, status, and labels, the controller deletes the host and creates a new one that conforms to the latest spec. This is called machine immutability.
 - id: q9
   type: multiple_choice
@@ -213,9 +213,9 @@ questions:
   correct: b
   explanation: An MHC identifies unhealthy node conditions and initiates remediation for MachineSet-owned nodes; the default maxunhealthy is 40%.
   source:
-    label: Prerequisites for Installation
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
-    page: p.22
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: ''
     quote: A MachineHealthCheck (MHC) identifies unhealthy node conditions and initiates remediation for nodes owned by a MachineSet… the default value of maxunhealthy is set to 40%.
 - id: q11
   type: multiple_choice
@@ -234,9 +234,9 @@ questions:
   correct: b
   explanation: A ClusterResourceSet groups and deploys core cluster components (e.g., CNI, CSI) after the Kubernetes cluster is installed.
   source:
-    label: Prerequisites for Installation
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-prereq-install-c.html
-    page: p.22
+    label: CAPI Concepts and Terms
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nkp-capi-concepts-c.html
+    page: ''
     quote: A ClusterResourceSet is a custom resource definition (CRD) that can be used to group and deploy core cluster components after the installation of the Kubernetes cluster.
 - id: q12
   type: multiple_choice
@@ -276,9 +276,9 @@ questions:
   correct: b
   explanation: kubectl get cluster-api gathers all resources that comprise a cluster and their statuses.
   source:
-    label: Installing NKP
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
-    page: p.1041
+    label: Starting an NKP Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-start-t.html
+    page: ''
     quote: Gather a list of all resources that comprise a cluster and their statuses. kubectl get cluster-api… reviewing the CAPI resources helps identify configuration issues…
 - id: q14
   type: multiple_choice
@@ -297,9 +297,9 @@ questions:
   correct: a
   explanation: nkp describe cluster --cluster-name=${CLUSTER_NAME} checks the infrastructure health and prints a readiness tree (Cluster, ClusterInfrastructure, ControlPlane, Machines).
   source:
-    label: Installing NKP
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
-    page: p.1040
+    label: Starting an NKP Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-start-t.html
+    page: ''
     quote: 'run this command to check the health of the cluster infrastructure. nkp describe cluster --cluster-name=${CLUSTER_NAME}… Cluster/nkp-example True … ##ControlPlane - KubeadmControlPlane…'
 - id: q15
   type: multiple_choice
@@ -318,9 +318,9 @@ questions:
   correct: a
   explanation: Run nkp diagnose to collect information from pods and infrastructure when pods aren't Running/Completed (feeds a support bundle).
   source:
-    label: Installing NKP
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
-    page: p.1041
+    label: Starting an NKP Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-start-t.html
+    page: ''
     quote: If something has not been deployed properly or thoroughly, run the nkp diagnose command. This collects information from pods and infrastructure.
 - id: q16
   type: multiple_choice
@@ -339,9 +339,9 @@ questions:
   correct: a
   explanation: Verify all system pods with kubectl get pods --all-namespaces; if any is not Running/Completed, investigate further.
   source:
-    label: Installing NKP
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
-    page: p.1041
+    label: Starting an NKP Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-start-t.html
+    page: ''
     quote: Ensure to check pod status across all namespaces… kubectl get pods --all-namespaces. If any pod is not in Running or Completed status, see Troubleshooting.
 - id: q17
   type: multiple_choice
@@ -381,9 +381,9 @@ questions:
   correct: b
   explanation: In the describe cluster tree, a healthy resource shows READY = True.
   source:
-    label: Installing NKP
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-nkp-t.html
-    page: p.1040
+    label: Starting an NKP Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-cluster-start-t.html
+    page: ''
     quote: A healthy cluster returns an output similar to this example… Cluster/nkp-example True … all of the previous commands should return as Ready or True.
 - id: q19
   type: multiple_choice
@@ -423,9 +423,9 @@ questions:
   correct: b
   explanation: Edit the Cluster object's spec.clusterNetwork.services.cidrBlocks and spec.clusterNetwork.pods.cidrBlocks fields to change the subnets.
   source:
-    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
-    page: p.702
+    label: Configuring CIDR Values for the Pod Network and Kubernetes Services
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-configure-cidr-values-for-pod-network-and-kubernetes-services-t.html
+    page: ''
     quote: 'To modify the Services subnet, add or edit the spec.clusterNetwork.services.cidrBlocks field of the Cluster object… To modify the cluster: Add or edit the spec.clusterNetwork.pods.cidrBlocks field.'
 - id: q21
   type: multiple_choice
@@ -507,9 +507,9 @@ questions:
   correct: b
   explanation: Pod and Service subnets must not overlap with node subnets (or LoadBalancer virtual-IP subnets), and must be changed at cluster creation.
   source:
-    label: 'Nutanix Air-gapped Environment: Creating a New Cluster'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanixAG-custom-create-cluster-t.html
-    page: p.701
+    label: Subnets for Pods
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-subnets-pods-t.html
+    page: ''
     quote: These subnets must not overlap with subnets used by cluster Nodes… you must change the Pods or Services subnets… at cluster creation.
 - id: q25
   type: multiple_choice
@@ -570,9 +570,9 @@ questions:
   correct: a
   explanation: Point air-gapped nodes at the local registry with --registry-mirror-url (plus username/password, and --registry-mirror-cacert if the registry uses a self-signed CA).
   source:
-    label: Nutanix Air-gapped Installation
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-ag-install-c.html
-    page: p.20
+    label: Registry and Registry Mirrors
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-registry-and-registry-mirrors-c.html
+    page: ''
     quote: --registry-mirror-url=${REGISTRY_URL} --registry-mirror-cacert=${REGISTRY_CA} --registry-mirror-username=${REGISTRY_USERNAME} --registry-mirror-password=${REGISTRY_PASSWORD}
 - id: q28
   type: multiple_choice
