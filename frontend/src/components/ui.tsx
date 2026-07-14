@@ -21,6 +21,19 @@ export function SourceCite({ source }: { source: Source }) {
         >
           {source.label} ↗
         </a>
+        {source.url2 && (
+          <>
+            <span className="text-slate-500">·</span>
+            <a
+              href={source.url2}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-iris-light underline-offset-2 hover:underline"
+            >
+              {source.label2 || "Additional reference"} ↗
+            </a>
+          </>
+        )}
         {source.page && <span className="text-slate-500">· {source.page}</span>}
       </div>
     </div>

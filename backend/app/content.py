@@ -34,6 +34,9 @@ class Source:
     url: str
     page: str = ""
     quote: str = ""
+    # Optional second citation (some answers are documented across two pages).
+    label2: str = ""
+    url2: str = ""
 
 
 @dataclass(frozen=True)
@@ -123,6 +126,8 @@ def _parse_question(raw: dict) -> Question:
             url=src["url"],
             page=src.get("page", ""),
             quote=src.get("quote", ""),
+            label2=src.get("label2", ""),
+            url2=src.get("url2", ""),
         )
 
     return Question(

@@ -66,9 +66,9 @@ questions:
   correct: a
   explanation: Generate a default installer configuration file with nkp install kommander --init > kommander.yaml.
   source:
-    label: Additional Kommander Configuration
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
-    page: p.83
+    label: Installing Kommander in a Non-air-gapped Environment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-install-kommander-in-non-air-gapped-env-t.html
+    page: ''
     quote: Create a configuration file for the deployment. nkp install kommander --init > kommander.yaml
 - id: q36
   type: multiple_choice
@@ -87,9 +87,9 @@ questions:
   correct: a
   explanation: Install with a custom config via --installer-config kommander.yaml (and --kubeconfig).
   source:
-    label: Additional Kommander Configuration
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
-    page: p.84
+    label: 'Essential License — Install Kommander (Non-air-gapped)'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-essential-license-install-kommander-non-air-gapped-env-t.html
+    page: ''
     quote: Use the customized kommander.yaml to install NKP. nkp install kommander --installer-config kommander.yaml --kubeconfig=${CLUSTER_NAME}.conf
 - id: q37
   type: multiple_choice
@@ -150,10 +150,12 @@ questions:
   correct: a
   explanation: Use nkp open dashboard to log in, and nkp get dashboard to retrieve the URL and credentials at any time.
   source:
-    label: Additional Kommander Configuration
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
-    page: p.85
+    label: 'Nutanix Air-gapped: Verify Kommander and Log in to the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-nutanix-ag-basic-komm-login-ui-t.html
+    page: ''
     quote: nkp open dashboard --kubeconfig=${CLUSTER_NAME}.conf … Retrieve the URL and credentials at any time… nkp get dashboard --kubeconfig=${CLUSTER_NAME}.conf
+    label2: 'Pre-provisioned FIPS Air-gapped: Verify Kommander and Log in to the UI'
+    url2: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-preprovFIPSAG-verify-komm-login-ui-t.html
 - id: q40
   type: multiple_choice
   difficulty: core
@@ -171,9 +173,9 @@ questions:
   correct: a
   explanation: Check install status with kubectl -n kommander wait --for condition=Ready helmreleases --all --timeout 15m.
   source:
-    label: Additional Kommander Configuration
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
-    page: p.84
+    label: Verify Kommander Installation and Log in to the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-verify-komm-login-ui-t.html
+    page: ''
     quote: kubectl -n kommander wait --for condition=Ready helmreleases --all --timeout 15m
 - id: q41
   type: multiple_choice
@@ -213,9 +215,9 @@ questions:
   correct: a
   explanation: Check a failing application with kubectl -n kommander get helmrelease <HELMRELEASE_NAME>.
   source:
-    label: Additional Kommander Configuration
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
-    page: p.85
+    label: Verify Kommander Install
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-verify-kommander-install-t.html
+    page: ''
     quote: If an application fails to deploy, check the status of the HelmRelease using the following command. kubectl -n kommander get helmrelease <HELMRELEASE_NAME>
 - id: q43
   type: multiple_choice
@@ -255,9 +257,9 @@ questions:
   correct: b
   explanation: Kommander platform applications (HelmReleases) run in the kommander namespace.
   source:
-    label: Additional Kommander Configuration
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
-    page: p.84
+    label: Project Deployments Troubleshooting
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-project-deployments-troubleshooting-t.html
+    page: ''
     quote: kubectl -n kommander wait --for condition=Ready helmreleases --all… kubectl -n kommander get helmrelease…
 - id: q45
   type: multiple_choice
@@ -276,9 +278,9 @@ questions:
   correct: b
   explanation: Each Kommander platform application is represented by a HelmRelease (helm.toolkit.fluxcd.io).
   source:
-    label: Additional Kommander Configuration
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
-    page: p.84
+    label: 'Pre-provisioned Air-gapped — Verify Kommander and Log in to the UI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-preprovAG-custom-verify-komm-login-ui-t.html
+    page: ''
     quote: helmrelease.helm.toolkit.fluxcd.io/kommander condition met… /traefik condition met… /velero condition met
 - id: q46
   type: multiple_choice
@@ -320,7 +322,7 @@ questions:
   source:
     label: Installing Kommander in a Small Environment
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-install-kommander-in-small-env-t.html
-    page: p.992
+    page: ''
     quote: Applications that have enabled set to false are not taken into account during installation.
 - id: q48
   type: multiple_choice
@@ -570,9 +572,9 @@ questions:
   correct: a
   explanation: Rerun nkp install kommander --installer-config kommander.yaml --kubeconfig=... — this works after the initial install to reconfigure applications.
   source:
-    label: Additional Kommander Configuration
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-addl-kommander-config-c.html
-    page: p.84
+    label: Install Kommander with a Configuration File
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-install-kommander-with-config-file-t.html
+    page: ''
     quote: To reconfigure applications, you can also run this command after the initial installation. nkp install kommander --installer-config kommander.yaml --kubeconfig=${CLUSTER_NAME}.conf
 - id: q60
   type: multiple_choice

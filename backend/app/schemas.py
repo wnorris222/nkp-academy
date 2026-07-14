@@ -82,6 +82,8 @@ class SourceOut(BaseModel):
     url: str
     page: str = ""
     quote: str = ""
+    label2: str = ""
+    url2: str = ""
 
 
 class GradeOut(BaseModel):

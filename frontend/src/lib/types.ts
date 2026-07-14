@@ -49,6 +49,8 @@ export interface Source {
   url: string;
   page: string;
   quote: string;
+  label2?: string;
+  url2?: string;
 }
 
 export interface GradeResult {
