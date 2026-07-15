@@ -114,9 +114,9 @@ questions:
   correct: b
   explanation: Thanos is an open-source, HA, Prometheus-compatible solution that offers unlimited data retention through object storage.
   source:
-    label: Centralized Metrics
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-centralized-metrics-c.html
-    page: p.359
+    label: Platform Applications Dependencies
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-platform-apps-dependencies-c.html
+    page: ''
     quote: 'thanos: An open-source, highly available Prometheus-compatible solution that offers unlimited data retention through object storage while remaining fully compatible with existing Prometheus tools.'
 - id: q102
   type: multiple_choice
@@ -198,9 +198,9 @@ questions:
   correct: b
   explanation: Access the per-cluster Grafana UI at https://<CLUSTER_URL>/dkp/grafana.
   source:
-    label: Monitoring and Alerts
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-monitoring-and-alerts-c.html
-    page: p.662
+    label: Disable Default Dashboards
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-disable-default-dashboards-t.html
+    page: ''
     quote: To access the Grafana UI, browse to the landing page and then search for the Grafana dashboard, for example, https://<CLUSTER_URL>/dkp/grafana.
 - id: q106
   type: multiple_choice
@@ -220,8 +220,8 @@ questions:
   explanation: Thanos Query queries the Prometheus instances on attached clusters (via a Thanos sidecar per Prometheus), and Grafana uses Thanos Query as its data source for a global view.
   source:
     label: Centralized Metrics
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-centralized-metrics-c.html
-    page: p.669
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-centralized-metrics-c.html
+    page: ''
     quote: The Thanos Query component is installed on attached and managed clusters. Thanos Query queries the Prometheus instances on the attached clusters, using a Thanos sidecar… Grafana is configured with…
 - id: q107
   type: multiple_choice
@@ -282,9 +282,9 @@ questions:
   correct: b
   explanation: Karma aggregates all alerts from the Alertmanagers running in the attached clusters, giving one page to view/filter them.
   source:
-    label: Centralized Metrics
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-centralized-metrics-c.html
-    page: p.670
+    label: Centralized Alerts
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-centralized-alerts-c.html
+    page: ''
     quote: A centralized view of alerts from attached clusters, is provided using an alert dashboard called Karma… Karma aggregates all alerts from the Alertmanagers running in the attached clusters…
 - id: q110
   type: multiple_choice
