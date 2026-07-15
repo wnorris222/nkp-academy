@@ -24,9 +24,9 @@ questions:
   correct: b
   explanation: A workspace is a logical grouping of clusters that maintain a similar configuration, with certain configurations automatically federated to those clusters.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.371
+    label: Workspaces
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-workspaces-c.html
+    page: ''
     quote: Workspaces are a logical grouping of clusters that maintain a similar configuration, with certain configurations automatically federated to those clusters.
 - id: q2
   type: multiple_choice
@@ -45,9 +45,9 @@ questions:
   correct: b
   explanation: 'The UI is accessible at three levels: Global (all clusters/workspaces), Workspace (clusters within a workspace), and Project.'
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.371
+    label: Workspaces
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-workspaces-c.html
+    page: ''
     quote: 'Global: … manage all clusters across all workspaces. Workspace: … manage multiple clusters within a workspace.'
 - id: q3
   type: multiple_choice
@@ -69,9 +69,9 @@ questions:
   - c
   explanation: Workspaces let you separate clusters according to departments, products, or business functions.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.371
+    label: Workspaces
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-workspaces-c.html
+    page: ''
     quote: you can create workspaces to separate clusters according to departments, products, or business functions.
 - id: q4
   type: multiple_choice
@@ -90,9 +90,9 @@ questions:
   correct: b
   explanation: You can use the default workspace deployed in NKP to get started immediately.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.371
+    label: Workspaces
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-workspaces-c.html
+    page: ''
     quote: To get started immediately, you can use the default workspace deployed in NKP.
 - id: q5
   type: multiple_choice
@@ -132,9 +132,9 @@ questions:
   correct: b
   explanation: A workspace can only be deleted if all clusters in it have been deleted or detached.
   source:
-    label: Deleting a Workspace
+    label: Delete a Workspace
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-delete-a-workspace-c.html
-    page: p.372
+    page: ''
     quote: Workspaces can only be deleted if all the clusters in the workspace have been deleted or detached.
 - id: q7
   type: multiple_choice
@@ -153,9 +153,9 @@ questions:
   correct: b
   explanation: You cannot move clusters from one workspace to another after creating or attaching them — assignment is permanent.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.371
+    label: Workspaces
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-workspaces-c.html
+    page: ''
     quote: you cannot move clusters from one workspace to another after creating/attaching them.
 - id: q8
   type: multiple_choice
@@ -216,9 +216,9 @@ questions:
   correct: b
   explanation: Certain configurations are automatically federated to all clusters in a workspace; workspace labels/annotations apply to all clusters, and an app enabled at the workspace deploys to all its clusters.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.371
+    label: 'Add, Edit, or Delete Workspace Annotations and Labels'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-add-edit-or-delete-workspace-annotations-and-labels-t.html
+    page: ''
     quote: certain configurations automatically federated to those clusters.
 - id: q11
   type: multiple_choice
@@ -237,9 +237,9 @@ questions:
   correct: b
   explanation: NKP can configure Nutanix, AWS, Azure, and vSphere infrastructure providers.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.310
+    label: Infrastructure Providers
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-infrastructure-providers-c.html
+    page: ''
     quote: Infrastructure providers, such as Nutanix, AWS, Azure, and vSphere, provide the infrastructure for your management clusters.
 - id: q12
   type: multiple_choice
@@ -258,9 +258,9 @@ questions:
   correct: b
   explanation: Infrastructure provider credentials are configured in each workspace, and the assigned name must be unique across the other namespaces in your cluster.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.310
+    label: Infrastructure Providers
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-infrastructure-providers-c.html
+    page: ''
     quote: Infrastructure provider credentials are configured in each workspace. The name you assign must be unique across all the other namespaces in your cluster.
 - id: q13
   type: multiple_choice
@@ -279,9 +279,9 @@ questions:
   correct: b
   explanation: Starter supports Nutanix only; Pro supports a single management cluster with attached/managed clusters of the same provider; Ultimate supports multiple infrastructure providers.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.310
+    label: Infrastructure Providers
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-infrastructure-providers-c.html
+    page: ''
     quote: NKP Ultimate supports a multi-cluster environment… of multiple infrastructure providers.
 - id: q14
   type: multiple_choice
@@ -300,9 +300,9 @@ questions:
   correct: b
   explanation: A Nutanix infrastructure provider contains your Prism Central credentials — endpoint URL, username, password, and the trust bundle.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.311
+    label: 'Create a Nutanix Infrastructure Provider (UI)'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-nutanix-infra-provider-ui-t.html
+    page: ''
     quote: In the Prism Central Endpoint field, enter the endpoint URL of Prism Central… In the Password field… upload the trust bundle.
 - id: q15
   type: multiple_choice
