@@ -150,9 +150,9 @@ questions:
   correct: b
   explanation: Set a default storage class on each attached cluster for successful Loki deployment.
   source:
-    label: Logging
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
-    page: p.595
+    label: Enable Logging Applications Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-enable-logging_apps-using-ui-t.html
+    page: ''
     quote: Set a default storage class on each attached cluster for successful Loki deployment.
 - id: q40
   type: multiple_choice
@@ -171,9 +171,9 @@ questions:
   correct: b
   explanation: In the target workspace > Applications, enable Rook Ceph and Rook Ceph Cluster, then Grafana Loki, Logging Operator, and Grafana Logging.
   source:
-    label: Logging
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
-    page: p.595
+    label: Enable Logging Applications Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-enable-logging_apps-using-ui-t.html
+    page: ''
     quote: Select the three-dot button... for Rook Ceph and Rook Ceph Cluster, then click Enable... Repeat the process for the Grafana Loki, Logging Operator, and Grafana Logging applications.
 - id: q41
   type: multiple_choice
@@ -213,9 +213,9 @@ questions:
   correct: b
   explanation: Fluent Bit collects admin logs, which can consume around 2 GB/day per node; enable it only after configuring the Grafana Loki Ceph bucket with sufficient storage.
   source:
-    label: Logging
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
-    page: p.596
+    label: Create AppDeployments to Enable Workspace Logging
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-appdeployments-to-enable-workspace-logging-t.html
+    page: ''
     quote: We do not recommend installing Fluent Bit, which is responsible for collecting admin logs, unless you have configured the Grafana Loki Ceph Cluster Bucket with sufficient storage space… around 2GB/day per node.
 - id: q43
   type: multiple_choice
@@ -276,9 +276,9 @@ questions:
   correct: b
   explanation: When the kube-prometheus-stack (Prometheus Monitoring) platform app is enabled, you can view the Logging Operator, Loki, and Ceph dashboards in the Grafana UI.
   source:
-    label: Logging Operator
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
-    page: p.591
+    label: 'Logging Stack — Logging Operator'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-logging-stack-logging-operator-c.html
+    page: ''
     quote: In NKP, if the Prometheus Monitoring (kube-prometheus-stack) platform application is enabled, you can view the Logging Operator dashboard in the Grafana UI.
 - id: q46
   type: multiple_choice
@@ -423,9 +423,9 @@ questions:
   correct: b
   explanation: Use nkp diagnose to generate a support bundle; it builds on the open-source troubleshoot.sh project.
   source:
-    label: Logging
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
-    page: p.1067
+    label: Generate a Diagnostic Bundle
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-ts-gather-generate-diagnostic-bundle-c.html
+    page: ''
     quote: nkp diagnose was developed by NKP and builds on the open source troubleshoot.sh project.
 - id: q53
   type: multiple_choice
@@ -444,9 +444,9 @@ questions:
   correct: b
   explanation: The support bundle collects data for the last 48 hours of the cluster's life by default.
   source:
-    label: Logging
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-cluster-operations-c.html
-    page: p.1067
+    label: Generate a Support Bundle
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-ts-gather-generate-c.html
+    page: ''
     quote: In order to generate a support bundle with data collected for the last 48 hours of the life of the cluster...
 - id: q54
   type: multiple_choice
@@ -570,9 +570,9 @@ questions:
   correct: b
   explanation: In a high-log-traffic environment, Fluentd (in the Logging Operator) usually becomes the bottleneck.
   source:
-    label: Logging Operator
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-logging-operator-c.html
-    page: p.591
+    label: 'Logging Stack — Logging Operator'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-logging-stack-logging-operator-c.html
+    page: ''
     quote: In a high log traffic environment, fluentd usually becomes the bottleneck of the logging stack.
 - id: q60
   type: multiple_choice
