@@ -66,9 +66,9 @@ questions:
   correct: b
   explanation: The Velero platform app is installed in the kommander namespace (not velero); set velero client config set namespace=kommander so CLI commands target the right namespace.
   source:
-    label: Velero Installation Using CLI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-velero-backup-c.html
-    page: p.575
+    label: Velero Installation Using the CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-velero-installation-using-cli-c.html
+    page: ''
     quote: In NKP, the Velero platform application is installed in the kommander namespace instead of velero... velero client config set namespace=kommander.
 - id: q68
   type: multiple_choice
@@ -108,9 +108,9 @@ questions:
   correct: b
   explanation: 'To restore: the Rook Ceph Cluster backend storage must be operational, the Velero platform service must be operational, and Velero must be set to restore-only-mode.'
   source:
-    label: Velero Configuration (Backup and Restore)
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-and-restore-c.html
-    page: p.578
+    label: Restore a Cluster from Backup
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-restore-a-cluster-from-backup-t.html
+    page: ''
     quote: The backend storage, Rook Ceph Cluster, is still operational.
 - id: q70
   type: multiple_choice
@@ -129,9 +129,9 @@ questions:
   correct: b
   explanation: NKP offers Integrated Rook Ceph (default) or External S3-compatible object storage (Nutanix Objects or a cloud provider).
   source:
-    label: Velero Configuration (Backup and Restore)
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-and-restore-c.html
-    page: p.554
+    label: Velero Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-velero-config-c.html
+    page: ''
     quote: For default installations, NKP deploys Velero integrated with Rook Ceph, operating within the same cluster.
 - id: q71
   type: multiple_choice
@@ -150,9 +150,9 @@ questions:
   correct: b
   explanation: For production, use an S3-compatible object store that resides outside the Kubernetes cluster (Nutanix Objects or AWS S3) for reliable external backup storage.
   source:
-    label: Velero Configuration (Backup and Restore)
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-and-restore-c.html
-    page: p.554
+    label: Velero Configuration
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-velero-config-c.html
+    page: ''
     quote: For production use cases, use an S3-compatible object store that resides outside the Kubernetes cluster as the backup storage location for Velero.
 - id: q72
   type: multiple_choice
@@ -174,9 +174,9 @@ questions:
   - c
   explanation: 'Prerequisites: Velero is installed (default in NKP), the Velero CLI is installed, and an S3 bucket is created with Nutanix Objects with access configured.'
   source:
-    label: Velero Configuration (Backup and Restore)
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-and-restore-c.html
-    page: p.554
+    label: 'Velero with Nutanix Objects — Prepare the Environment'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-velero-with-nutanix-prep-environment-t.html
+    page: ''
     quote: Velero is installed (included in the default NKP installation). Velero CLI is installed… You have created an S3 bucket with Nutanix Objects and configured access.
 - id: q73
   type: multiple_choice
@@ -216,9 +216,9 @@ questions:
   correct: b
   explanation: Backups target a BackupStorageLocation (BSL); each cluster must have its own bucket, and the AWS_PROFILE field maps each secret to its BSL.
   source:
-    label: Velero Configuration (Backup and Restore)
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-and-restore-c.html
-    page: p.556
+    label: 'Velero with Nutanix Objects — Prepare the Environment'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-velero-with-nutanix-prep-environment-t.html
+    page: ''
     quote: Each cluster must have its own bucket. If you use different credentials to access the BackupStorageLocation (BSL), you can create multiple secrets… The AWS_PROFILE field maps each secret to its BSL.
 - id: q75
   type: multiple_choice
@@ -279,9 +279,9 @@ questions:
   correct: b
   explanation: Create an alternate schedule with velero create schedule <name> -n ${WORKSPACE_NAMESPACE} --snapshot-volumes=false --schedule="@every 8h".
   source:
-    label: Backup Operations
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-operations-c.html
-    page: p.576
+    label: Create Backup Schedules
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-backup-schedules-t.html
+    page: ''
     quote: velero create schedule <backup-schedule-name> -n ${WORKSPACE_NAMESPACE} --snapshot-volumes=false --schedule="@every 8h"
 - id: q78
   type: multiple_choice
@@ -321,9 +321,9 @@ questions:
   correct: b
   explanation: Scope a schedule to namespaces with --include-namespaces (e.g., velero create schedule <name> --include-namespaces=kube-system,kommander --schedule="@every 24h").
   source:
-    label: Backup Operations
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-operations-c.html
-    page: p.577
+    label: Create a Backup Schedule for Specific Namespaces
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-a-backup-schedule-for-specific-namespace-t.html
+    page: ''
     quote: velero create schedule <backup-schedule-name> --include-namespaces=kube-system,kube-public,kommander --snapshot-volumes=false --schedule="@every 24h"
 - id: q80
   type: multiple_choice
@@ -342,9 +342,9 @@ questions:
   correct: b
   explanation: Take an on-demand backup before upgrading components or modifying cluster configuration, using velero backup create <name>.
   source:
-    label: Backup Operations
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-operations-c.html
-    page: p.577
+    label: Back Up On Demand
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-back-up-on-demand-t.html
+    page: ''
     quote: if you are preparing to upgrade any components or modify your cluster configuration, perform a backup before taking that action. velero backup create <backup-name>…
 - id: q81
   type: multiple_choice
@@ -405,9 +405,9 @@ questions:
   correct: a
   explanation: Use velero get backups / velero get schedules / velero get restores (also backup-locations and snapshot-locations) to list resources.
   source:
-    label: Backup Operations
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-operations-c.html
-    page: p.579
+    label: Backup Service Diagnostics
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-backup-service-diagnostics-c.html
+    page: ''
     quote: velero get schedules / velero get backups / velero get restores / velero get backup-locations / velero get snapshot-locations
 - id: q84
   type: multiple_choice
@@ -426,9 +426,9 @@ questions:
   correct: a
   explanation: Restore with velero restore create --from-backup <backup-name>.
   source:
-    label: Velero Configuration (Backup and Restore)
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-and-restore-c.html
-    page: p.579
+    label: Restore a Cluster from Backup
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-restore-a-cluster-from-backup-t.html
+    page: ''
     quote: 'Restore the cluster from the selected backup: velero restore create --from-backup'
 - id: q85
   type: multiple_choice
@@ -531,9 +531,9 @@ questions:
   correct: b
   explanation: Check Velero with kubectl get all -A | grep velero, or via the Kubernetes dashboard in the NKP UI on the Management Cluster.
   source:
-    label: Backup Operations
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-backup-operations-c.html
-    page: p.579
+    label: Backup Service Diagnostics
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-backup-service-diagnostics-c.html
+    page: ''
     quote: 'You can check whether the Velero service is currently running… by running the following kubectl command: kubectl get all -A | grep velero.'
 - id: q90
   type: multiple_choice
