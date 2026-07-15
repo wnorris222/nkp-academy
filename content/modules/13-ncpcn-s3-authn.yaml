@@ -24,9 +24,9 @@ questions:
   correct: b
   explanation: NKP supports GitHub, LDAP, SAML, and standard OIDC identity providers (such as Google) for login/authentication.
   source:
-    label: Security
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
-    page: p.299
+    label: Identity Providers
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-identity-providers-c.html
+    page: ''
     quote: NKP supports GitHub Identity Provider Configuration… Adding an LDAP Connector… SAML, and standard OIDC identity providers such as Google.
 - id: q2
   type: multiple_choice
@@ -45,9 +45,9 @@ questions:
   correct: b
   explanation: You can use a single IdP for all workspaces or configure a dedicated IdP per workspace, useful for multi-tenancy.
   source:
-    label: Security
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-security-c.html
-    page: p.299
+    label: Identity Providers
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-identity-providers-c.html
+    page: ''
     quote: you can use a single identity provider to manage access for all of them or choose to configure an identity provider per workspace… particularly helpful if you have multiple tenants.
 - id: q3
   type: multiple_choice
@@ -129,9 +129,9 @@ questions:
   correct: b
   explanation: Access-control groups are configured in the Groups tab of the Identity Providers page (global workspace > Administration > Identity Providers).
   source:
-    label: Access Control
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
-    page: p.289
+    label: Types of Access Control Objects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-types-of-access-control-objects-c.html
+    page: ''
     quote: Access control groups are configured in the Groups tab of the Identity Providers page… select administration or identity providers in the left sidebar in the global workspace level, and then select the Groups tab.
 - id: q7
   type: multiple_choice
@@ -213,9 +213,9 @@ questions:
   correct: b
   explanation: cluster-admin is a system role granting permission to all actions on any resource, including non-resource URLs; the default dashboard user is bound to it.
   source:
-    label: Access Control
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
-    page: p.292
+    label: Default Roles
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-default-roles-r.html
+    page: ''
     quote: The cluster-admin role is a system role that grants permission to all actions (verbs) on any resource, including non-resource URLs. The default dashboard user is bound to this role.
 - id: q11
   type: multiple_choice
@@ -234,9 +234,9 @@ questions:
   correct: b
   explanation: With NKP Starter you can only select cluster-admin or cluster view; the default roles are not available with Starter.
   source:
-    label: Access Control
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
-    page: p.292
+    label: Default Roles
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-default-roles-r.html
+    page: ''
     quote: 'With the NKP Starter license, you can only select the following cluster roles: cluster-admin or cluster view… The default roles are not available with the NKP Starter license.'
 - id: q12
   type: multiple_choice
@@ -276,9 +276,9 @@ questions:
   correct: b
   explanation: Create a custom role via Administration > Access Control > Cluster Roles tab > + Create Role, then Add Rule selecting resources and verbs.
   source:
-    label: Access Control
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
-    page: p.296
+    label: Creating Custom Roles
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-custom-roles-create-t.html
+    page: ''
     quote: In the Administration section… select Access Control. Select the Cluster Roles tab, and then select + Create Role… select Add Rule… select the get, list, and watch options.
 - id: q14
   type: multiple_choice
@@ -339,9 +339,9 @@ questions:
   correct: b
   explanation: Role bindings (Kommander, cluster, and project role bindings) bind a Kommander group to any number of roles.
   source:
-    label: Access Control
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
-    page: p.289
+    label: Role Bindings
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-role-bindings-c.html
+    page: ''
     quote: Kommander role bindings, cluster role bindings, and project role bindings bind a Kommander group to any number of roles.
 - id: q17
   type: multiple_choice
@@ -570,9 +570,9 @@ questions:
   correct: b
   explanation: You must manually grant access to the projects — add a RoleBinding to a kommander-project-(admin/edit/view) role for each workspace group/user.
   source:
-    label: Access Control
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
-    page: p.290
+    label: Workspace Limitations
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-workspace-limitation-c.html
+    page: ''
     quote: when granting users access to a workspace, you must manually grant access to the projects within that workspace… add RoleBinding… prefixed with one of the roles kommander-project-(admin/edit/view).
 - id: q28
   type: multiple_choice
