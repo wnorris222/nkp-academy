@@ -87,9 +87,9 @@ questions:
   correct: b
   explanation: The benefit is saving operational costs by automatically scaling down capacity when it's not needed and adding capacity when there is greater demand (with CAPI-enabled autoscaling groups).
   source:
-    label: Configuring Nutanix Cluster Autoscaler
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-nutanix-cluster-autoscaler-t.html
-    page: p.10
+    label: Cluster Autoscaling Overview
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_14:top-Overview.html
+    page: ''
     quote: Cluster Autoscaling - Save operational costs by automatically scaling down capacity when it's not needed and adding capability when there is greater demand, with CAPI enabled autoscaling groups.
 - id: q133
   type: multiple_choice
