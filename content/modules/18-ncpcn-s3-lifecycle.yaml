@@ -24,9 +24,9 @@ questions:
   correct: b
   explanation: 'Upgrade in sequence: 1) Kommander, 2) Platform Applications on managed/attached clusters, 3) Management and Managed clusters (Kubernetes).'
   source:
-    label: Upgrade NKP Pro
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
-    page: p.1049
+    label: Upgrade NKP Ultimate
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-ug-nkp-ultimate-c.html
+    page: ''
     quote: 'Upgrade your NKP environment in the following sequence to avoid compatibility issues:'
 - id: q148
   type: multiple_choice
@@ -45,9 +45,9 @@ questions:
   correct: b
   explanation: Always upgrade Kommander before upgrading the Kubernetes version in attached clusters to apply required updates for new/updated Kubernetes APIs.
   source:
-    label: Upgrade NKP Pro
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
-    page: p.1049
+    label: Upgrade Kommander
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-up-kommander-t.html
+    page: ''
     quote: Always upgrade Kommander before upgrading the Kubernetes version in attached clusters to apply any required updates for new or updated Kubernetes APIs.
 - id: q149
   type: multiple_choice
@@ -66,9 +66,9 @@ questions:
   correct: b
   explanation: Upgrade Kommander (non-air-gapped) with nkp upgrade kommander.
   source:
-    label: Upgrade NKP Pro
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
-    page: p.1050
+    label: Upgrade Kommander
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-up-kommander-t.html
+    page: ''
     quote: 'For non-air-gapped environments, run the upgrade command: nkp upgrade kommander.'
 - id: q150
   type: multiple_choice
@@ -87,9 +87,9 @@ questions:
   correct: b
   explanation: For air-gapped, run nkp upgrade kommander --kommander-applications-repository ./application-repositories/kommander-applications-nkp-version.tar.gz from the extracted bundle root.
   source:
-    label: Upgrade NKP Pro
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
-    page: p.1050
+    label: Upgrade Kommander
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-up-kommander-t.html
+    page: ''
     quote: 'For air-gapped environments, run the upgrade command with the repository path: nkp upgrade kommander --kommander-applications-repository.'
 - id: q151
   type: multiple_choice
@@ -322,9 +322,9 @@ questions:
   correct: b
   explanation: Create a node pool with nkp create nodepool <provider> -c ${CLUSTER_NAME} ${NODEPOOL_NAME} and the provider flags.
   source:
-    label: Upgrading Kubernetes Version on a Managed Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
-    page: p.899
+    label: Create Pre-provisioned Node Pools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-preprov-node-pools-t.html
+    page: ''
     quote: nkp create nodepool vsphere ${NODEPOOL_NAME} --cluster-name=${CLUSTER_NAME} creates the MachineDeployment, machine template, and KubeadmConfigTemplate.
 - id: q162
   type: multiple_choice
@@ -385,9 +385,9 @@ questions:
   correct: b
   explanation: Create additional node pools to manage machines with specialized properties — GPUs, extra memory, specialized networking/storage, or nodes in different availability zones.
   source:
-    label: Upgrading Kubernetes Version on a Managed Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-up-ultimate-managed-cluster-k8s-ver-t.html
-    page: p.818
+    label: Creating vSphere Node Pools
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-vsphere-node-pools-t.html
+    page: ''
     quote: Creating a node pool is useful when you want to run workloads that require machines with specific resources, such as a GPU, additional memory, or specialized network or storage hardware.
 - id: q165
   type: multiple_choice
@@ -532,9 +532,9 @@ questions:
   correct: b
   explanation: Delete a cluster with nkp delete cluster --cluster-name=${CLUSTER_NAME} --kubeconfig $HOME/.kube/config.
   source:
-    label: Upgrade NKP Pro
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-ug-nkp-pro-c.html
-    page: p.806
+    label: Delete an AWS Cluster
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-delete-aws-cluster-t.html
+    page: ''
     quote: nkp delete cluster --cluster-name=${CLUSTER_NAME} --kubeconfig $HOME/.kube/config.
 - id: q172
   type: multiple_choice
