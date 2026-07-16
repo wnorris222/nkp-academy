@@ -24,9 +24,9 @@ questions:
   correct: b
   explanation: 'NKP has three cluster types: Management Cluster, Managed Cluster, and Attached Cluster.'
   source:
-    label: Workspaces
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspaces-c.html
-    page: p.19
+    label: NKP Cluster Types
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-nkp-cluster-types-c.html
+    page: ''
     quote: Management Cluster (All NKP editions)... Managed Cluster (All NKP editions)... Attached Cluster (NKP Ultimate only)...
 - id: q36
   type: multiple_choice
@@ -45,9 +45,9 @@ questions:
   correct: b
   explanation: A Managed Cluster (also called an 'NKP cluster') is a workload cluster you create with NKP; the Management cluster manages its infrastructure, life cycle, and applications.
   source:
-    label: Workspaces
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspaces-c.html
-    page: p.19
+    label: NKP Cluster Types
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-nkp-cluster-types-c.html
+    page: ''
     quote: 'Managed Cluster (All NKP editions): Also called an ''NKP cluster,'' this is a type of workload cluster that you can create with NKP.'
 - id: q37
   type: multiple_choice
@@ -66,9 +66,9 @@ questions:
   correct: b
   explanation: An Attached Cluster is created outside NKP and then connected so NKP manages its applications (its lifecycle is not managed by NKP); Attached Clusters are NKP Ultimate only.
   source:
-    label: Workspaces
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspaces-c.html
-    page: p.19
+    label: NKP Cluster Types
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-nkp-cluster-types-c.html
+    page: ''
     quote: 'Attached Cluster (NKP Ultimate only): This is a type of managed cluster that is created outside of NKP but is then connected to the NKP Management Cluster so that NKP can manage it''s applications.'
 - id: q38
   type: multiple_choice
@@ -87,9 +87,9 @@ questions:
   correct: b
   explanation: 'Storage default depends on the provider: vSphere uses the vSphere CSI driver; pre-provisioned defaults to a local static provisioner that is not suitable for production (use a production-grade CSI).'
   source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.87
+    label: 'Pre-provisioned Non-air-gapped — Creating a New Cluster'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-preprovNONAG-custom-create-cluster-t.html
+    page: ''
     quote: NKP uses a local static provisioner as the default storage provider for a pre-provisioned environment... localvolumeprovisioner is not suitable for production use.
 - id: q39
   type: multiple_choice
@@ -174,9 +174,9 @@ questions:
   correct: b
   explanation: Customers are encouraged to run workloads on Managed and Attached clusters, not on the Management cluster (except in single-cluster environments).
   source:
-    label: Workspaces
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspaces-c.html
-    page: p.19
+    label: NKP Cluster Types
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-nkp-cluster-types-c.html
+    page: ''
     quote: Customers are encouraged to run workloads on Managed and Attached clusters not on the Management cluster except in single-cluster environments.
 - id: q43
   type: multiple_choice
@@ -195,9 +195,9 @@ questions:
   correct: b
   explanation: Deploying managed (workload) clusters lets you run workloads while the NKP Management cluster centrally manages their infrastructure, life cycle, and applications.
   source:
-    label: Workspaces
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspaces-c.html
-    page: p.19
+    label: NKP Cluster Types
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-nkp-cluster-types-c.html
+    page: ''
     quote: The NKP Management cluster manages its infrastructure, its life cycle, and its applications.
 - id: q44
   type: multiple_choice
@@ -216,9 +216,9 @@ questions:
   correct: b
   explanation: A single-cluster environment is a stand-alone self-managed cluster running all workloads; a multi-cluster environment has a Management cluster plus Managed/Attached clusters.
   source:
-    label: Workspaces
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspaces-c.html
-    page: p.19
+    label: NKP Cluster Types
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-nkp-cluster-types-c.html
+    page: ''
     quote: The initial NKP cluster is a stand-alone cluster. It is self-managed... all workloads are run on your single NKP cluster.
 - id: q45
   type: multiple_choice
@@ -237,9 +237,9 @@ questions:
   correct: b
   explanation: You do not install Kommander or create/move CAPI objects on a managed cluster — those tasks are only done on Management clusters.
   source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.86
+    label: 'Azure — Create Managed Clusters Using the NKP CLI'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-azure-create-managed-clusters-nkp-cli-t.html
+    page: ''
     quote: When creating managed clusters, do not create and move CAPI objects or install the Kommander component. Those tasks are only done on Management clusters.
 - id: q46
   type: multiple_choice
@@ -405,9 +405,9 @@ questions:
   correct: b
   explanation: In the UI, open the target workspace dashboard, select Add Cluster > Create Cluster, and complete the provisioning form.
   source:
-    label: Creating a Managed Cluster on VCD Through the NKP UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-managed-cluster-on-vcd-through-nkp-ui-t.html
-    page: p.462
+    label: Specify Nutanix Cluster Information
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-specify-nutanix-cluster-info-t.html
+    page: ''
     quote: In the selected workspace Dashboard, select the Add Cluster button at the top right... Select the Create Cluster card.
 - id: q54
   type: multiple_choice
@@ -429,9 +429,9 @@ questions:
   - c
   explanation: The UI form requires the Cluster Name, Infrastructure Provider, Kubernetes Version, SSH Username, and SSH Public Key (and optional labels).
   source:
-    label: Creating a Managed Cluster on VCD Through the NKP UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-managed-cluster-on-vcd-through-nkp-ui-t.html
-    page: p.463
+    label: Specify Nutanix Cluster Information
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-specify-nutanix-cluster-info-t.html
+    page: ''
     quote: Cluster Name... Infrastructure Provider... Kubernetes Version... SSH Username... SSH Public Key...
 - id: q55
   type: multiple_choice
@@ -639,7 +639,7 @@ questions:
   correct: a
   explanation: List all CAPI resources and their statuses with kubectl get cluster-api.
   source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.1041
+    label: Verify and Monitor CAPI Resources
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-verify-c-monitor-capi-resource-c.html
+    page: ''
     quote: Gather a list of all resources that comprise a cluster and their statuses. kubectl get cluster-api.
