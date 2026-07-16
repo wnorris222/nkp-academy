@@ -87,9 +87,9 @@ questions:
   correct: b
   explanation: A NKP-CLI-created cluster becomes a Managed cluster on attachment; an AKS/EKS/GKE or other external cluster becomes an Attached cluster.
   source:
-    label: Attaching an Existing Kubernetes Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
-    page: p.479
+    label: Basic Requirements
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-basic-requirements-c.html
+    page: ''
     quote: a NKP-CLI-created cluster (which will become a Managed cluster upon attachment), or another Kubernetes cluster like AKS, EKS, or GKE (which will become an Attached cluster upon attachment).
 - id: q69
   type: multiple_choice
@@ -108,9 +108,9 @@ questions:
   correct: b
   explanation: NKP supports attaching all Kubernetes Conformant clusters, but only x86-64 architecture — ARM is not supported.
   source:
-    label: Attaching an Existing Kubernetes Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
-    page: p.478
+    label: Kubernetes Cluster Attachment
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-kubernetes-cluster-attachment-c.html
+    page: ''
     quote: NKP supports the attachment of all Kubernetes Conformant clusters, but only x86-64 architecture is supported, not ARM.
 - id: q70
   type: multiple_choice
@@ -192,9 +192,9 @@ questions:
   correct: b
   explanation: Before attaching, create one or more Workspaces (and, recommended, Projects within them) to group clusters and push common configuration.
   source:
-    label: Basic Requirements for Attaching Existing Clusters
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
-    page: p.479
+    label: Projects and Workspaces
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-projects-and-workspaces-c.html
+    page: ''
     quote: Before you attach clusters, you need to create one or more Workspaces, and we recommend that you also create Projects within your Workspaces.
 - id: q74
   type: multiple_choice
@@ -339,9 +339,9 @@ questions:
   correct: b
   explanation: NKP manages an attached cluster's applications, but not its lifecycle.
   source:
-    label: Basic Requirements for Attaching Existing Clusters
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-basic-requirements-c.html
-    page: p.19
+    label: NKP Cluster Types
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-nkp-cluster-types-c.html
+    page: ''
     quote: Attached Cluster (NKP Ultimate only)... connected to the NKP Management Cluster so that NKP can manage it's applications. The lifecycle will not be managed by NKP.
 - id: q81
   type: multiple_choice
@@ -444,9 +444,9 @@ questions:
   correct: b
   explanation: A stuck 'Pending'/'Error' state usually means the wrong kubeconfig file was used or the cluster is not reachable.
   source:
-    label: Attaching an Existing Kubernetes Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-kubernetes-cluster-attachment-c.html
-    page: p.545
+    label: Disconnect or Delete Clusters
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-disconnect-or-delete-clusters-t.html
+    page: ''
     quote: This can happen because the wrong kubeconfig file is used or the cluster is just not reachable.
 - id: q86
   type: multiple_choice
