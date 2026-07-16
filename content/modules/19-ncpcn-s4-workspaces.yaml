@@ -321,9 +321,9 @@ questions:
   correct: b
   explanation: Add a provider via Administration > Infrastructure Providers > Add Infrastructure Provider (selecting the target workspace).
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.311
+    label: 'Create a Nutanix Infrastructure Provider (UI)'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-nutanix-infra-provider-ui-t.html
+    page: ''
     quote: From the left navigation pane, click Administration > Infrastructure Providers. Click Add Infrastructure Provider.
 - id: q16
   type: multiple_choice
@@ -342,9 +342,9 @@ questions:
   correct: b
   explanation: The Prism Central Endpoint must be https://<Prism Central IP Address or FQDN>:9440.
   source:
-    label: Creating a Workspace
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-workspace-t.html
-    page: p.311
+    label: 'Create a Nutanix Infrastructure Provider (UI)'
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-nutanix-infra-provider-ui-t.html
+    page: ''
     quote: The Prism Central endpoint must be in the format https://<Prism Central IP Address or FQDN>:9440.
 - id: q17
   type: multiple_choice
@@ -363,9 +363,9 @@ questions:
   correct: b
   explanation: Multi-tenancy isolates each tenant by configuring an identity provider per workspace/tenant, keeping workspaces separate and isolated.
   source:
-    label: Multi-Tenancy in NKP
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
-    page: p.415
+    label: Multi-tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-multi-tenancy-in-nkp-c.html
+    page: ''
     quote: multi-tenancy allows you to configure an identity provider per workspace or tenant… NKP keeps all workspaces and tenants separate and isolated.
 - id: q18
   type: multiple_choice
@@ -384,9 +384,9 @@ questions:
   correct: b
   explanation: The global administrator manages tenant access at the Workspace level; a tenant can further adapt user access at the Project level.
   source:
-    label: Multi-Tenancy in NKP
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
-    page: p.415
+    label: Multi-tenancy in NKP
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-multi-tenancy-in-nkp-c.html
+    page: ''
     quote: You, as a global administrator, manage tenant access at the Workspace level. A tenant can further adapt user access at the Project level.
 - id: q19
   type: multiple_choice
@@ -513,9 +513,9 @@ questions:
   correct: b
   explanation: Enabling an application for a workspace deploys it to all clusters within that workspace.
   source:
-    label: Workspace Applications
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspace-applications-c.html
-    page: p.373
+    label: Cluster-scoped Application Configuration from the NKP UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-cluster-scoped-app-config-from-nkp-ui-c.html
+    page: ''
     quote: When you enable an application for a workspace, you deploy this application to all clusters within that workspace.
 - id: q25
   type: multiple_choice
@@ -534,9 +534,9 @@ questions:
   correct: b
   explanation: NKP Pro users can only configure and deploy applications to a single cluster within a workspace.
   source:
-    label: Workspace Applications
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspace-applications-c.html
-    page: p.373
+    label: Cluster-scoped Application Configuration from the NKP UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-cluster-scoped-app-config-from-nkp-ui-c.html
+    page: ''
     quote: NKP Pro users are only be able to configure and deploy applications to a single cluster within a workspace.
 - id: q26
   type: multiple_choice
@@ -555,9 +555,9 @@ questions:
   correct: b
   explanation: In the UI, go to Applications, select the app tile's triple-dot icon > Enable, choose the target cluster(s), then select Enable.
   source:
-    label: Enabling an Application Per Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enable-an-existing-app-c.html
-    page: p.373
+    label: Enable a Cluster-scoped Application
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-enable-a-cluster-scoped-app-t.html
+    page: ''
     quote: Select the triple dot vertical icon in the desired application's tile and select Enable… Select the cluster(s) that you want to deploy the application to.
 - id: q27
   type: multiple_choice
@@ -576,9 +576,9 @@ questions:
   correct: b
   explanation: Once you enable an app at the workspace level, NKP automatically enables it on any other cluster you create or attach.
   source:
-    label: Enabling an Application Per Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enable-an-existing-app-c.html
-    page: p.374
+    label: Enable a Cluster-scoped Application
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-enable-a-cluster-scoped-app-t.html
+    page: ''
     quote: Once you enable an application at the workspace level, NKP automatically enables that app on any other cluster you create or attach.
 - id: q28
   type: multiple_choice
