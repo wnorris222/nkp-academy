@@ -388,27 +388,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-multi-tenancy-in-nkp-c.html
     page: ''
     quote: You, as a global administrator, manage tenant access at the Workspace level. A tenant can further adapt user access at the Project level.
-- id: q19
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: In a multi-tenant system, what does a workspace represent?
-  options:
-  - id: a
-    text: A node pool
-  - id: b
-    text: A tenant (workspaces and tenants are synonymous)
-  - id: c
-    text: A namespace only
-  - id: d
-    text: A license
-  correct: b
-  explanation: In a multi-tenant system, workspaces and tenants are synonymous — a workspace represents a tenant.
-  source:
-    label: Multi-Tenancy in NKP
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-multi-tenancy-in-nkp-c.html
-    page: p.416
-    quote: 'Workspaces: In a multi-tenant system, workspaces and tenants are synonymous.'
 - id: q20
   type: multiple_choice
   difficulty: core
@@ -580,27 +559,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-enable-a-cluster-scoped-app-t.html
     page: ''
     quote: Once you enable an application at the workspace level, NKP automatically enables that app on any other cluster you create or attach.
-- id: q28
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: How do you customize an application differently per cluster?
-  options:
-  - id: a
-    text: You cannot
-  - id: b
-    text: Use the two editors — Workspace Application Configuration (applies to the whole workspace) and Cluster Application Configuration Override (per-cluster, merges with the workspace config)
-  - id: c
-    text: Edit the container image
-  - id: d
-    text: Use a separate workspace
-  correct: b
-  explanation: 'Use the two editors: Workspace Application Configuration (applies to the whole workspace) and Cluster Application Configuration Override (per-cluster, which merges with the workspace configuration).'
-  source:
-    label: Enabling an Application Per Cluster
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enable-an-existing-app-c.html
-    page: p.374
-    quote: 'Cluster Application Configuration Override: A cluster-scoped code editor… These customizations will merge with the workspace application configuration.'
 - id: q29
   type: multiple_choice
   difficulty: core
@@ -688,27 +646,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-overview-nkp-insights-c.html
     page: p.1104
     quote: 'NKP Insights assists Kubernetes Administrators or Application Owners with routine tasks such as: Resolving common anomalies… Checking security issues…'
-- id: q33
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: What severity levels can Insights alerts be filtered by?
-  options:
-  - id: a
-    text: High, Medium, Low
-  - id: b
-    text: Critical, Warning, and Notice
-  - id: c
-    text: P1, P2, P3
-  - id: d
-    text: Red, Yellow, Green
-  correct: b
-  explanation: 'Insights alerts can be filtered by severity: Critical, Warning, and Notice.'
-  source:
-    label: Nutanix Kubernetes Platform Insights Overview
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-overview-nkp-insights-c.html
-    page: p.1105
-    quote: 'You can also filter insight alerts in the Alerts table for each Severity level: Critical… Warning… Notice.'
 - id: q34
   type: multiple_choice
   difficulty: core
