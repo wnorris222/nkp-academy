@@ -91,30 +91,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-preprovNONAG-custom-create-cluster-t.html
     page: ''
     quote: NKP uses a local static provisioner as the default storage provider for a pre-provisioned environment... localvolumeprovisioner is not suitable for production use.
-- id: q39
-  type: multiple_choice
-  difficulty: core
-  points: 15
-  prompt: Which provider-specific inputs does a vSphere workload cluster require? (Select all that apply)
-  options:
-  - id: a
-    text: VSPHERE_SERVER, VSPHERE_USERNAME, VSPHERE_PASSWORD
-  - id: b
-    text: --network, --data-center, --data-store, --folder
-  - id: c
-    text: --resource-pool, --vm-template, --server
-  - id: d
-    text: An AWS access key
-  correct:
-  - a
-  - b
-  - c
-  explanation: 'A vSphere workload cluster needs VSPHERE_SERVER/USERNAME/PASSWORD plus provider flags: --network, --data-center, --data-store, --folder, --server, --resource-pool, and --vm-template.'
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.208
-    quote: nkp create cluster vsphere --cluster-name ... --namespace ${WORKSPACE_NAMESPACE} --network ... --data-center ... --data-store ... --folder ... --server ... --resource-pool ... --vm-template ...
 - id: q40
   type: multiple_choice
   difficulty: core
@@ -241,69 +217,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-azure-create-managed-clusters-nkp-cli-t.html
     page: ''
     quote: When creating managed clusters, do not create and move CAPI objects or install the Kommander component. Those tasks are only done on Management clusters.
-- id: q46
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: Are subsequent clusters (after the first) self-managed?
-  options:
-  - id: a
-    text: 'Yes'
-  - id: b
-    text: No — they are not self-managed; they are managed or attached clusters of the Management cluster
-  - id: c
-    text: Only on AWS
-  - id: d
-    text: Only with Ultimate
-  correct: b
-  explanation: Subsequent clusters are not self-managed; they are managed or attached clusters of the Management cluster.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.86
-    quote: Subsequent new clusters are not self-managed as they are likely to be managed or attached clusters to this Management Cluster.
-- id: q47
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: What manages a managed cluster's lifecycle?
-  options:
-  - id: a
-    text: The cluster manages itself
-  - id: b
-    text: The NKP Management cluster
-  - id: c
-    text: Prism Central directly
-  - id: d
-    text: The bastion host
-  correct: b
-  explanation: A managed cluster's life cycle is managed by the NKP Management cluster.
-  source:
-    label: Workspaces
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-workspaces-c.html
-    page: p.19
-    quote: A managed cluster is a Kubernetes cluster whose life cycle is managed by a management cluster.
-- id: q48
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: How do you assign a new managed cluster to a specific workspace when creating it with the CLI?
-  options:
-  - id: a
-    text: Edit a ConfigMap
-  - id: b
-    text: Set WORKSPACE_NAMESPACE and pass --namespace ${WORKSPACE_NAMESPACE} on the nkp create cluster command
-  - id: c
-    text: Use --workspace-id
-  - id: d
-    text: It is chosen automatically
-  correct: b
-  explanation: Assign a managed cluster to a workspace by setting WORKSPACE_NAMESPACE and passing --namespace ${WORKSPACE_NAMESPACE} on nkp create cluster.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.86
-    quote: Your new managed cluster must be part of a workspace... set that workspace's environment variable... --namespace ${WORKSPACE_NAMESPACE}.
 - id: q49
   type: multiple_choice
   difficulty: core
@@ -325,69 +238,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
     page: p.86
     quote: If you have an Ultimate license and an existing workspace name, run this command to find the name. kubectl get workspace -A.
-- id: q50
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: For non-Ultimate license tiers, what happens to the workspace when you create a managed cluster?
-  options:
-  - id: a
-    text: Creation fails
-  - id: b
-    text: A new workspace is automatically created
-  - id: c
-    text: It uses kube-system
-  - id: d
-    text: You must buy Ultimate
-  correct: b
-  explanation: For non-Ultimate tiers, a new workspace is automatically created.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.86
-    quote: For other licence tiers, a new workspace will be automatically created.
-- id: q51
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: Which flag targets the Management cluster's kubeconfig when creating a managed cluster from the CLI?
-  options:
-  - id: a
-    text: --kubeconfig=<management-cluster-kubeconfig-path>
-  - id: b
-    text: --context=managed
-  - id: c
-    text: --admin
-  - id: d
-    text: --remote
-  correct: a
-  explanation: Target the Management cluster's kubeconfig with --kubeconfig=<management-cluster-kubeconfig-path> when creating a managed cluster.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.208
-    quote: nkp create cluster vsphere ... --kubeconfig=<management-cluster-kubeconfig-path>.
-- id: q52
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: Which command creates a managed vSphere cluster in a workspace via the CLI?
-  options:
-  - id: a
-    text: kubectl create cluster
-  - id: b
-    text: nkp create cluster vsphere --cluster-name ${MANAGED_CLUSTER_NAME} --namespace ${WORKSPACE_NAMESPACE} --network ... --vm-template ... --kubeconfig=<mgmt-kubeconfig>
-  - id: c
-    text: nkp deploy vsphere
-  - id: d
-    text: helm install cluster
-  correct: b
-  explanation: Create a managed vSphere cluster with nkp create cluster vsphere --cluster-name ... --namespace ${WORKSPACE_NAMESPACE} --network ... --vm-template ... --kubeconfig=<mgmt-kubeconfig>.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.208
-    quote: nkp create cluster vsphere --cluster-name ${MANAGED_CLUSTER_NAME} --namespace ${WORKSPACE_NAMESPACE} --network ... --kubeconfig=<management-cluster-kubeconfig-path>.
 - id: q53
   type: multiple_choice
   difficulty: core
@@ -433,48 +283,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-specify-nutanix-cluster-info-t.html
     page: ''
     quote: Cluster Name... Infrastructure Provider... Kubernetes Version... SSH Username... SSH Public Key...
-- id: q55
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: If you do NOT set a workspace when creating a cluster with the CLI, where is it placed?
-  options:
-  - id: a
-    text: It fails
-  - id: b
-    text: In the default workspace (you then manually attach it to the desired workspace)
-  - id: c
-    text: In kube-system
-  - id: d
-    text: On the bootstrap cluster
-  correct: b
-  explanation: If you don't set a workspace, the cluster is created in the default workspace; you then manually attach it to your desired workspace.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.209
-    quote: if you do not set a workspace, the attached cluster will be created in the default workspace.
-- id: q56
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: Does a CLI-created managed cluster attach to the Management cluster automatically?
-  options:
-  - id: a
-    text: No, always manual
-  - id: b
-    text: Yes — it attaches automatically to the Management cluster after a few moments
-  - id: c
-    text: Only via the UI
-  - id: d
-    text: Only with Ultimate
-  correct: b
-  explanation: A CLI-created managed cluster attaches automatically to the Management cluster after a few moments.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.209
-    quote: When you create a Managed Cluster with the NKP CLI, it attaches automatically to the Management Cluster after a few moments.
 - id: q57
   type: multiple_choice
   difficulty: core
@@ -496,90 +304,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
     page: p.208
     quote: nkp get kubeconfig --cluster-name ${MANAGED_CLUSTER_NAME} --kubeconfig <management-cluster-kubeconfig-path> -n ${WORKSPACE_NAMESPACE} > ${MANAGED_CLUSTER_NAME}.conf.
-- id: q58
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: Which command checks a workload cluster's deployment status (readiness tree of Cluster, ControlPlane, Machines)?
-  options:
-  - id: a
-    text: nkp describe cluster -c ${CLUSTER_NAME}
-  - id: b
-    text: kubectl get svc
-  - id: c
-    text: nkp status
-  - id: d
-    text: helm status
-  correct: a
-  explanation: Check deployment status with nkp describe cluster -c ${CLUSTER_NAME}, which prints a readiness tree (Cluster, ControlPlane, Machines).
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.183
-    quote: 'Check the current status of the cluster: nkp describe cluster -c ${CLUSTER_NAME}... Cluster/... True ... ##ControlPlane ... ##Workers.'
-- id: q59
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: New nodes show NotReady shortly after deployment. What is the likely benign cause?
-  options:
-  - id: a
-    text: The cluster failed
-  - id: b
-    text: The Pod network is still deploying — nodes become Ready soon after the calico-node DaemonSet Pods are Ready
-  - id: c
-    text: The license expired
-  - id: d
-    text: The registry is down
-  correct: b
-  explanation: NotReady nodes shortly after deployment are usually waiting for the Pod network — they become Ready soon after the calico-node DaemonSet Pods are Ready.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.185
-    quote: It may take a few minutes for the Status to move to Ready while the Pod network is deployed. The node status will change to Ready soon after the calico-node DaemonSet Pods are Ready.
-- id: q60
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: 'Scenario: managed Nutanix cluster provisioning fails. Which network requirement should you verify?'
-  options:
-  - id: a
-    text: Internet access on every node
-  - id: b
-    text: That the management cluster has seamless network access to the Prism Central (PC) environment
-  - id: c
-    text: That the bastion is offline
-  - id: d
-    text: That DNS is disabled
-  correct: b
-  explanation: Ensure the management cluster has seamless network access to the Prism Central (PC) environment to avoid provisioning issues.
-  source:
-    label: Creating a Managed Cluster on VCD Through the NKP UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-managed-cluster-on-vcd-through-nkp-ui-t.html
-    page: p.462
-    quote: Before provisioning a managed cluster, ensure your network allows seamless access from the management cluster to the Prism Central (PC) environment to avoid provisioning issues.
-- id: q61
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: How do you verify the nodes and pods on the newly created cluster?
-  options:
-  - id: a
-    text: kubectl --kubeconfig=${CLUSTER_NAME}.conf get nodes and get pods -A
-  - id: b
-    text: nkp verify
-  - id: c
-    text: ping the nodes
-  - id: d
-    text: Check the license page
-  correct: a
-  explanation: Verify nodes and pods with kubectl --kubeconfig=${CLUSTER_NAME}.conf get nodes and kubectl --kubeconfig=${CLUSTER_NAME}.conf get pods -A.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.208
-    quote: List the nodes... kubectl --kubeconfig=${MANAGED_CLUSTER_NAME}.conf get nodes... List the pods... kubectl --kubeconfig=${MANAGED_CLUSTER_NAME}.conf get pods -A.
 - id: q62
   type: multiple_choice
   difficulty: core
@@ -601,27 +325,6 @@ questions:
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
     page: p.79
     quote: 'A cluster name can include only the following characters: a-z, 0-9, ., and -. The cluster creation fails if the name has uppercase letters.'
-- id: q63
-  type: multiple_choice
-  difficulty: core
-  points: 10
-  prompt: Some pods are not Running/Completed after deployment. Which command gathers diagnostics?
-  options:
-  - id: a
-    text: nkp diagnose (support bundle)
-  - id: b
-    text: kubectl top
-  - id: c
-    text: journalctl
-  - id: d
-    text: nkp reset
-  correct: a
-  explanation: Run nkp diagnose to collect diagnostic information from pods and infrastructure (a support bundle) when pods aren't Running/Completed.
-  source:
-    label: 'vSphere: Creating Managed Clusters Using the NKP CLI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-vsphere-create-managed-clusters-nkp-cli-t.html
-    page: p.1041
-    quote: If something has not been deployed properly or thoroughly, run the nkp diagnose command. This collects information from pods and infrastructure.
 - id: q64
   type: multiple_choice
   difficulty: core
