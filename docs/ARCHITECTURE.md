@@ -3,7 +3,7 @@
 Everything you need to understand, run, modify, and deploy this application.
 
 **Audience:** engineers, SEs, and anyone inheriting this project.
-**Last verified against:** image tag `1.9.38`, 20 modules / 303 questions / 26 badges.
+**Last verified against:** image tag `1.11.0`, 20 modules / 303 questions / 26 badges / 238 flashcards.
 
 ---
 
@@ -86,7 +86,7 @@ nkp-academy/
 │   │   ├── schemas.py       # Pydantic request/response contracts
 │   │   └── routers/         # auth, content_router, quiz, progress,
 │   │                        #   leaderboard, exam
-│   └── tests/               # 47 tests (scoring, content, quiz API, exam)
+│   └── tests/               # 64 tests (scoring, content, quiz API, exam, flashcards)
 │
 ├── frontend/
 │   ├── package.json, vite.config.ts, tsconfig.json
@@ -116,6 +116,9 @@ nkp-academy/
 ### Where content lives
 `content/modules/*.yaml` — one file per exam objective. Filenames are numeric-
 prefixed purely for load order (`sorted(glob("*.yaml"))`).
+
+`content/flashcards/*.yaml` — one file per study deck. Independent of the
+modules: a module tests you, a deck teaches you. See §4.5.
 
 ### Shape of a module
 
@@ -171,6 +174,48 @@ Three criteria types, evaluated in `scoring.evaluate_badges`:
 | `track_complete` | a track name | every module in that track is complete |
 | `xp_threshold` | an integer (as string) | cumulative XP ≥ value |
 
+### 4.5 Flashcard decks (`content/flashcards/*.yaml`)
+
+Decks are **purpose-written, not derived from the quiz**. This is deliberate and
+was a rewrite: cards used to be a projection of the 303 questions, which read
+badly because a question is built around distractors — the prompt assumes you
+can see the options, and the "answer" is only meaningful next to the three wrong
+ones. A card instead teaches exactly one thing and is read front-to-back.
+
+```yaml
+id: fc-capi                       # deck id, used as ?deck_id=
+title: Cluster API (CAPI)
+icon: refresh                     # key into ICONS in frontend/src/components/ui.tsx
+order: 2                          # load/display order
+summary: The CAPI objects NKP builds on — Machines, MachineDeployments, ...
+cards:
+  - id: capi-mhc-maxunhealthy     # must be unique across ALL decks
+    kind: fact                    # term | concept | command | fact — drives the badge colour
+    front: What is the default maxunhealthy value for a MachineHealthCheck?
+    back: 40%. It is customizable to suit your self-healing requirements.
+    detail: The cap exists so a widespread outage doesn't trigger mass remediation.
+    code: |                        # optional; rendered as a mono block
+      kubectl get MachineHealthCheck
+    page: p.22                     # optional
+    section: CAPI Concepts and Terms   # optional
+```
+
+`page`/`section` are **not** stored as-is — `content._parse_flashcard` folds them
+into a display string (`ref`): `NKP 2.17 Guide · p.22 · CAPI Concepts and Terms`.
+These are page references into the NKP 2.17 PDF, not portal URLs, so there are no
+version-pinned slugs to rot (unlike question `source.url`).
+
+Backticks in `front`/`back`/`detail` render as inline code (`RichText` in
+`Flashcards.tsx`). Keep them balanced — a stray one just renders as text.
+
+Flashcards are **stateless and self-graded**: no auth, no persistence, no XP. A
+tick you award yourself would be trivially farmable, so it stays out of the
+scoring path entirely (`app/flashcards.py` explains this).
+
+A test (`test_cards_are_not_copies_of_quiz_questions`) fails the build if a card
+front is byte-identical to a quiz prompt — the guard against regressing to the
+projection model.
+
 ### Current content (verified)
 
 | Track | Modules | Questions |
@@ -183,6 +228,9 @@ Three criteria types, evaluated in `scoring.evaluate_badges`:
 
 26 badges · 17 multi-select questions · question types: `multiple_choice`,
 `true_false`, `scenario`.
+
+10 flashcard decks · 238 cards (69 term · 59 fact · 56 command · 54 concept),
+sourced from the NKP 2.17 guide.
 
 ---
 
@@ -240,6 +288,8 @@ level 1 = 0–99, level 2 = 100–299, level 3 = 300–599, level 4 = 600–999 
 | POST | `/api/quiz/{module_id}/answer` | ✓ | Grade one answer → XP, explanation, source, new badges |
 | GET | `/api/progress` | ✓ | Per-module progress, XP, level, badges |
 | GET | `/api/leaderboard` | – | Ranked learners |
+| GET | `/api/flashcards/decks` | – | Deck list for the picker (+ the `all` deck) |
+| GET | `/api/flashcards?deck_id=X` | – | Every card in a deck (`all` = everything) |
 | GET | `/api/exam?count=N` | – | Generate a practice exam |
 | POST | `/api/exam/submit` | – | Grade a whole exam → per-section report |
 | GET | `/healthz` | – | Liveness/readiness (+ `modules_loaded`) |
@@ -342,7 +392,7 @@ docker compose up --build
 # With PostgreSQL instead → app on :8001
 docker compose --profile postgres up
 
-# Backend tests (47)
+# Backend tests (64)
 cd backend && .venv/bin/python3 -m pytest -q
 ```
 

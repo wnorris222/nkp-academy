@@ -1,0 +1,132 @@
+# NKP fundamentals — architecture, components, cluster types.
+# Purpose-written study cards (NOT quiz questions): a card teaches one term,
+# concept, command, or fact. Sourced from the NKP 2.17 Guide.
+id: fc-fundamentals
+title: NKP Fundamentals
+icon: star
+order: 1
+summary: The three components, what each one does, and the cluster types you build with them.
+cards:
+  - id: fun-components
+    kind: concept
+    front: What are the three main components that compose NKP?
+    back: Konvoy, Kommander, and Nutanix Image Builder (NIB).
+    detail: They work together to provide a single, centralized control point for an organization's application infrastructure.
+    page: p.18
+
+  - id: fun-konvoy
+    kind: term
+    front: Konvoy
+    back: The cluster life cycle manager component of NKP. It relies on the Kubernetes Cluster API (CAPI) to provide life cycle management for conformant Kubernetes clusters, with networking and storage.
+    detail: Konvoy provisions certified clusters on multiple cloud providers, vSphere, and on-premises hardware — in both connected and air-gapped environments.
+    page: p.18
+
+  - id: fun-kommander
+    kind: term
+    front: Kommander
+    back: The fleet management component of NKP. It delivers centralized observability, control, governance, unified policy, and operational insights across clusters.
+    detail: In NKP Ultimate, Kommander also supports attaching workload clusters and life cycle management of applications through FluxCD.
+    page: p.18
+
+  - id: fun-nib
+    kind: term
+    front: Nutanix Image Builder (NIB)
+    back: The component that creates Cluster API-compliant machine images, configured with all the software needed to deploy Kubernetes cluster nodes.
+    detail: Formerly known as Konvoy Image Builder (KIB).
+    page: p.18
+
+  - id: fun-cluster-manager
+    kind: term
+    front: What does Konvoy's Cluster Manager consist of?
+    back: Cluster API, Container Storage Interface (CSI), Container Network Interface (CNI), Cluster Autoscaler, Cert Manager, and load balancers.
+    page: p.18
+
+  - id: fun-cni-choice
+    kind: fact
+    front: Which CNI does NKP use on Nutanix, and which on everything else?
+    back: The Nutanix provider uses Cilium CNI. All other providers use Calico CNI.
+    detail: Kubernetes uses a CNI as the interface between the network infrastructure and pod networking.
+    page: p.18
+
+  - id: fun-platform-apps
+    kind: concept
+    front: What are NKP platform applications?
+    back: A pre-defined, pre-configured set of applications that NKP adds on top of native Kubernetes — the ones critical for running a cluster in production.
+    detail: 'Pro platform apps include: Monitoring, Logging, Backup/Restore, Policy Agent, External DNS, Load Balancing, Ingress, SSO, and Service Mesh.'
+    page: p.11, p.18
+
+  - id: fun-ultimate-apps
+    kind: fact
+    front: What do Ultimate platform applications add over Pro?
+    back: All of the Pro platform applications, plus Access Control and Centralized Cost Management.
+    page: p.18
+
+  - id: fun-catalog-apps
+    kind: term
+    front: Catalog Applications
+    back: Applications in NKP Ultimate that are deployed to be used for customer workloads (as opposed to platform apps, which make the cluster production-ready).
+    page: p.18
+
+  - id: fun-arch-basis
+    kind: concept
+    front: What is NKP built around?
+    back: The open-source Cluster API (CAPI). NKP becomes the single, centralized point of control for an organization's application infrastructure.
+    page: p.10
+
+  - id: fun-arch
+    kind: fact
+    front: Which CPU architectures does NKP support?
+    back: Only x86/amd64. Arm-based systems are not supported.
+    page: p.12
+
+  # ---- Cluster types ----
+
+  - id: fun-mgmt-cluster
+    kind: term
+    front: Management Cluster
+    back: The cluster where you install NKP. It is self-managed, and in a multi-cluster environment it also manages the other clusters. Available in all NKP editions.
+    detail: Customers are encouraged to run workloads on Managed and Attached clusters — not on the Management cluster, except in single-cluster environments.
+    page: p.19
+
+  - id: fun-managed-cluster
+    kind: term
+    front: Managed Cluster
+    back: A workload cluster that you create with NKP (also called an "NKP cluster"). The Management cluster manages its infrastructure, its life cycle, and its applications. Available in all editions.
+    page: p.19
+
+  - id: fun-attached-cluster
+    kind: term
+    front: Attached Cluster
+    back: A cluster created OUTSIDE of NKP that is then connected to the Management cluster so NKP can manage its applications. NKP Ultimate only.
+    detail: Crucially, the life cycle of an attached cluster is NOT managed by NKP — only its applications.
+    page: p.19
+
+
+  - id: fun-self-managed
+    kind: term
+    front: Self-Managed Cluster
+    back: A cluster in which the CAPI resources and controllers that describe and manage it run on the same cluster they are managing.
+    detail: The initial NKP cluster is self-managed; it handles its own scaling, upgrades, and life cycle.
+    page: p.19, p.20
+
+  - id: fun-net-restricted
+    kind: concept
+    front: How does a network-restricted cluster differ from an air-gapped one?
+    back: A network-restricted cluster CAN reach external networks like the Internet, but its services and ingresses cannot be accessed from outside. An air-gapped cluster allows neither ingress nor egress traffic.
+    detail: Network-restricted clusters sit behind a firewall, perimeter network, NAT gateway, or proxy — typically remote or at the edge.
+    page: p.21
+
+  # ---- The self-managed build sequence ----
+
+  - id: fun-selfmanaged-flow
+    kind: concept
+    front: What is the high-level sequence to create a self-managed cluster?
+    back: Create a bootstrap cluster → create the management cluster → deploy CAPI components on it → pivot (move) the CAPI resources onto it → delete the bootstrap cluster.
+    detail: The pivot is what makes the cluster self-managed — the controllers that manage it now run on it.
+    code: |
+      nkp create bootstrap
+      nkp create cluster nutanix ...
+      nkp create capi-components --kubeconfig ${CLUSTER_NAME}.conf
+      nkp move capi-resources --to-kubeconfig ${CLUSTER_NAME}.conf
+      nkp delete bootstrap
+    page: p.20, p.21

@@ -1,0 +1,257 @@
+# Workspaces, Projects & Apps — purpose-written study cards from the NKP 2.17 Guide.
+id: fc-clusters-apps
+title: "Workspaces, Projects & Apps"
+icon: layers
+order: 3
+summary: "How NKP groups clusters, federates configuration, and deploys platform applications."
+cards:
+  - id: ws-workspace
+    kind: term
+    front: "What is a Workspace in NKP?"
+    back: "A logical grouping of clusters that maintain a similar configuration, with certain configurations automatically federated to those clusters."
+    detail: "Workspaces let you represent your organization by department, product, or business function, and allow teams or tenants to manage their own clusters."
+    page: "371"
+    section: "Workspaces"
+
+  - id: ws-default-workspace
+    kind: fact
+    front: "What is the Default Workspace in NKP?"
+    back: "A workspace deployed with NKP that you can use to get started immediately without creating your own."
+    detail: "You cannot move clusters from one workspace to another after creating or attaching them."
+    page: "371"
+    section: "Workspaces"
+
+  - id: ws-ui-levels
+    kind: concept
+    front: "What are the three UI levels in NKP and who uses each?"
+    back: "Global (IT admins manage all clusters across all workspaces), Workspace (DevOps admins manage multiple clusters within a workspace), and Projects (DevOps admins or developers manage configuration and services across multiple clusters)."
+    page: "371"
+    section: "Workspaces"
+
+  - id: ws-labels-propagate
+    kind: fact
+    front: "Where do workspace labels get applied?"
+    back: "Annotations and labels added in a workspace's Advanced Options are applied to the workspace namespace, the kommanderclusters object, and all clusters in the workspace."
+    page: "372"
+    section: "Workspaces"
+
+  - id: ws-delete-precondition
+    kind: fact
+    front: "What must be true before you can delete a workspace?"
+    back: "All clusters in the workspace must have been deleted or detached first."
+    page: "372"
+    section: "Workspaces"
+
+  - id: ws-infrastructure-provider
+    kind: term
+    front: "What is an Infrastructure Provider in NKP?"
+    back: "A provider such as Nutanix, AWS, Azure, or vSphere that supplies the infrastructure for your management clusters, holding the authentication keys and credentials NKP needs to automate cluster provisioning."
+    detail: "Credentials are configured in each workspace, and the name you assign must be unique across all other namespaces in your cluster."
+    page: "310"
+    section: "Infrastructure Providers"
+
+  - id: ws-license-infra-limits
+    kind: fact
+    front: "How do NKP licenses differ for infrastructure providers?"
+    back: "Starter supports only Nutanix Infrastructure; Pro supports a multi-cluster environment with a single management cluster and clusters of the same infrastructure provider; Ultimate supports clusters of multiple infrastructure providers."
+    page: "310"
+    section: "Infrastructure Providers"
+
+  - id: ws-multi-tenancy
+    kind: concept
+    front: "What is multi-tenancy in NKP?"
+    back: "An architecture model where a single NKP Ultimate instance serves multiple organization divisions, customers, or tenants, with each tenant system represented by a workspace."
+    detail: "Workspaces can be isolated from each other using separate Identity Providers even though they all fall under a single Ultimate license."
+    page: "415"
+    section: "Multi-Tenancy in NKP"
+
+  - id: ws-tenant
+    kind: term
+    front: "What is a Tenant in NKP?"
+    back: "A customer of an MSP, or a division within an organization requiring strict isolation from other divisions. In NKP, a workspace is assigned to a tenant."
+    detail: "In a multi-tenant system, workspaces and tenants are synonymous."
+    page: "415"
+    section: "Multi-Tenancy in NKP"
+
+  - id: ws-dedicated-login-url
+    kind: command
+    front: "How do you generate a dedicated tenant login URL?"
+    back: "Echo the management cluster ingress address followed by `/token/landing/${WORKSPACE_NAME}`, producing a workspace-specific NKP UI login page."
+    detail: "The login page only shows identity providers set globally plus those set for that specific workspace."
+    code: "echo https://$(kubectl get kommandercluster -n kommander host-cluster -o jsonpath='{ .status.ingress.address }')/token/landing/${WORKSPACE_NAME}"
+    page: "417"
+    section: "Multi-Tenancy in NKP"
+
+  - id: proj-project
+    kind: term
+    front: "Project (NKP)"
+    back: "A pre-defined subset group of Kubernetes clusters under NKP management that supports federated configMaps, continuous deployments, secrets, services, quotas, RBAC, and multi-tenant logging."
+    detail: "When a Project is created, NKP creates a federated namespace propagated to the associated Kubernetes clusters."
+    page: "418"
+    section: "Projects"
+
+  - id: proj-federation
+    kind: concept
+    front: "What does \"federation\" mean in the context of NKP Projects?"
+    back: "A common configuration is pushed out from a central location (NKP) to all Kubernetes clusters, or to a pre-defined subset group of clusters called a Project."
+    detail: "NKP leverages Kubernetes Cluster Federation (KubeFed) to coordinate configuration of multiple clusters."
+    page: "418"
+    section: "Projects"
+
+  - id: proj-namespace
+    kind: term
+    front: "Project Namespace"
+    back: "A Kommander-specific concept that isolates configurations across clusters; it is created on all clusters matching the project labels and corresponds to a Kubernetes Federated Namespace."
+    detail: "By default the name is auto-generated from the project name (first 57 characters) plus 5 unique alphanumeric characters."
+    page: "418"
+    section: "Projects"
+
+  - id: proj-gitops
+    kind: concept
+    front: "What is GitOps as used by NKP Project Deployments?"
+    back: "A deployment strategy where the configuration describing how an application is deployed is stored in a Git repository and continuously synchronized to the cluster, ensuring cluster state always matches the repository."
+    detail: "Kommander deployments are backed by FluxCD; you can Suspend the GitOps source to stop auto-sync for live debugging, then Resume."
+    page: "436"
+    section: "Project Deployments"
+
+  - id: proj-gitops-namespace-rule
+    kind: fact
+    front: "What manifests must a Project GitOps repository avoid?"
+    back: "It must not contain cluster-scoped manifests (Namespace, ClusterRole, ClusterRoleBinding, etc.) — all manifests must be namespace-scoped — and no HelmRelease or Kustomization targeting a different namespace than the project namespace."
+    page: "445"
+    section: "Project Deployments"
+
+  - id: proj-configmap
+    kind: term
+    front: "What is a Project ConfigMap?"
+    back: "A Kubernetes FederatedConfigMap that ensures Kubernetes ConfigMaps are automatically created on all clusters associated with the Project, in the corresponding namespace."
+    code: |
+      apiVersion: types.kubefed.io/v1beta1
+      kind: FederatedConfigMap
+    page: "452"
+    section: "Project ConfigMaps"
+
+  - id: proj-secret
+    kind: term
+    front: "What is a Project Secret?"
+    back: "A Kubernetes FederatedSecret that automatically provisions the corresponding Kubernetes secret in each associated cluster and namespace, ensuring consistent secret management across a project."
+    detail: "The value of the key is base64 encoded."
+    page: "453"
+    section: "Project Secrets"
+
+  - id: proj-quota
+    kind: term
+    front: "How are Project Quotas defined in NKP?"
+    back: "All Project Quotas are defined using a Kubernetes FederatedResourceQuota named `kommander` in the project namespace, and are applied to all project clusters."
+    detail: "Nutanix recommends setting Quotas for CPU and Memory. This surfaces as a ResourceQuota named kommander on the associated cluster."
+    page: "455"
+    section: "Project Quotas and Limit Ranges"
+
+  - id: proj-limitrange
+    kind: term
+    front: "How are Project Limit Ranges defined in NKP?"
+    back: "Using a FederatedLimitRange object named `kommander` in the project namespace."
+    detail: "Limit Ranges restrict resource consumption of individual Pods, Containers, and Persistent Volume Claims in the project namespace."
+    page: "456"
+    section: "Project Quotas and Limit Ranges"
+
+  - id: proj-cd-service-account
+    kind: concept
+    front: "What happens to service accounts when you use the NKP Project CD feature?"
+    back: "A dedicated service account with the same name as the Project is automatically generated with limited RBAC permissions, restricting access solely to the namespace where resources are provisioned."
+    detail: "This prevents tenants from accessing or modifying resources outside their designated namespace, mitigating privilege escalation via cluster-scoped resources like ClusterRoleBindings."
+    page: "436"
+    section: "Project Deployments"
+
+  - id: app-appdeployment
+    kind: term
+    front: "What is an AppDeployment in NKP?"
+    back: "A custom resource created by NKP for the purpose of deploying platform, NKP catalog, and custom applications to the management cluster, managed clusters, or both."
+    detail: "When installing NKP, an AppDeployment resource is created for each enabled Platform Application."
+    page: "329"
+    section: "Applications"
+
+  - id: app-clusterapp-vs-app
+    kind: concept
+    front: "ClusterApp vs. App in an AppDeployment"
+    back: "ClusterApps are cluster-scoped so platform applications are deployable to all workspaces or projects; Apps are namespace-scoped and only deployable to the workspace or project in which they were created."
+    page: "329"
+    section: "AppDeployment Resources"
+
+  - id: app-configoverrides
+    kind: concept
+    front: "How do you customize an application's default configuration in NKP?"
+    back: "Create a ConfigMap with your values and set the `configOverrides` field on the AppDeployment to point at that ConfigMap. This overrides the app configuration for all clusters within the workspace."
+    page: "329"
+    section: "Customizing Your Application"
+
+  - id: app-clusterconfigoverrides
+    kind: term
+    front: "What is clusterConfigOverrides used for?"
+    back: "The `spec.clusterConfigOverrides` field on an AppDeployment references a ConfigMap per cluster, enabling per-cluster customization on top of the workspace configuration."
+    detail: "Set up only one cluster override ConfigMap per cluster, and it must be created on the Management cluster."
+    page: "378"
+    section: "Workspace Applications"
+
+  - id: app-cluster-scoped-ultimate
+    kind: fact
+    front: "Which license is required for cluster-scoped application enablement?"
+    back: "Cluster-scoped enablement and customization of applications is an Ultimate-only feature. It is not provided for project applications."
+    detail: "NKP Pro users can only configure and deploy applications to a single cluster within a workspace."
+    page: "375"
+    section: "Workspace Applications"
+
+  - id: app-create-appdeployment
+    kind: command
+    front: "How do you deploy a platform application to a workspace using the CLI?"
+    back: "Use `nkp create appdeployment` with the `--app` flag in `<APP-ID>-<Version>` format, run against WORKSPACE_NAME (not WORKSPACE_NAMESPACE)."
+    code: "nkp create appdeployment kiali --app kiali-2.18.0 --workspace ${WORKSPACE_NAME}"
+    page: "355"
+    section: "Platform Applications"
+
+  - id: app-verify-helmrelease
+    kind: command
+    front: "How do you verify a deployed platform application?"
+    back: "Connect to the attached cluster and watch the HelmReleases; the HelmRelease must be marked as Ready."
+    code: "kubectl get helmreleases kiali -n ${WORKSPACE_NAMESPACE} -w"
+    page: "355"
+    section: "Platform Applications"
+
+  - id: app-foundational-apps
+    kind: concept
+    front: "What are the Foundational Applications in NKP?"
+    back: "flux, reloader, and traefik — they provide the foundation for all platform application capabilities and must be enabled for any platform application to work properly."
+    detail: "flux keeps clusters in sync with Git config sources; reloader reloads ConfigMap/Secret values in Pods; traefik provides an HTTP reverse proxy and load balancer."
+    page: "356"
+    section: "Platform Applications"
+
+  - id: app-platform-bundle
+    kind: fact
+    front: "How are platform applications versioned and deployed across a workspace?"
+    back: "Platform applications are bundled and tested as a single unit; you must deploy or upgrade the entire bundle in one operation per workspace, so all clusters in a workspace run the same set and version."
+    detail: "Catalog applications are individual and can be deployed and upgraded independently for each project."
+    page: "362"
+    section: "Platform Applications"
+
+  - id: app-priorityclasses
+    kind: fact
+    front: "What PriorityClasses are available in NKP?"
+    back: "NKP High (`nkp-high-priority`, value 100001000) for high priority workloads, and NKP Critical (`nkp-critical-priority`, value 100002000), the highest PriorityClass, for critical priority workloads."
+    detail: "By default the PriorityClasses of Platform Applications are set by NKP; override via a ConfigMap referencing priorityClassName."
+    page: "369"
+    section: "Setting PriorityClasses"
+
+  - id: app-eso
+    kind: term
+    front: "What is the External Secrets Operator (ESO) in NKP?"
+    back: "A Kubernetes operator that synchronizes secrets from external systems such as AWS Secrets Manager, HashiCorp Vault, and Azure Key Vault directly into your Kubernetes clusters."
+    detail: "From NKP 2.17 the management cluster includes ESO pre-installed by default; disabling it on the management cluster is not permitted. By default ESO deploys to the external-secrets namespace."
+    page: "367"
+    section: "Platform Applications"
+
+  - id: app-catalog-applications
+    kind: term
+    front: "What are Workspace Catalog Applications?"
+    back: "Third-party or open source applications that appear in the Catalog, deployed to be used for customer workloads."
+    page: "381"
+    section: "Workspace Applications"

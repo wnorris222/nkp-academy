@@ -1,14 +1,43 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { SourceCite, Spinner } from "../components/ui";
+import { Icon, Spinner } from "../components/ui";
 import { api } from "../lib/api";
-import type { Deck, Flashcard, FlashcardDeck } from "../lib/types";
+import type { CardKind, Deck, Flashcard, FlashcardDeck } from "../lib/types";
 
 type Mark = "known" | "unknown";
 
-/** Answers longer than this are prose that duplicates the explanation, so the
- *  chip is suppressed; short ones ("False", "9440") are the whole point. */
-const ANSWER_CHIP_MAX = 60;
+/** The "all" deck is the everything-at-once option; it gets the hero slot. */
+const DECK_ALL = "all";
+
+const KIND_STYLES: Record<CardKind, string> = {
+  term: "border-sky-500/40 text-sky-300",
+  concept: "border-iris/40 text-iris-light",
+  command: "border-amber-500/40 text-amber-300",
+  fact: "border-emerald-500/40 text-emerald-300",
+};
+
+/** Render `backticked` spans in authored prose as inline code.
+ *
+ * Card text names literal things — a namespace called `kommander`, a flag
+ * called `--self-managed` — and the decks mark those the way the Nutanix docs
+ * do. Splitting on the backtick leaves code spans at the odd indices; an
+ * unmatched backtick just falls through as text rather than breaking the card.
+ */
+function RichText({ text }: { text: string }) {
+  return (
+    <>
+      {text.split("`").map((part, i) =>
+        i % 2 === 1 ? (
+          <code key={i} className="rounded bg-charcoal px-1 py-0.5 text-[0.9em] text-iris-light">
+            {part}
+          </code>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
 
 /** Fisher-Yates — returns a new array, leaves the source order untouched. */
 function shuffled<T>(items: T[]): T[] {
@@ -23,61 +52,53 @@ function shuffled<T>(items: T[]): T[] {
 /* ---------------- Deck picker ---------------- */
 
 function DeckPicker({ decks, onPick }: { decks: Deck[]; onPick: (id: string) => void }) {
-  const all = decks.find((d) => d.kind === "all");
-  const tracks = decks.filter((d) => d.kind === "track");
-  const modules = decks.filter((d) => d.kind === "module");
+  const all = decks.find((d) => d.id === DECK_ALL);
+  const topics = decks.filter((d) => d.id !== DECK_ALL);
 
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold tracking-tight">Flashcards</h1>
         <p className="mt-1 text-sm text-slate-400">
-          Quick-fire recall drills. Self-graded, so nothing here affects your XP or the
-          leaderboard — just practice.
+          Learn the terms, concepts, and commands behind NKP. Self-graded, so nothing here
+          affects your XP or the leaderboard — just practice.
         </p>
       </div>
 
       {all && (
         <button
           onClick={() => onPick(all.id)}
-          className="card mb-6 flex w-full items-center justify-between p-5 text-left transition-all hover:border-iris hover:shadow-glow"
+          className="card mb-6 flex w-full items-center justify-between gap-4 p-5 text-left transition-all hover:border-iris hover:shadow-glow"
         >
-          <div>
-            <div className="text-lg font-bold">{all.title}</div>
-            <div className="text-sm text-slate-400">Every question in the syllabus</div>
+          <div className="flex items-center gap-4">
+            <Icon name={all.icon} className="text-2xl" />
+            <div>
+              <div className="text-lg font-bold">{all.title}</div>
+              <div className="text-sm text-slate-400">{all.summary}</div>
+            </div>
           </div>
-          <span className="chip border-iris/40 text-iris-light">{all.count} cards</span>
+          <span className="chip shrink-0 border-iris/40 text-iris-light">{all.count} cards</span>
         </button>
       )}
 
       <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-slate-500">
-        By section
+        By topic
       </h2>
-      <div className="mb-6 grid gap-3 sm:grid-cols-2">
-        {tracks.map((d) => (
+      <div className="grid gap-3 sm:grid-cols-2">
+        {topics.map((d) => (
           <button
             key={d.id}
             onClick={() => onPick(d.id)}
-            className="card flex items-center justify-between p-4 text-left transition-all hover:border-iris"
+            className="card flex flex-col p-4 text-left transition-all hover:border-iris"
           >
-            <span className="font-semibold">{d.title}</span>
-            <span className="chip">{d.count}</span>
-          </button>
-        ))}
-      </div>
-
-      <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-slate-500">
-        By objective
-      </h2>
-      <div className="grid gap-2 sm:grid-cols-2">
-        {modules.map((d) => (
-          <button
-            key={d.id}
-            onClick={() => onPick(d.id)}
-            className="card flex items-center justify-between px-4 py-3 text-left text-sm transition-all hover:border-iris"
-          >
-            <span className="text-slate-200">{d.title}</span>
-            <span className="text-xs text-slate-500">{d.count}</span>
+            <div className="flex items-center justify-between gap-3">
+              <span className="flex items-center gap-2 font-semibold">
+                <Icon name={d.icon} />
+                {d.title}
+              </span>
+              <span className="chip shrink-0">{d.count}</span>
+            </div>
+            <p className="mt-1.5 text-sm leading-snug text-slate-400">{d.summary}</p>
           </button>
         ))}
       </div>
@@ -97,32 +118,39 @@ function Card({ card, flipped, onFlip }: { card: Flashcard; flipped: boolean; on
           flipped ? "[transform:rotateY(180deg)]" : ""
         }`}
       >
-        {/* Front — the prompt */}
+        {/* Front — the term or question */}
         <div className="card absolute inset-0 flex flex-col justify-center p-8 [backface-visibility:hidden]">
-          <div className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
-            {card.module_title}
+          <div className="mb-4">
+            <span className={`chip ${KIND_STYLES[card.kind]}`}>{card.kind}</span>
           </div>
           <p className="text-2xl font-semibold leading-snug text-slate-50 md:text-3xl">
-            {card.front}
+            <RichText text={card.front} />
           </p>
           <div className="absolute inset-x-0 bottom-6 text-center text-sm text-slate-500">
             See answer
           </div>
         </div>
 
-        {/* Back — answer, explanation, citation.
-            The answer chip is only worth showing when it's terse ("False",
-            "9440"); long option text just restates the explanation below it. */}
+        {/* Back — the answer, then optional colour (detail), the command itself
+            (code), and where in the guide to read more (ref). */}
         <div className="card absolute inset-0 flex flex-col justify-center overflow-y-auto p-8 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          {card.answer.length <= ANSWER_CHIP_MAX && (
-            <div className="mb-3">
-              <span className="chip border-iris/40 text-iris-light">{card.answer}</span>
-            </div>
-          )}
-          <p className="text-xl font-semibold leading-snug text-slate-50 md:text-2xl">
-            {card.back}
+          <p className="text-lg font-semibold leading-snug text-slate-50 md:text-xl">
+            <RichText text={card.back} />
           </p>
-          {card.source && <SourceCite source={card.source} />}
+
+          {card.code && (
+            <pre className="mt-4 overflow-x-auto rounded-lg border border-charcoal-border bg-charcoal px-4 py-3 text-left text-xs leading-relaxed text-iris-light">
+              <code>{card.code}</code>
+            </pre>
+          )}
+
+          {card.detail && (
+            <p className="mt-4 text-sm leading-relaxed text-slate-400">
+              <RichText text={card.detail} />
+            </p>
+          )}
+
+          {card.ref && <div className="mt-4 text-xs text-slate-600">{card.ref}</div>}
         </div>
       </button>
     </div>

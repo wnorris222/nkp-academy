@@ -1,0 +1,179 @@
+# Storage & Rook Ceph — purpose-written study cards from the NKP 2.17 Guide.
+id: fc-storage
+title: "Storage & Rook Ceph"
+icon: database
+order: 7
+summary: "CSI drivers, StorageClasses, volume expansion, and the Ceph cluster NKP ships with."
+cards:
+  - id: sto-csi
+    kind: term
+    front: "What is the Container Storage Interface (CSI)?"
+    back: "A common abstraction that lets container orchestrators interact with storage subsystems of various types. All NKP default storage drivers implement CSI."
+    detail: "Each driver has specific configuration parameters that affect PV provisioning."
+    page: "41"
+    section: "Driver Information"
+
+  - id: sto-default-providers
+    kind: fact
+    front: "Which CSI driver and default StorageClass does NKP configure for each cloud provisioner?"
+    back: "Nutanix uses nutanix-csi-driver with StorageClass nutanix-volume; AWS uses aws-ebs-csi-driver with ebs-sc; Azure uses azuredisk-csi-driver with azuredisk-sc; vSphere uses vsphere-csi-driver with vsphere-raw-block-sc; GCP uses gcp-compute-persistent-disk-csi-driver with csi-gce-pd; Pre-provisioned uses local-static-provisioner with localvolumeprovisioner."
+    detail: "Driver versions listed are Nutanix 3.3.8, AWS 1.51, Azure 1.33.5, Pre-provisioned 2.8.0, vSphere 3.4.0, GCP 1.15.4."
+    page: "36"
+    section: "Default Storage Providers"
+
+  - id: sto-localvolumeprovisioner
+    kind: term
+    front: "localvolumeprovisioner"
+    back: "The default storage provider NKP deploys for pre-provisioned clusters, backed by the local-static-provisioner driver. It is explicitly not suitable for production use."
+    detail: "Nutanix directs customers to a production-suitable Kubernetes CSI instead."
+    page: "36"
+    section: "Default Storage Providers"
+
+  - id: sto-sc-immutable
+    kind: fact
+    front: "Can StorageClass parameters be changed after creation?"
+    back: "No. StorageClass parameters cannot be changed after creation — to use a different volume configuration you must create a new StorageClass."
+    page: "41"
+    section: "Driver Information"
+
+  - id: sto-allowvolumeexpansion
+    kind: fact
+    front: "What is the default value of allowVolumeExpansion in NKP?"
+    back: "It is set to true by default for NKP on Nutanix AHV, and false by default for all providers other than Nutanix."
+    detail: "Change it to true to allow storage volumes to be expanded."
+    page: "37"
+    section: "Enabling Expansion of Storage Volumes"
+
+  - id: sto-patch-expansion
+    kind: command
+    front: "How do you enable volume expansion on the nutanix-volume StorageClass?"
+    back: "Patch the StorageClass to set allowVolumeExpansion to true, then update the matching allowExpansion value in the Cluster resource for consistency."
+    code: "kubectl patch sc nutanix-volume -p '{\"allowVolumeExpansion\":true}' --kubeconfig=$KUBECONFIG"
+    page: "38"
+    section: "Enabling Expansion of Storage Volumes"
+
+  - id: sto-nutanix-sc-spec
+    kind: fact
+    front: "What are the key spec values of the default nutanix-volume StorageClass?"
+    back: "provisioner is csi.nutanix.com, reclaimPolicy is Delete, volumeBindingMode is WaitForFirstConsumer, fstype is ext4, and storageType is NutanixVolumes."
+    detail: "Its CSI secrets are named nutanix-csi-credentials in the ntnx-system namespace."
+    page: "38"
+    section: "Enabling Expansion of Storage Volumes"
+
+  - id: sto-ebs-gp3
+    kind: fact
+    front: "What EBS volume type does NKP deploy on AWS by default?"
+    back: "NKP deploys gp3 (general purpose SSD) EBS volumes, via the ebs-sc StorageClass with provisioner ebs.csi.aws.com."
+    detail: "reclaimPolicy is Delete and volumeBindingMode is WaitForFirstConsumer, which is required to use CSI's Topology feature."
+    page: "39"
+    section: "Driver Information"
+
+  - id: sto-azure-disk
+    kind: fact
+    front: "What Azure disk type does NKP deploy by default?"
+    back: "NKP deploys with StandardSSD_LRS for Azure Virtual Disks, using the azuredisk-csi-driver."
+    page: "40"
+    section: "Azure CSI Driver"
+
+  - id: sto-hypervisor-attached
+    kind: concept
+    front: "What are Hypervisor Attached Volumes in the Nutanix CSI driver?"
+    back: "A Nutanix StorageClass option (hypervisorAttached) that is Enabled by default. Both the NKP CLI and UI can enable or disable it, and the selection passes through to the CSI driver's storage class."
+    page: "40"
+    section: "Nutanix CSI Driver"
+
+  - id: sto-vsphere-static
+    kind: fact
+    front: "What provisioning modes does the vSphere CSI driver support in NKP?"
+    back: "The NKP default storage class for vSphere supports both dynamic provisioning and static provisioning of block volumes."
+    page: "40"
+    section: "vSphere CSI Driver"
+
+  - id: sto-gcp-filestore
+    kind: fact
+    front: "What backs volumes provisioned by the GCP CSI driver in NKP?"
+    back: "Google Cloud Filestore instances, which can be dynamically created and mounted by workloads."
+    page: "41"
+    section: "GCP CSI Driver"
+
+  - id: sto-static-local-mntdisks
+    kind: concept
+    front: "How does the local volume static provisioner discover volumes?"
+    back: "It watches the /mnt/disks folder on each host and creates a persistent volume in the localvolumeprovisioner StorageClass for each disk it discovers there."
+    code: "mkdir -p /mnt/disks/example-volume && mount -t tmpfs example-volume /mnt/disks/example-volume"
+    page: "43"
+    section: "Provisioning a Static Local Volume"
+
+  - id: sto-ephemeral
+    kind: term
+    front: "Ephemeral storage (Kubernetes)"
+    back: "Storage that is cleaned up when the workload is deleted or the container crashes. Examples include EmptyDir volumes, container logs, and container image and writable layers."
+    detail: "EmptyDir is managed by kubelet under /var/lib/kubelet; image layers are managed by the container runtime under /var/lib/containerd."
+    page: "35"
+    section: "Storage"
+
+  - id: sto-pvc
+    kind: term
+    front: "PersistentVolumeClaim (PVC)"
+    back: "A storage request that a workload uses to express its need for persistent storage, specifying a size and Access Modes. When a PV satisfies the claim, it is bound to the PVC before the Pod starts."
+    detail: "If storageClassName is left blank in the PVC, the default StorageClass is used."
+    page: "36"
+    section: "Storage"
+
+  - id: sto-rook-ceph
+    kind: term
+    front: "What is Rook Ceph used for in NKP?"
+    back: "NKP ships with a Rook Ceph cluster used as the primary blob storage for NKP components in the logging stack, backups, cost monitoring, and NKP Insights."
+    detail: "The NKP-installed Ceph instance is intended only for the NKP Insights, logging stack, velero, harbor, and opencost platform applications."
+    page: "675"
+    section: "Rook Ceph in NKP"
+
+  - id: sto-ceph-pvc-mode
+    kind: concept
+    front: "What Ceph cluster mode does NKP ship with, and what is its key limitation?"
+    back: "NKP ships with a PVC Cluster (PVC mode), which keeps deployment and upgrades simple and agnostic to node draining. In PVC mode Ceph cannot be your CSI provisioner, since it relies on an existing CSI provisioner to bind the PVCs it creates."
+    page: "677"
+    section: "Components of a Rook Ceph Cluster"
+
+  - id: sto-erasure-coding
+    kind: concept
+    front: "Erasure Coding (vs Replication)"
+    back: "Erasure Coding slices an object into k data fragments and computes m parity fragments, so data can be recreated from any k of the k+m fragments. Storage efficiency is k/(k+m)*100 and at most m nodes can be lost without data loss."
+    detail: "Replication instead keeps N full copies with (1/N)*100 efficiency and N-1 fault tolerance. Smallest erasure coding count is k=2, m=1, requiring at least 3 storage nodes."
+    page: "680"
+    section: "Primer on Replication Strategies"
+
+  - id: sto-ceph-dashboard
+    kind: command
+    front: "How do you log in to the Rook Ceph dashboard?"
+    back: "Open the Dashboard button from the Application Dashboards tab in Kommander, use username admin, and retrieve the password from the rook-ceph-dashboard-password secret."
+    detail: "NAMESPACE is kommander on the management cluster, or the workspace namespace on attached and managed clusters."
+    code: "kubectl get secret -n ${NAMESPACE} rook-ceph-dashboard-password -ogo-template='{{ .data.password | base64decode | printf \"%s\\n\" }}'"
+    page: "680"
+    section: "Accessing the Rook Ceph Dashboard"
+
+  - id: sto-byos
+    kind: term
+    front: "Bring Your Own Storage (BYOS) in NKP"
+    back: "Reusing an existing Ceph installation that was deployed before NKP, and is not managed by NKP, to satisfy the storage requirements of NKP applications. In this model Ceph can act as the CSI provisioner."
+    page: "681"
+    section: "Bring Your Own Storage (BYOS) to NKP Clusters"
+
+  - id: sto-ceph-uninstall-order
+    kind: command
+    front: "In what order do you uninstall a healthy NKP-managed Rook Ceph?"
+    back: "Delete the rook-ceph-cluster AppDeployment first, wait for the CephCluster to be removed, then delete the rook-ceph operator AppDeployment. The order matters so no resources are left behind."
+    code: |
+      kubectl delete appdeployment -n <WORKSPACE_NAMESPACE> rook-ceph-cluster
+      kubectl wait --for=delete cephclusters --all -n <WORKSPACE_NAMESPACE> --timeout=1200s --kubeconfig <kubeconfig-of-your-cluster>
+      kubectl delete appdeployment -n <WORKSPACE_NAMESPACE> rook-ceph
+    page: "681"
+    section: "Disabling NKP-managed Ceph"
+
+  - id: sto-byos-buckets
+    kind: fact
+    front: "Which ObjectBucketClaims does BYOS create for NKP applications?"
+    back: "nkp-loki with maxSize 80G for grafana-loki, and nkp-velero with maxSize 10G for velero, both using the nkp-object-store StorageClass backed by a CephObjectStore named nkp-object-store."
+    detail: "Ceph is typically installed in the rook-ceph namespace; the OBCs go in the same namespace as velero and grafana-loki (kommander on the management cluster). Wait for the ObjectBuckets to reach Bound."
+    page: "684"
+    section: "Creating NKP-compatible Ceph Resources"

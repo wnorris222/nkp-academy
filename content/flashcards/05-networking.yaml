@@ -1,0 +1,191 @@
+# Networking — purpose-written study cards from the NKP 2.17 Guide.
+id: fc-networking
+title: "Networking"
+icon: globe
+order: 5
+summary: "CNI, Services, Ingress, load balancing, and the domains NKP needs to reach."
+cards:
+  - id: net-cilium-cni
+    kind: fact
+    front: "What is NKP's default CNI, and what does it replace?"
+    back: "NKP now supports Cilium as the default CNI. Cilium replaces kube-proxy and handles Kubernetes Service load balancing."
+    detail: "For environments that use Calico instead of Cilium, kube-proxy is fully supported and available."
+    page: "634"
+    section: "Load Balancing for Internal Traffic"
+
+  - id: net-service
+    kind: term
+    front: "What is a Kubernetes Service in the NKP networking stack?"
+    back: "An API resource that defines a logical set of pods and a policy by which to access them — an abstracted manner to expose applications as network services. A selector determines the set of Pods targeted, and Services act as entry points that load-balance traffic across them."
+    detail: "Kubernetes assigns each Service an IP address; kube-proxy implements a form of virtual IP for Services of any type other than ExternalName. A Service name must be a valid DNS label name, and a Service is not a Platform Service."
+    page: "629"
+    section: "Networking Service"
+
+  - id: net-service-topology
+    kind: term
+    front: "What is Service Topology in Kubernetes?"
+    back: "A mechanism that routes traffic based on the cluster's Node topology — for example, routing traffic to endpoints on specific nodes, or by the region or availability zone of the node's location."
+    detail: "Enable it with the feature gates --feature-gates=\"ServiceTopology=true,EndpointSlice=true\", then control routing with the topologyKeys field in the Service API object. If topologyKeys matches no pattern, traffic is rejected."
+    page: "630"
+    section: "Service Topology"
+
+  - id: net-endpointslices
+    kind: term
+    front: "What are EndpointSlices?"
+    back: "An API resource providing a scalable, more manageable way to track network endpoints in a Kubernetes cluster by distributing them across multiple resources, with a limit of 100 endpoints per EndpointSlice."
+    detail: "The control plane creates EndpointSlices for any Service with a selector, including references to all pods matching the Service selector. Like Services, an EndpointSlice name must be a valid DNS subdomain name."
+    page: "630"
+    section: "EndpointSlices"
+
+  - id: net-dns-patterns
+    kind: fact
+    front: "What are the DNS resolution patterns for pods and services in Kubernetes?"
+    back: "A pod resolves as pod-ip-address.namespace-name.pod-name.cluster-domain.example, and a service as service-name.namespace-name.svc.cluster-domain.example."
+    detail: "A pod in the same namespace can query the short service name (my-konvoy-service); a pod in another namespace must qualify it (my-konvoy-service.default)."
+    page: "631"
+    section: "DNS for Services and Pods"
+
+  - id: net-ingress
+    kind: term
+    front: "What is an Ingress in Kubernetes?"
+    back: "An API resource that manages external access to services in a cluster through HTTP or HTTPS. It offers name-based virtual hosting, SSL termination, and load balancing when exposing HTTP/HTTPS routes from outside to services in the cluster."
+    detail: "Each rule defines an optional host, a list of paths/routes, and a backend — a combination of Service name and port, or a custom resource backend defined as a CRD."
+    page: "631"
+    section: "Ingress and Networking"
+
+  - id: net-ingress-functions
+    kind: fact
+    front: "What four things does an Ingress perform?"
+    back: "It gives Services externally-reachable URLs, load balances traffic, terminates SSL/TLS sessions, and offers name-based virtual hosting."
+    detail: "An Ingress controller fulfills the Ingress with a load balancer, and a cluster can have multiple Ingress controllers."
+    page: "635"
+    section: "Ingress"
+
+  - id: net-ingress-controllers
+    kind: concept
+    front: "Why must you choose an Ingress controller, and which one does Kommander deploy?"
+    back: "Unlike controllers in the Kubernetes control plane, Ingress controllers are not started with a cluster, so one must be deployed for Ingress definitions to work. In Kommander, Traefik deploys by default as a well-suited Ingress controller."
+    detail: "Three of the most known Ingress controllers are HAProxy Ingress, Traefik, and the experimental Envoy-based Ambassador API Gateway."
+    page: "631"
+    section: "Ingress Controllers"
+
+  - id: net-networkpolicy
+    kind: term
+    front: "What is a NetworkPolicy?"
+    back: "An API resource that controls traffic flow at port level 3 or 4, or at the IP address level, defining constraints on how a pod communicates with network services such as endpoints and services."
+    detail: "A Pod can be restricted using namespaces to be accessed, allowed IP blocks (regardless of node or pod IP), and other allowed Pods."
+    page: "632"
+    section: "Network Policies"
+
+  - id: net-hostaliases
+    kind: term
+    front: "What is the HostAliases field on a Pod?"
+    back: "A Pod API field that adds entries to the container's /etc/hosts file, overriding hostname resolution when DNS and other options are not applicable."
+    code: |
+      spec:
+        hostAliases:
+        - ip: "127.0.0.1"
+          hostnames:
+          - "foo.node.local"
+    page: "633"
+    section: "Adding Entries to Pod /etc/hosts with HostAliases"
+
+  - id: net-required-domains
+    kind: fact
+    front: "What are the Required Domains for NKP?"
+    back: "Domains that must be reachable through customer networking rules so Kommander can download all required images — including docker.io, gcr.io, k8s.gcr.io, mcr.microsoft.com, quay.io, us.gcr.io, registry.k8s.io, nvcr.io, and various Helm chart hosts. All listed domains, including redirections and subdomains, must be enabled."
+    detail: "In an air-gapped installation the required domains need not be accessible. For NKP Pulse to send data to Nutanix, insights.nutanix.com must be reachable."
+    page: "633"
+    section: "Required Domains"
+
+  - id: net-two-lb-kinds
+    kind: concept
+    front: "What are the two kinds of load balancing in a Kubernetes cluster?"
+    back: "Internal load balancing for traffic within the cluster (accessed through a ClusterIP service type), and external load balancing for traffic coming from outside the cluster (a service of type LoadBalancer)."
+    detail: "ClusterIP presents a single IP address to the client and load balances traffic going to that IP to the backend servers."
+    page: "634"
+    section: "Load Balancing"
+
+  - id: net-external-lb-tls
+    kind: fact
+    front: "What is the TLS requirement for an external load balancer in NKP?"
+    back: "In NKP environments, the external load balancer must be configured without TLS termination."
+    page: "635"
+    section: "Load Balancing for External Traffic"
+
+  - id: net-metallb
+    kind: term
+    front: "What is MetalLB and where does NKP use it?"
+    back: "A load-balancing service that NKP ships with for on-premises Pre-provisioned deployments. Pre-provisioned and vSphere environments use MetalLB, whereas cloud deployments get their load balancer from the cloud provider (for example, AWS provisions an ELB targeting the cluster nodes)."
+    page: "635"
+    section: "Load Balancing for External Traffic"
+
+  - id: net-traefik
+    kind: term
+    front: "What is Traefik in NKP?"
+    back: "A modern HTTP reverse proxy and load balancer that deploys microservices with ease. Kommander installs Traefik by default on every cluster and it creates a service of type LoadBalancer, providing access to the NKP UI."
+    detail: "Traefik listens to the Kubernetes API and automatically generates and updates routes without restarts or further configuration. In the cloud the provider creates the load balancer; in an on-premises deployment it uses MetalLB by default."
+    page: "635"
+    section: "Ingress / Traefik"
+
+  - id: net-traefik-svc-cmd
+    kind: command
+    front: "How do you find the external URL of the load balancer created for the Traefik service?"
+    back: "Query the kommander-traefik service in the kommander namespace; the output shows the Traefik LoadBalancer's cluster IP, external IP/hostname, and ports (80, 443, 8080)."
+    code: "kubectl get svc kommander-traefik -n kommander"
+    page: "637"
+    section: "Configuring Ingress for Load Balancing"
+
+  - id: net-istio
+    kind: term
+    front: "What is Istio in NKP?"
+    back: "An open-source service mesh that helps manage cloud-based deployments by connecting, securing, controlling, and observing microservices. NKP documents exposing an application on the cluster using Istio's LoadBalancer (layer-4) service type."
+    page: "637"
+    section: "Istio as a Microservice"
+
+  - id: net-istio-ambient-label
+    kind: command
+    front: "How do you enrol a namespace in the Istio ambient mesh?"
+    back: "After enabling ambient mode, label the namespace of each application you want to enrol with istio.io/dataplane-mode=ambient."
+    detail: "Ambient mode can only be enabled if Istio-Helm or Istio-Operator was not previously enabled; an existing Istio installation must be uninstalled first."
+    code: "kubectl label namespace <namespace-name> istio.io/dataplane-mode=ambient"
+    page: "639"
+    section: "Enabling Istio-Helm in Ambient Mode in UI"
+
+  - id: net-flux-gitops
+    kind: concept
+    front: "Why can't you modify Istio resources directly with kubectl edit in NKP?"
+    back: "NKP uses Flux to manage platform applications through GitOps, so Flux aggressively reverts manual changes to downstream resources during its next reconciliation loop, potentially causing unexpected downtime and confusion."
+    detail: "To persist Day-2 changes such as replicas, CPU/memory requests and limits, or HPA settings, supply a configuration override via a ConfigMap and attach it to the respective AppDeployment's spec.configOverrides."
+    page: "644"
+    section: "Modifying Istio Configuration in NKP"
+
+  - id: proj-network-policy
+    kind: term
+    front: "What is a Project Network Policy?"
+    back: "A policy that controls inbound and outbound traffic between pods and namespaces by defining bidirectional ingress and egress rules, enforced by CNI plugins such as Calico and Cilium."
+    detail: "Network policies are additive and do not conflict; pods selected by more than one policy are subject to the union of those policies' rules."
+    page: "457"
+    section: "Project Network Policies"
+
+  - id: proj-netpol-bidirectional
+    kind: concept
+    front: "Why is network policy traffic control bi-directional in NKP?"
+    back: "You must configure both the egress policy on the source pod and the ingress policy on the destination pod to enable traffic. If either end denies the traffic, it will not flow between the pods."
+    page: "457"
+    section: "Project Network Policies"
+
+  - id: proj-netpol-deny-all
+    kind: fact
+    front: "How do you deny all ingress or all egress traffic in an NKP network policy?"
+    back: "Select the Ingress policy type and leave the ingress rules empty to deny all ingress; select the Egress type and leave egress rules empty to deny all egress."
+    detail: "Since the Kubernetes default is to allow all traffic, a common practice is a default \"deny all traffic\" rule, then selectively open pods, ports, and applications."
+    page: "458"
+    section: "Project Network Policies"
+
+  - id: proj-cni-plugins
+    kind: fact
+    front: "Which CNI plugins does NKP name for enforcing network policies?"
+    back: "Calico for non-Nutanix environments and Cilium for Nutanix environments."
+    page: "457"
+    section: "Project Network Policies"

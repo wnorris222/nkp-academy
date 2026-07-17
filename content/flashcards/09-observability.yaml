@@ -1,0 +1,323 @@
+# Logging & Monitoring — purpose-written study cards from the NKP 2.17 Guide.
+id: fc-observability
+title: "Logging & Monitoring"
+icon: activity
+order: 9
+summary: "The Loki logging stack, Prometheus monitoring, alerts, and cost visibility."
+cards:
+  - id: log-stack-overview
+    kind: concept
+    front: "What is the NKP logging stack?"
+    back: "A pre-configured stack that lets you collect and visualize pod and admin log data at the Workspace level. It is multi-tenant capable, with multi-tenancy enabled at the Project level through RBAC."
+    detail: "Logging is disabled by default on managed and attached clusters; you must explicitly enable the logging stack applications on the workspace."
+    page: "589"
+    section: "Logging"
+
+  - id: log-components
+    kind: fact
+    front: "Name the projects that make up the NKP logging stack."
+    back: "BanzaiCloud Logging-operator; Grafana and Grafana Loki; Fluent Bit and Fluentd."
+    detail: "The stack also relies on the container runtime, the journal facility, and system configuration to collect logs from all machines in the cluster."
+    page: "589"
+    section: "Logging"
+
+  - id: log-operator
+    kind: term
+    front: "What does the Logging Operator do in NKP?"
+    back: "NKP uses the BanzaiCloud Logging operator to manage the Fluent Bit and Fluentd deployments that collect pod logs using Kubernetes API extensions called custom resources."
+    detail: "The custom resources let users declare logging configurations using kubectl commands. Fluent Bit gathers pod log data and sends it to Fluentd, which forwards it to the appropriate Grafana Loki servers."
+    page: "590"
+    section: "Logging Operator"
+
+  - id: log-loki-index
+    kind: concept
+    front: "How does Loki index log data in NKP?"
+    back: "Loki indexes log data by label and stores it for querying; it maintains log order integrity but does not index the log messages themselves."
+    detail: "Not indexing message bodies improves Loki's efficiency and lowers its footprint."
+    page: "590"
+    section: "Logging"
+
+  - id: log-fluentbit-buffer
+    kind: fact
+    front: "What are Fluent Bit's buffer characteristics in NKP?"
+    back: "Fluent Bit maintains a small buffer of logs (5 MB in memory), keeps a per-file checkpoint on each host so it can resume where it left off after a restart, and flushes the buffer every one second."
+    detail: "There is a five-second grace period to flush the buffer on exit, plus a 30-second termination grace period on the pod. Fluent Bit can use a hostPath volume so buffer information survives restarts."
+    page: "590"
+    section: "Logging Operator"
+
+  - id: log-fluentd-bottleneck
+    kind: concept
+    front: "Which logging stack component usually becomes the bottleneck under high log traffic?"
+    back: "Fluentd. The typical sign is that Fluentd cannot handle its buffer — the buffer directory grows for more than the configured or calculated (timekey + timekey_wait) flush interval."
+    detail: "You can also improve Fluentd throughput by turning off the buffering for the loki clusterOutput."
+    page: "591"
+    section: "Logging Stack Scaling"
+
+  - id: log-loki-microservice
+    kind: concept
+    front: "In what mode does NKP deploy Loki, and how should you scale it?"
+    back: "NKP deploys Loki in Microservice mode for maximum scaling flexibility. In high log traffic, scale the Ingester up first; scale the Distributor only when the existing one is stressed by high compute usage."
+    detail: "The number of Distributor pods should usually be much lower than the number of Ingester pods."
+    page: "592"
+    section: "Logging Stack Scaling"
+
+  - id: log-loki-gateway
+    kind: term
+    front: "What is the Loki Gateway?"
+    back: "It acts as a single access point to the various Loki components, routing requests between the Distributor, Query Frontend, and other components as needed."
+    page: "594"
+    section: "Workspace-level Logging"
+
+  - id: log-loki-ingester
+    kind: term
+    front: "What does the Loki Ingester do?"
+    back: "It compresses, indexes, and persists the received log chunks that the Distributor forwards to it."
+    detail: "On the read path, Queriers fetch log chunks back from the Ingester, decompress and filter them, and return results to the Query Frontend."
+    page: "594"
+    section: "Workspace-level Logging"
+
+  - id: log-loki-query-frontend
+    kind: term
+    front: "What does the Loki Query Frontend do?"
+    back: "It splits incoming queries into smaller parts, forwards them to the Loki Querier component, and combines the results from all Queriers before returning the final result."
+    page: "594"
+    section: "Workspace-level Logging"
+
+  - id: log-write-path
+    kind: concept
+    front: "Describe the NKP logging write path."
+    back: "Fluent Bit on each node collects log data and forwards it to Fluentd; Fluentd processes it and forwards it to the Loki Distributor through the Loki Gateway; the Distributor partitions streams into chunks and forwards them to the Ingester, which compresses, indexes, and persists them."
+    page: "595"
+    section: "Workspace-level Logging"
+
+  - id: log-admin-logs
+    kind: concept
+    front: "What are admin-level logs in NKP and how are they collected?"
+    back: "NKP includes a Fluentbit instance that collects admin-level logs — host process logs managed by systemd, kernel logs, and Kubernetes audit logs — and sends them to the workspace Grafana Loki running on the cluster."
+    detail: "This isolates the more sensitive logs from the Logging-operator, eliminating the possibility that users gain inadvertent access to that data."
+    page: "593"
+    section: "Admin-level Logs"
+
+  - id: log-audit-overhead
+    kind: fact
+    front: "How much extra log traffic does enabling audit logging create?"
+    back: "Enabling audit logging via the kommander-fluent-bit AppDeployment increases inbound traffic to the logging stack by approximately 3-4 times."
+    detail: "Consider scaling up all logging stack components when enabling the audit log. You can fine-tune it with an override configmap named kommander-fluent-bit using Fluent Bit INPUT, FILTER, and OUTPUT settings."
+    page: "593"
+    section: "Audit Log"
+
+  - id: log-retention
+    kind: fact
+    front: "What is the default Loki log retention in NKP, and what is the minimum?"
+    back: "NKP configures Grafana Loki to retain log metadata and logs for one week using the Compactor. The minimum retention period is 24 hours."
+    detail: "Customize it with a configOverrides ConfigMap; the doc's example sets retention_period to 360h (15 days) under loki.structuredConfig.limits_config."
+    code: |
+      kubectl apply -f - # ConfigMap grafana-loki-custom-overrides
+      # data.values.yaml: loki.structuredConfig.limits_config.retention_period: 360h
+      nkp edit appdeployment -n ${WORKSPACE_NAMESPACE} grafana-loki
+    page: "599"
+    section: "Overriding ConfigMap to Modify the Storage Retention"
+
+  - id: log-enable-cli
+    kind: command
+    front: "Which CLI commands enable the workspace logging stack in NKP?"
+    back: "Run nkp create appdeployment on the management cluster for logging-operator, rook-ceph, rook-ceph-cluster, grafana-loki, and grafana-logging, each scoped to the workspace."
+    code: |
+      nkp create appdeployment logging-operator --app logging-operator-3.17.9 --workspace ${WORKSPACE_NAME}
+      nkp create appdeployment rook-ceph --app rook-ceph-1.10.3 --workspace ${WORKSPACE_NAME}
+      nkp create appdeployment grafana-loki --app grafana-loki-0.69.16 --workspace ${WORKSPACE_NAME}
+      nkp create appdeployment grafana-logging --app grafana-logging-6.57.4 --workspace ${WORKSPACE_NAME}
+      nkp create appdeployment fluent-bit --app fluent-bit-0.20.9 --workspace ${WORKSPACE_NAME}
+    page: "597"
+    section: "Creating AppDeployments to Enable Workspace Logging"
+
+  - id: log-verify
+    kind: command
+    front: "How do you verify the cluster logging stack installed successfully?"
+    back: "Check the HelmReleases in the workspace namespace on the attached cluster; a successful deploy shows grafana-logging, logging-operator, logging-operator-logging, grafana-loki, rook-ceph, rook-ceph-cluster, and object-bucket-claims as READY True."
+    detail: "Changes may take time based on the duration configured for the Flux GitRepository reconciliation."
+    code: "kubectl get helmreleases -n ${WORKSPACE_NAMESPACE}"
+    page: "600"
+    section: "Verifying the Cluster Logging Stack Installation"
+
+  - id: log-multitenant-flow
+    kind: concept
+    front: "How does multi-tenant logging isolate log data in NKP?"
+    back: "Each Project namespace has a logging-operator \"Flow\" that sends its pod logs to its own Loki server, with a corresponding Grafana server per namespace. Access to log data is enforced at the namespace level through Projects in Kommander."
+    detail: "Multi-tenant logging uses the same base components — BanzaiCloud logging-operator, Grafana Loki, and Grafana. Workspace-level logging is a prerequisite."
+    page: "602"
+    section: "Multi-Tenant Logging"
+
+  - id: log-clusterflow
+    kind: term
+    front: "What is a ClusterFlow in NKP multi-tenant logging?"
+    back: "A cluster-scoped Logging-operator flow paired with a cluster-scoped Loki/Grafana instance that directs pod logs from all namespaces to that pair, for the convenience of cluster Administrators."
+    detail: "A cluster Administrator can grant access to none of the logs, or to all logs collected from all pods in a given namespace."
+    page: "602"
+    section: "Multi-Tenant Logging"
+
+  - id: log-project-appdeployments
+    kind: command
+    front: "Which AppDeployments enable Project-level (multi-tenant) logging?"
+    back: "project-grafana-loki, project-grafana-logging, and project-logging, each created with both --workspace and --project flags."
+    code: |
+      nkp create appdeployment project-grafana-loki --app project-grafana-loki-0.69.16 --workspace ${WORKSPACE_NAME} --project ${PROJECT_NAME}
+      nkp create appdeployment project-grafana-logging --app project-grafana-logging-6.57.4 --workspace ${WORKSPACE_NAME} --project ${PROJECT_NAME}
+      nkp create appdeployment project-logging --app project-logging-1.0.3 --workspace ${WORKSPACE_NAME} --project ${PROJECT_NAME}
+    page: "604"
+    section: "Creating the Project-level AppDeployments"
+
+  - id: log-obc-limit
+    kind: term
+    front: "What is the ObjectBucketClaim storage limit in NKP?"
+    back: "A storage limit option that prevents your S3 bucket from growing beyond a limit; in NKP it is enabled by default. After sizing up Rook Ceph, also increase the ObjectBucketClaim limits for grafana-loki and/or project-grafana-loki."
+    detail: "Override nkp.grafana-loki.maxSize via a configmap on the rook-ceph-cluster platform app, or nkp.project-grafana-loki.maxSize on the project-grafana-loki platform app."
+    page: "592"
+    section: "ObjectBucketClaim Storage Limit"
+
+  - id: log-ceph-overhead
+    kind: fact
+    front: "How much storage overhead does the default Rook Ceph Cluster in NKP have?"
+    back: "The default Rook Ceph Cluster configuration has a 33% overhead in data storage for redundancy — of 1000Gb of allocated data disks, only 750Gb is used to store your data."
+    detail: "Ceph is the default S3 storage provider in NKP; a Rook Ceph Operator and a Rook Ceph Cluster are deployed together."
+    page: "592"
+    section: "Rook Ceph"
+
+  - id: mon-stack
+    kind: concept
+    front: "What is the default NKP monitoring stack?"
+    back: "A pre-configured monitoring stack based on the Prometheus open-source project, provided by Kommander. It monitors Kubernetes components and platform services, ships default Grafana dashboards, and supports predefined critical error and warning alerts."
+    detail: "It also lets you add metrics from any deployed application into the overall Prometheus metrics stream."
+    page: "659"
+    section: "Monitoring and Alerts"
+
+  - id: mon-kube-prometheus-stack
+    kind: term
+    front: "What is kube-prometheus-stack in NKP?"
+    back: "The stack deployed by default on the management cluster and attached clusters that exposes metrics from nodes, Kubernetes units, and running apps. It deploys prometheus-operator, prometheus, alertmanager, node-exporter, kube-state-metrics, grafana, and service monitors."
+    page: "663"
+    section: "Cluster Metrics"
+
+  - id: mon-kube-state-metrics
+    kind: term
+    front: "What is kube-state-metrics?"
+    back: "A simple service that listens to the Kubernetes API server and generates metrics about the state of the Kubernetes objects."
+    detail: "By contrast, node-exporter is deployed on each node to collect machine hardware and OS metrics."
+    page: "663"
+    section: "Cluster Metrics"
+
+  - id: mon-default-dashboards
+    kind: fact
+    front: "Which default Grafana dashboards ship with Kommander?"
+    back: "Kubernetes Components (API Server, Nodes, Pods, Kubelet, Scheduler, StatefulSets, Persistent Volumes), Kubernetes USE method (Cluster and Nodes), Calico, etcd, and Prometheus."
+    detail: "Disable them all with an overrides ConfigMap setting grafana.defaultDashboardsEnabled to false on the kube-prometheus-stack AppDeployment."
+    page: "661"
+    section: "Grafana Dashboards"
+
+  - id: mon-grafana-url
+    kind: fact
+    front: "What is the per-cluster Grafana UI URL in NKP?"
+    back: "https://<CLUSTER_URL>/dkp/grafana — browse to the landing page and search for the Grafana dashboard."
+    page: "662"
+    section: "Grafana Dashboards"
+
+  - id: mon-alertmanager
+    kind: term
+    front: "What is AlertManager's role in NKP?"
+    back: "The alertmanager of the kube-prometheus-stack handles alerts sent by client applications such as the Prometheus server, keeping you informed of events occurring in your cluster."
+    detail: "Kommander ships pre-defined alerts covering node state, system services managing the cluster, resource events from specific system services, and Prometheus expressions exceeding pre-defined thresholds."
+    page: "663"
+    section: "Alerts Using AlertManager"
+
+  - id: mon-alert-examples
+    kind: fact
+    front: "Name some pre-defined alerts available in NKP."
+    back: "CPUThrottlingHigh, TargetDown, KubeletNotReady, KubeAPIDown, CoreDNSDown, and KubeVersionMismatch."
+    page: "663"
+    section: "Alerts Using AlertManager"
+
+  - id: mon-alertmanager-url
+    kind: fact
+    front: "What is the Prometheus Alertmanager UI URL in NKP?"
+    back: "https://<CLUSTER_URL>/dkp/alertmanager — browse to the landing page and search for the Prometheus Alertmanager dashboard."
+    detail: "From the Prometheus web console you can mute or unmute firing alerts and perform other operations."
+    page: "665"
+    section: "Configuring Alert Rules"
+
+  - id: mon-monitoring-id
+    kind: term
+    front: "What is a monitoring ID in NKP centralized monitoring?"
+    back: "The identifier that distinguishes managed or attached clusters; it corresponds to the kube-system namespace UID of the cluster."
+    detail: "Find it on the Clusters tab in the NKP UI under Configuration > Monitoring ID (clusterId), or via kubectl."
+    code: "kubectl get namespace kube-system -o jsonpath='{.metadata.uid}'"
+    page: "668"
+    section: "Centralized Monitoring"
+
+  - id: mon-thanos
+    kind: concept
+    front: "How does NKP collect centralized metrics from attached clusters?"
+    back: "Using Thanos. Thanos Query is installed on attached and managed clusters and queries the Prometheus instances on the attached clusters via a Thanos sidecar running alongside each Prometheus container."
+    detail: "Grafana is configured with Thanos Query as its data source and ships pre-installed dashboards for a global view of all attached clusters, including a Thanos Query dashboard."
+    page: "669"
+    section: "Centralized Metrics"
+
+  - id: mon-metrics-not-backed-up
+    kind: fact
+    front: "Are centralized cluster metrics backed up in Kommander?"
+    back: "No. Cluster metrics are read remotely from Kommander and are not backed up. If an attached cluster goes down, Kommander no longer collects or presents its metrics, including past data."
+    page: "669"
+    section: "Centralized Metrics"
+
+  - id: mon-centralized-urls
+    kind: fact
+    front: "What are the centralized monitoring UI URLs in NKP?"
+    back: "Centralized Grafana at https://<CLUSTER_URL>/dkp/kommander/monitoring/grafana and the Thanos Query UI at https://<CLUSTER_URL>/dkp/kommander/monitoring/query/ (stores view at .../query/stores)."
+    detail: "The centralized Grafana is a separate instance from the one installed on attached clusters, dedicated to centralized monitoring components."
+    page: "669"
+    section: "Centralized Metrics"
+
+  - id: mon-karma
+    kind: term
+    front: "What is Karma in NKP?"
+    back: "The alert dashboard providing a centralized view of alerts from attached clusters. It aggregates all alerts from the Alertmanagers running in the attached clusters onto one page, filterable by alert type, cluster, and more."
+    detail: "Available at https://<CLUSTER_URL>/dkp/kommander/monitoring/karma. Silencing alerts using the Karma UI is currently not supported."
+    page: "670"
+    section: "Centralized Alerts"
+
+  - id: mon-opencost
+    kind: term
+    front: "What is OpenCost in NKP?"
+    back: "An open source cost monitoring tool for cloud native environments that integrates with NKP Kommander to provide cost monitoring across all attached clusters. NKP enables OpenCost in the management cluster by default and collects cost metrics remotely from each workload cluster."
+    detail: "It integrates with the Kubernetes API and cloud billing APIs for real-time visibility into Kubernetes spending and cost allocation. The NKP UI displays costs from the last day and last seven days per cluster, workspace, and project."
+    page: "671"
+    section: "Cost Monitoring"
+
+  - id: mon-opencost-tabs
+    kind: fact
+    front: "What views does the OpenCost application provide in the NKP UI?"
+    back: "Cost Allocation (cloud resource costs broken down by cluster, node, namespace, controller kind, controller, service, pod, and container over the past seven days), Cloud Costs (actual billing data from your public cloud provider), and External Costs (expenses not directly tied to Kubernetes resources)."
+    page: "671"
+    section: "Monitoring Cost Using OpenCost"
+
+  - id: mon-kubecost-transition
+    kind: fact
+    front: "What replaced Kubecost in NKP 2.17?"
+    back: "OpenCost. Starting with NKP 2.17 Kubecost is no longer available in the NKP UI and OpenCost is the cost monitoring solution."
+    detail: "On upgrade, if no active non-trial Kubecost license is found the NKP CLI uninstalls Kubecost from all clusters; if an active Kubecost license is detected the upgrade aborts automatically to prevent disruption."
+    page: "673"
+    section: "Transitioning from Kubecost to OpenCost in NKP"
+
+  - id: mon-app-metrics
+    kind: concept
+    front: "What two conventions must your app follow to be monitored by Prometheus in NKP?"
+    back: "Expose metrics using an HTTP endpoint named /metrics, and expose them in a format Prometheus can consume."
+    page: "673"
+    section: "Application Monitoring using Prometheus"
+
+  - id: mon-default-servicemonitors
+    kind: fact
+    front: "Which service monitors does kube-prometheus-stack provide by default?"
+    back: "kube-apiserver, kube-scheduler, kube-controller-manager, etcd, kube-dns/coredns, and kube-proxy."
+    detail: "Service monitors collect internal Kubernetes components but can also be extended to monitor customer applications."
+    page: "673"
+    section: "Application Monitoring using Prometheus"

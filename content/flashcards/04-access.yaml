@@ -1,0 +1,257 @@
+# Identity & Access Control — purpose-written study cards from the NKP 2.17 Guide.
+id: fc-access
+title: "Identity & Access Control"
+icon: shield
+order: 4
+summary: "Dex, OIDC, roles, and how a login becomes a Kubernetes permission."
+cards:
+  - id: sec-dex
+    kind: term
+    front: "What is Dex in NKP?"
+    back: "Dex is the pre-configured identity broker and provider that ships with the NKP user interface; it acts as Kommander's OpenID Connect (OIDC) provider and federates authentication across clusters."
+    detail: "Dex does not store user identities itself — it delegates to one or more external IdPs (LDAP, SAML, GitHub, etc.)."
+    page: "614"
+    section: "Security / Authentication"
+
+  - id: sec-no-identity-store
+    kind: fact
+    front: "Do Kubernetes, Kommander, or Dex store user identities?"
+    back: "No. None of them store user identities. The Kommander installation ships with default admin static credentials that should be treated as backup credentials only."
+    detail: "The static admin credentials cannot currently be updated, so they should be used only to configure an external identity provider, not for normal access."
+    page: "614"
+    section: "Security / Authentication"
+
+  - id: sec-attached-cluster-auth-apps
+    kind: fact
+    front: "Which three platform applications does a newly attached cluster integrate for authentication?"
+    back: "kube-oidc-proxy, dex-k8s-authenticator, and traefik-forward-auth — all configured to accept the Management or Pro cluster and its Dex-issued ID tokens."
+    detail: "The Dex service on the Kommander cluster issues the user identity for attached clusters; a user identity is shared across the UI cluster and all attached clusters."
+    page: "615"
+    section: "Security / Attached Clusters"
+
+  - id: sec-kommander-authz
+    kind: concept
+    front: "How does Kommander handle authorization?"
+    back: "Kommander has no centralized authorization component — each service makes its own authorization decisions based on the user identity."
+    page: "615"
+    section: "Security / Authorization"
+
+  - id: sec-k8s-user-categories
+    kind: concept
+    front: "What are the two categories of users in every Kubernetes cluster?"
+    back: "Service accounts and normal users. Kubernetes manages authentication for service accounts, while the cluster administrator or a separate service (Dex, in NKP) manages authentication for normal users."
+    page: "615"
+    section: "OpenID Connect (OIDC)"
+
+  - id: sec-idp
+    kind: term
+    front: "What is an Identity Provider (IdP)?"
+    back: "A service that lets you manage identity information for users, including groups. A cluster created in Kommander uses Dex as its IdP, and Dex in turn delegates to one or more external IdPs."
+    page: "615"
+    section: "Identity Providers"
+
+  - id: sec-dex-version
+    kind: fact
+    front: "Which Dex version does NKP use, and which IdP connectors are marked stable?"
+    back: "NKP uses Dex 2.22.0. The connectors listed as stable are LDAP, GitHub, SAML 2.0, and OpenShift."
+    detail: "GitLab, OpenID Connect (includes Salesforce, Azure), LinkedIn, and Microsoft are beta; Google, AuthProxy, and Bitbucket Cloud are alpha."
+    page: "616"
+    section: "Identity Providers"
+
+  - id: sec-login-connectors
+    kind: concept
+    front: "What are Login Connectors in Kommander?"
+    back: "Dex connectors that provide OpenID Connect single sign-on (SSO) to the cluster. Dex can be configured with multiple connectors — including GitHub, LDAP, and SAML 2.0 — added as the values field in the Dex application."
+    code: |
+      apps:
+        dex:
+          values: |
+            config:
+              connectors:
+                - type: oidc
+                  id: google
+                  name: Google
+    page: "616"
+    section: "Login Connectors"
+
+  - id: sec-token-lifetime
+    kind: fact
+    front: "What is the default client access token lifetime in NKP?"
+    back: "24 hours. After that the token expires and cannot be used to authenticate."
+    detail: "On non-Nutanix infrastructure you set apps.dex.values.config.expiry.idTokens (e.g. \"48h\"). On Nutanix installations you must instead create a dex-overrides ConfigMap in the kommander namespace after installation and reference it from the dex AppDeployment's configOverrides."
+    page: "617"
+    section: "Access Token Lifetime"
+
+  - id: sec-oidc-oauth2
+    kind: concept
+    front: "How does OIDC relate to OAuth2 in NKP?"
+    back: "OpenID Connect is an extension of the OAuth2 authentication protocol. The client must be registered with Dex by passing an application name and callback/redirect URI; Dex then returns a client_id and a secret used to identify the client."
+    page: "617"
+    section: "Authentication"
+
+  - id: sec-two-access-paths
+    kind: concept
+    front: "What are the two ways users access Kommander?"
+    back: "By interacting with the Kubernetes API (usually through kubectl), and by interacting with the NKP UI, which has GUI dashboards for Prometheus, Grafana, and others."
+    detail: "Dex comes pre-configured with a client for each of these two access cases."
+    page: "617"
+    section: "Authentication"
+
+  - id: sec-dex-clients
+    kind: fact
+    front: "What are the two pre-configured Dex clients in the OIDC authentication flow?"
+    back: "The \"Kubernetes CLI authenticator\" (service dex-k8s-authenticator-kubeaddons, client id kube-apiserver) for getting user tokens for kube-apiserver, and the \"Ops Portal authenticator\" (service traefik-forward-auth-kubeaddons, client id traefik-forward-auth) for accessing the ops-portal."
+    page: "618"
+    section: "OIDC Authentication Flow with Dex"
+
+  - id: sec-tfa
+    kind: term
+    front: "What is Traefik-Forward-Authentication (TFA) in NKP?"
+    back: "A vital NKP component that handles authentication and authorization of web (HTTP) requests and controls how users access the NKP UI — it authorizes HTTP clients to enter your environment regardless of the authentication method chosen (user/password, SSO, 2FA)."
+    detail: "TFA is one of the standard applications in the Kommander component of NKP and is deployed by a controller on all attached, managed, and management clusters."
+    page: "623"
+    section: "Traefik-Forward-Authentication in NKP (TFA)"
+
+  - id: sec-tfa-default-cookies
+    kind: concept
+    front: "How does TFA store user authentication information by default?"
+    back: "In encrypted browser cookies. TFA stores the user's metadata in securely encrypted cookies that subsequent requests use to recognize the user without re-authenticating."
+    detail: "The cookies cannot be modified by users and contain the RBAC username plus the list of groups the user belongs to."
+    page: "624"
+    section: "Default TFA Configuration in NKP"
+
+  - id: sec-tfa-cluster-storage
+    kind: concept
+    front: "What is the TFA clusterStorage option and when do you need it?"
+    back: "An option in the Traefik Forward Auth application that stores metadata claims in the cluster as a Kubernetes secret instead of in the browser. It works around the 4Kb-per-cookie browser limit, which a user in many groups can exceed and receive a 500 internal server error."
+    detail: "With clusterStorage enabled, automatic garbage collection deletes the secrets after 12 hours, and web request performance suffers because TFA must load the secret on each HTTP API request. Nutanix recommends first reducing the number of groups per user."
+    code: |
+      traefik-forward-auth-mgmt:
+        values: |
+          clusterStorage:
+            enabled: true
+            namespace: kommander
+    page: "625"
+    section: "Cluster Storage Option"
+
+  - id: sec-local-users
+    kind: concept
+    front: "What are Local Users in NKP and when should you use them?"
+    back: "Local users are an alternative to an external identity provider, useful for quickly testing RBAC policies. NKP automatically creates a unique local user, admin, and you can create additional local users and assign them other RBAC roles."
+    detail: "Nutanix recommends configuring an external identity provider instead, and explicitly does not recommend local users for production clusters."
+    page: "625"
+    section: "Local Users"
+
+  - id: sec-rbac-local-user
+    kind: concept
+    front: "How do you grant a local user permissions in NKP?"
+    back: "Create a ClusterRoleBinding whose subjects.name is the user's email address and whose roleRef points to the RBAC role you want (for example cluster-admin). Without this, the created user has no permissions to see or manage the cluster."
+    detail: "If you configured an Identity Provider for a specific workspace (multi-tenancy), set subjects.name to <workspace_ID>:<user_email>, for example tenant-z:jane.doe@example.com."
+    page: "628"
+    section: "Adding RBAC Roles to Local Users"
+
+  - id: sec-dex-overrides
+    kind: term
+    front: "What is the dex-overrides ConfigMap?"
+    back: "A ConfigMap in the kommander namespace holding values.yaml overrides (such as staticPasswords) that you attach to the Dex AppDeployment via spec.configOverrides to create or modify local users after installation."
+    detail: "Editing the AppDeployment restarts the Dex HelmRelease and the new users are created after reconciliation. To modify or delete a local user, edit this same ConfigMap and update or remove the email/hash fields, plus any associated RoleBindings."
+    code: "kubectl edit -n kommander appdeployment dex"
+    page: "627"
+    section: "Creating Local Users After the Kommander Installation"
+
+  - id: ws-kommander-vs-cluster-roles
+    kind: concept
+    front: "Kommander Roles vs. Cluster Roles in the NKP UI"
+    back: "Kommander Roles control access to resources on the management cluster; Cluster Roles control access to resources on all target clusters."
+    detail: "These are the two conceptual groups of resources NKP uses to manage access control."
+    page: "287"
+    section: "Access Control"
+
+  - id: ws-access-scopes
+    kind: concept
+    front: "What three scopes does NKP use to manage access control?"
+    back: "Global (entire environment), Workspace (clusters in a specific workspace), and Project (clusters in a specific project)."
+    detail: "At Global scope, Kommander Roles create ClusterRoles on the management cluster and Cluster Roles federate ClusterRoles to all target clusters across all workspaces."
+    page: "287"
+    section: "Access Control"
+
+  - id: ws-oidc-prefix
+    kind: fact
+    front: "Why are external identity provider groups prefixed with \"oidc:\"?"
+    back: "All external groups are prefixed with `oidc:` (for example `oidc:devops`) to prevent collision with locally defined groups."
+    page: "292"
+    section: "Access Control"
+
+  - id: ws-subjects-name-syntax
+    kind: fact
+    front: "How does subjects.name differ for an IdP configured for All Workspaces vs. a Specific Workspace?"
+    back: "For All Workspaces, groups use `oidc:<IdP_user_group>` and users use `<user_email>`. For a Specific Workspace, groups use `oidc:<workspace_ID>:<IdP_user_group>` and users use `<workspace_ID>:<user_email>`."
+    page: "288"
+    section: "Access Control"
+
+  - id: ws-kommanderworkspacerole
+    kind: term
+    front: "What is a KommanderWorkspaceRole?"
+    back: "The resource used to define each workspace's roles, such as kommander-workspace-admin, kommander-workspace-edit, and kommander-workspace-view."
+    code: "kubectl get kommanderworkspaceroles -n <WORKSPACE_NAMESPACE>"
+    page: "289"
+    section: "Access Control"
+
+  - id: ws-default-role-propagation
+    kind: concept
+    front: "Which workspace roles propagate to projects by default?"
+    back: "Users granted Kommander Workspace Admin, Edit, or View are also granted the equivalent Kommander Project Admin, Edit, or View role for any project created in that workspace. Other workspace roles do not propagate automatically."
+    page: "289"
+    section: "Access Control"
+
+  - id: ws-cluster-admin-role
+    kind: term
+    front: "What is the cluster-admin role in NKP?"
+    back: "A system role that grants permission to all actions (verbs) on any resource, including non-resource URLs. The default dashboard user is bound to this role."
+    page: "292"
+    section: "Access Control"
+
+  - id: ws-starter-license-roles
+    kind: fact
+    front: "Which cluster roles are available with the NKP Starter license?"
+    back: "Only cluster-admin or cluster view. The default roles are not available with NKP Starter, and these roles apply to all clusters and workspaces."
+    page: "292"
+    section: "Access Control"
+
+  - id: ws-clusterrolebinding-vs-rolebinding
+    kind: fact
+    front: "ClusterRoleBindings vs. RoleBindings scope"
+    back: "ClusterRoleBindings permissions are applicable at the global level; RoleBindings permissions are applicable at the namespace level."
+    page: "299"
+    section: "Access Control"
+
+  - id: ws-kubeconfig
+    kind: term
+    front: "What is a kubeconfig file in NKP?"
+    back: "A file used to configure access to clusters; kubectl and NKP CLI tools use it to choose a cluster and communicate with its API server."
+    detail: "In NKP a kubeconfig is created automatically when you create a cluster, but it requires a valid token to obtain access."
+    page: "310"
+    section: "Kubectl API Access"
+
+  - id: proj-role-binding
+    kind: term
+    front: "What is a Project Role Binding?"
+    back: "A binding that assigns a specific project role to a specific group of users, providing controlled access to project resources; configurable via the NKP UI or CLI."
+    detail: "Created as a VirtualGroupProjectRoleBinding; Kommander then creates a Kubernetes FederatedRoleBinding on the cluster where Kommander runs."
+    page: "446"
+    section: "Project Role Bindings"
+
+  - id: proj-projectrole
+    kind: term
+    front: "What is a Project Role?"
+    back: "A role that defines permissions at the namespace level, determining the actions you can perform within a specific project. Created via the NKP UI or CLI."
+    detail: "When created, Kommander creates a Kubernetes FederatedRole on the cluster where Kommander is running, which becomes a Role in the project namespace on associated clusters."
+    page: "449"
+    section: "Project Roles"
+
+  - id: proj-rolebinding-ref-rule
+    kind: fact
+    front: "Can a VirtualGroupProjectRoleBinding specify both workspaceRoleRef and projectRoleRef?"
+    back: "No. You must specify either workspaceRoleRef or projectRoleRef to be validated by the admission webhook; specifying both is not valid and causes an error."
+    page: "447"
+    section: "Project Role Bindings"

@@ -139,19 +139,19 @@ class LeaderboardOut(BaseModel):
 
 class FlashcardOut(BaseModel):
     id: str
-    module_id: str
-    module_title: str
-    track: str
+    kind: str  # "term" | "concept" | "command" | "fact"
     front: str
-    answer: str
     back: str
-    source: SourceOut | None = None
+    detail: str = ""
+    code: str = ""
+    ref: str = ""
 
 
 class DeckOut(BaseModel):
     id: str
     title: str
-    kind: str  # "all" | "track" | "module"
+    icon: str
+    summary: str = ""
     count: int
 
 

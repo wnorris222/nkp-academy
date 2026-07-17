@@ -82,15 +82,42 @@ class Badge:
     criteria_value: str  # module_id, track name, or XP integer (as string)
 
 
+@dataclass(frozen=True)
+class Flashcard:
+    """One study card. Purpose-written to teach, not derived from a question."""
+
+    id: str
+    kind: str  # term | concept | command | fact
+    front: str
+    back: str
+    detail: str = ""
+    code: str = ""
+    ref: str = ""  # where to read more, e.g. "NKP 2.17 Guide · p.18"
+
+
+@dataclass(frozen=True)
+class FlashcardDeck:
+    id: str
+    title: str
+    icon: str
+    order: int
+    summary: str
+    cards: tuple[Flashcard, ...]
+
+
 @dataclass
 class ContentStore:
     """In-memory index of all loaded content."""
 
     modules: tuple[Module, ...] = field(default_factory=tuple)
     badges: tuple[Badge, ...] = field(default_factory=tuple)
+    flashcard_decks: tuple[FlashcardDeck, ...] = field(default_factory=tuple)
 
     def module(self, module_id: str) -> Module | None:
         return next((m for m in self.modules if m.id == module_id), None)
+
+    def flashcard_deck(self, deck_id: str) -> FlashcardDeck | None:
+        return next((d for d in self.flashcard_decks if d.id == deck_id), None)
 
     def question(self, module_id: str, question_id: str) -> Question | None:
         module = self.module(module_id)
@@ -156,8 +183,40 @@ def _parse_module(raw: dict) -> Module:
     )
 
 
+def _parse_flashcard(raw: dict) -> Flashcard:
+    """Build a card, deriving the human-readable doc reference from page/section."""
+    bits = []
+    if raw.get("page"):
+        page = str(raw["page"])
+        bits.append(page if page.lower().startswith("p.") else f"p.{page}")
+    if raw.get("section"):
+        bits.append(str(raw["section"]))
+    ref = "NKP 2.17 Guide · " + " · ".join(bits) if bits else ""
+
+    return Flashcard(
+        id=raw["id"],
+        kind=raw.get("kind", "concept"),
+        front=raw["front"],
+        back=raw["back"],
+        detail=raw.get("detail", "") or "",
+        code=(raw.get("code", "") or "").rstrip("\n"),
+        ref=ref,
+    )
+
+
+def _parse_flashcard_deck(raw: dict) -> FlashcardDeck:
+    return FlashcardDeck(
+        id=raw["id"],
+        title=raw["title"],
+        icon=raw.get("icon", "book"),
+        order=int(raw.get("order", 0)),
+        summary=raw.get("summary", ""),
+        cards=tuple(_parse_flashcard(c) for c in raw.get("cards", [])),
+    )
+
+
 def load_content(content_dir: Path) -> ContentStore:
-    """Load every ``*.yaml`` module from ``<content_dir>/modules`` plus badges.
+    """Load modules from ``<content_dir>/modules``, plus badges and flashcards.
 
     Raises ``FileNotFoundError`` if the content directory is missing so
     misconfiguration fails loudly at startup rather than serving an empty app.
@@ -190,4 +249,18 @@ def load_content(content_dir: Path) -> ContentStore:
                 )
             )
 
-    return ContentStore(modules=tuple(modules), badges=tuple(badges))
+    # Flashcard decks are optional — the quiz works without them.
+    decks: list[FlashcardDeck] = []
+    flashcards_dir = content_dir / "flashcards"
+    if flashcards_dir.is_dir():
+        for path in sorted(flashcards_dir.glob("*.yaml")):
+            data = yaml.safe_load(path.read_text(encoding="utf-8"))
+            if data:
+                decks.append(_parse_flashcard_deck(data))
+        decks.sort(key=lambda d: (d.order, d.id))
+
+    return ContentStore(
+        modules=tuple(modules),
+        badges=tuple(badges),
+        flashcard_decks=tuple(decks),
+    )

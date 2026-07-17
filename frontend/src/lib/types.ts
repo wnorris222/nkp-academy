@@ -150,21 +150,23 @@ export interface ExamReport {
   results: ExamQuestionResult[];
 }
 
+export type CardKind = "term" | "concept" | "command" | "fact";
+
 export interface Flashcard {
   id: string;
-  module_id: string;
-  module_title: string;
-  track: string;
+  kind: CardKind;
   front: string;
-  answer: string;
   back: string;
-  source?: Source | null;
+  detail: string;
+  code: string;
+  ref: string;
 }
 
 export interface Deck {
   id: string;
   title: string;
-  kind: "all" | "track" | "module";
+  icon: string;
+  summary: string;
   count: number;
 }
 

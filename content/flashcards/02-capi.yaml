@@ -1,0 +1,81 @@
+# Cluster API (CAPI) concepts — the machinery underneath every NKP cluster.
+id: fc-capi
+title: Cluster API (CAPI)
+icon: refresh
+order: 2
+summary: The CAPI objects NKP builds on — Machines, MachineDeployments, health checks, and the bootstrap cluster.
+cards:
+  - id: capi-what
+    kind: concept
+    front: What is Cluster API (CAPI) and why does NKP use it?
+    back: CAPI is the open-source technology NKP uses to create and manage the life cycle of Kubernetes clusters — provisioning, upgrading, and operating many clusters across distributions and environments.
+    detail: A basic understanding of CAPI concepts helps you install and maintain NKP.
+    page: p.21
+
+  - id: capi-bootstrap-cluster
+    kind: concept
+    front: What does a bootstrap cluster do?
+    back: It generates cluster certificates, initializes the control plane, joins control-plane and worker nodes, and installs the CNI, CSI volume provisioners, Cluster Autoscaler, and core Kubernetes components.
+    detail: It is temporary — a local Kubernetes-in-Docker (KinD) cluster used only to stand up the real cluster, then deleted.
+    page: p.21
+
+  - id: capi-machine
+    kind: term
+    front: Machine (in CAPI)
+    back: A declarative specification for a platform or infrastructure component that hosts a Kubernetes node — either a bare metal server or a VM.
+    detail: Provider-specific information is not portable between providers.
+    page: p.22
+
+  - id: capi-immutability
+    kind: concept
+    front: What is machine immutability?
+    back: When you update a machine spec — other than values like annotations, status, and labels — the controller deletes the host and creates a new one that conforms to the latest spec.
+    detail: You don't mutate a node in place; you replace it. Deleting a machine deletes both the infrastructure and the node.
+    page: p.22
+
+  - id: capi-machinedeployment
+    kind: term
+    front: MachineDeployment
+    back: A declarative CAPI object that handles changes to machines by replacing them — the way a core Kubernetes Deployment replaces Pods.
+    detail: It reconciles machine-spec changes by rolling out across two MachineSets (similar to a ReplicaSet) — the old and the newly updated.
+    page: p.22
+
+  - id: capi-mhc
+    kind: term
+    front: MachineHealthCheck (MHC)
+    back: Identifies unhealthy node conditions and initiates remediation for nodes owned by a MachineSet.
+    detail: This is what gives NKP clusters self-healing behaviour.
+    page: p.22
+
+  - id: capi-mhc-maxunhealthy
+    kind: fact
+    front: What is the default maxunhealthy value for a MachineHealthCheck?
+    back: 40%. It is customizable to suit your self-healing requirements.
+    detail: The cap exists so a widespread outage doesn't trigger mass remediation and make things worse.
+    page: p.22
+
+  - id: capi-crs
+    kind: term
+    front: ClusterResourceSet
+    back: A Custom Resource Definition (CRD) used to group and deploy core cluster components after the Kubernetes cluster is installed.
+    detail: It exists because a CAPI-created cluster is functionally minimal — crucial components like CSI and CNI are not in the default cluster spec.
+    page: p.22
+
+  - id: capi-bootstrapdata
+    kind: term
+    front: BootstrapData
+    back: Machine or node role-specific data — such as cloud-initialization data — used to bootstrap a "machine" onto a node.
+    page: p.21
+
+  - id: capi-managed-cluster
+    kind: term
+    front: Managed Cluster (in CAPI terms)
+    back: A Kubernetes cluster whose life cycle is managed by a management cluster. It provides the platform to deploy, execute, and run workloads.
+    page: p.21
+
+  - id: capi-pivot
+    kind: command
+    front: How do you pivot CAPI resources from the bootstrap cluster to the management cluster?
+    back: Move the CAPI resources to the new cluster's kubeconfig — this is what makes the cluster self-managed.
+    code: nkp move capi-resources --to-kubeconfig ${CLUSTER_NAME}.conf
+    page: p.21

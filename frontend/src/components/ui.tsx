@@ -50,6 +50,15 @@ const ICONS: Record<string, string> = {
   star: "⭐",
   crown: "👑",
   cap: "🎓",
+  // Flashcard decks
+  layers: "🗂️",
+  shield: "🛡️",
+  globe: "🌐",
+  lock: "🔒",
+  database: "💾",
+  archive: "📦",
+  activity: "📈",
+  terminal: "⌨️",
 };
 
 export function Icon({ name, className = "" }: { name: string; className?: string }) {

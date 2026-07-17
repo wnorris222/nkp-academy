@@ -1,7 +1,8 @@
 """Tests for flashcard deck building and the flashcards API.
 
-Cards are a projection of the quiz content, so these guard the projection
-(every card has a usable front/back) and the deck filters.
+Cards are authored content rather than a projection of the quiz, so these
+guard the loader (every card is usable and well-formed), the deck selection,
+and the promise that flashcards stay out of the scoring path.
 """
 from __future__ import annotations
 
@@ -9,12 +10,18 @@ import pytest
 
 from app import flashcards as fc
 
+VALID_KINDS = {"term", "concept", "command", "fact"}
+
 
 # ---- Pure deck logic ----
 
-def test_all_deck_has_one_card_per_question(content_store):
+def test_content_ships_flashcard_decks(content_store):
+    assert content_store.flashcard_decks, "expected authored decks under content/flashcards"
+
+
+def test_all_deck_is_every_card_from_every_deck(content_store):
     cards = fc.build_deck(content_store)
-    total = sum(len(m.questions) for m in content_store.modules)
+    total = sum(len(d.cards) for d in content_store.flashcard_decks)
     assert len(cards) == total
 
 
@@ -22,58 +29,53 @@ def test_every_card_has_a_front_and_a_back(content_store):
     for card in fc.build_deck(content_store):
         assert card.front.strip(), f"{card.id} has an empty front"
         assert card.back.strip(), f"{card.id} has an empty back"
-        assert card.answer.strip(), f"{card.id} has an empty answer"
 
 
-def test_answer_text_renders_option_text_not_ids(content_store):
-    module = content_store.module("ncpcn-s1-bastion")
-    question = next(q for q in module.questions if q.id == "q79")
-    # q79 is the bastion resource-requirements question; option "b" is correct.
-    assert fc.answer_text(question) == "8 vCPU, 16 GB memory, 80 GB disk"
+def test_every_card_has_a_known_kind(content_store):
+    for card in fc.build_deck(content_store):
+        assert card.kind in VALID_KINDS, f"{card.id} has kind={card.kind!r}"
 
 
-def test_answer_text_joins_multi_select_answers(content_store):
-    multi = [
-        (m, q)
-        for m in content_store.modules
-        for q in m.questions
-        if len(q.correct_set) > 1
-    ]
-    assert multi, "expected at least one multi-select question in content"
-    module, question = multi[0]
-    text = fc.answer_text(question)
-    assert " · " in text
-    assert len(text.split(" · ")) == len(question.correct_set)
+def test_card_ids_are_unique_across_decks(content_store):
+    ids = [c.id for c in fc.build_deck(content_store)]
+    assert len(ids) == len(set(ids)), "duplicate flashcard ids"
 
 
-def test_module_deck_only_contains_that_module(content_store):
-    cards = fc.build_deck(content_store, module_id="ncpcn-s1-bastion")
-    assert cards
-    assert {c.module_id for c in cards} == {"ncpcn-s1-bastion"}
+def test_cards_are_not_copies_of_quiz_questions(content_store):
+    """The whole point of the redesign: cards teach, they don't restate the quiz."""
+    prompts = {q.prompt.strip() for m in content_store.modules for q in m.questions}
+    clashes = [c.id for c in fc.build_deck(content_store) if c.front.strip() in prompts]
+    assert not clashes, f"cards duplicate quiz prompts: {clashes}"
 
 
-def test_track_deck_only_contains_that_track(content_store):
-    track = content_store.tracks()[0]
-    cards = fc.build_deck(content_store, track=track)
-    assert cards
-    assert {c.track for c in cards} == {track}
+def test_page_reference_is_rendered_for_display(content_store):
+    """`page: 18` in YAML becomes a human-readable ref, not a bare number."""
+    refs = [c.ref for c in fc.build_deck(content_store) if c.ref]
+    assert refs, "expected at least one card with a doc reference"
+    assert all(r.startswith("NKP 2.17 Guide · p.") for r in refs)
 
 
-def test_parse_deck_id():
-    assert fc.parse_deck_id("all") == (None, None)
-    assert fc.parse_deck_id("module:abc") == ("abc", None)
-    assert fc.parse_deck_id("track:NCP-CN Section 1") == (None, "NCP-CN Section 1")
+def test_named_deck_only_contains_its_own_cards(content_store):
+    deck = content_store.flashcard_decks[0]
+    cards = fc.build_deck(content_store, deck.id)
+    assert [c.id for c in cards] == [c.id for c in deck.cards]
 
 
-def test_list_decks_covers_all_tracks_and_modules(content_store):
+def test_unknown_deck_builds_empty(content_store):
+    assert fc.build_deck(content_store, "does-not-exist") == []
+
+
+def test_deck_title(content_store):
+    deck = content_store.flashcard_decks[0]
+    assert fc.deck_title(content_store, fc.DECK_ALL) == "All cards"
+    assert fc.deck_title(content_store, deck.id) == deck.title
+
+
+def test_list_decks_covers_every_deck_plus_all(content_store):
     decks = fc.list_decks(content_store)
-    kinds = [d.kind for d in decks]
-    assert kinds.count("all") == 1
-    assert kinds.count("track") == len(content_store.tracks())
-    assert kinds.count("module") == len(content_store.modules)
-    # The "all" deck's count is the sum of every module's questions.
-    all_deck = next(d for d in decks if d.kind == "all")
-    assert all_deck.count == sum(len(m.questions) for m in content_store.modules)
+    assert len(decks) == len(content_store.flashcard_decks) + 1
+    all_deck = next(d for d in decks if d.id == fc.DECK_ALL)
+    assert all_deck.count == sum(len(d.cards) for d in content_store.flashcard_decks)
 
 
 # ---- API ----
@@ -85,6 +87,7 @@ async def test_list_decks_endpoint(client):
     decks = resp.json()
     assert any(d["id"] == "all" for d in decks)
     assert all(d["count"] > 0 for d in decks)
+    assert all(d["title"] and d["icon"] for d in decks)
 
 
 @pytest.mark.asyncio
@@ -95,27 +98,29 @@ async def test_get_all_deck(client):
     assert body["deck_id"] == "all"
     assert body["count"] == len(body["cards"])
     card = body["cards"][0]
-    assert card["front"] and card["back"] and card["answer"]
+    assert card["front"] and card["back"] and card["kind"] in VALID_KINDS
 
 
 @pytest.mark.asyncio
-async def test_get_module_deck(client):
-    resp = await client.get("/api/flashcards", params={"deck_id": "module:ncpcn-s1-bastion"})
+async def test_get_named_deck(client):
+    resp = await client.get("/api/flashcards", params={"deck_id": "fc-fundamentals"})
     assert resp.status_code == 200
     body = resp.json()
     assert body["count"] > 0
-    assert {c["module_id"] for c in body["cards"]} == {"ncpcn-s1-bastion"}
+    assert body["title"] == "NKP Fundamentals"
 
 
 @pytest.mark.asyncio
-async def test_unknown_module_deck_404s(client):
-    resp = await client.get("/api/flashcards", params={"deck_id": "module:does-not-exist"})
-    assert resp.status_code == 404
+async def test_command_cards_carry_code(client):
+    resp = await client.get("/api/flashcards", params={"deck_id": "fc-cli"})
+    assert resp.status_code == 200
+    cards = resp.json()["cards"]
+    assert any(c["code"] for c in cards), "expected the CLI deck to ship code snippets"
 
 
 @pytest.mark.asyncio
-async def test_unknown_track_deck_404s(client):
-    resp = await client.get("/api/flashcards", params={"deck_id": "track:Nope"})
+async def test_unknown_deck_404s(client):
+    resp = await client.get("/api/flashcards", params={"deck_id": "does-not-exist"})
     assert resp.status_code == 404
 
 

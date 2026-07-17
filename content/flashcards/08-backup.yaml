@@ -1,0 +1,159 @@
+# Backup & Restore — purpose-written study cards from the NKP 2.17 Guide.
+id: fc-backup
+title: "Backup & Restore"
+icon: archive
+order: 8
+summary: "Velero, backup storage locations, schedules, and disaster recovery."
+cards:
+  - id: bak-crds
+    kind: concept
+    front: "How does NKP store cluster data for backup purposes?"
+    back: "NKP stores all data as CRDs in the Kubernetes API, so it can be backed up and restored. Backups should cover cluster state, application state, and the running configuration of both stateless and stateful applications."
+    page: "554"
+    section: "Backup and Restore"
+
+  - id: bak-velero-approaches
+    kind: concept
+    front: "What are the two approaches for configuring Velero backup storage in NKP?"
+    back: "Integrated Rook Ceph, where NKP deploys Velero integrated with Rook Ceph in the same cluster (the default installation), or External Object Storage using an S3-compatible store such as Nutanix Objects or a cloud provider."
+    detail: "For production use cases, Nutanix recommends an S3-compatible object store residing outside the Kubernetes cluster."
+    page: "554"
+    section: "Velero Configuration"
+
+  - id: bak-bsl
+    kind: term
+    front: "BackupStorageLocation (BSL)"
+    back: "The Velero resource that defines where backups are stored. NKP supports multiple BSL configurations, and the AWS_PROFILE field maps each credentials secret to its BSL."
+    detail: "Each cluster must have its own bucket. Verify a BSL is healthy by checking that its phase displays as Available."
+    code: "kubectl get bsl -n ${WORKSPACE_NAMESPACE} default"
+    page: "556"
+    section: "Velero Configuration"
+
+  - id: bak-velero-namespace
+    kind: command
+    front: "In which namespace is the Velero platform application installed in NKP?"
+    back: "In the kommander namespace, not velero. After installing the Velero CLI, set the namespace config option so subsequent invocations target the right namespace."
+    code: "velero client config set namespace=kommander"
+    page: "575"
+    section: "Velero Installation Using CLI"
+
+  - id: bak-insecure-skip-tls
+    kind: fact
+    front: "Why might Velero commands in NKP need --insecure-skip-tls-verify?"
+    back: "By default NKP sets up Velero to use Rook Ceph over TLS with a self-signed certificate, so certain commands may require the --insecure-skip-tls-verify flag."
+    detail: "The doc notes this default setup is not suitable for production use cases."
+    page: "575"
+    section: "Velero Installation Using CLI"
+
+  - id: bak-default-schedule
+    kind: fact
+    front: "What is the NKP default Velero backup schedule?"
+    back: "NKP configures a regular automatic backup named velero-default that creates daily backups and saves data from all namespaces."
+    detail: "NKP default backups do not support the creation of Volume Snapshots. The initial backup starts once the cluster is provisioned and ready."
+    page: "576"
+    section: "Setting a Backup Schedule"
+
+  - id: bak-create-schedule
+    kind: command
+    front: "How do you create an alternate Velero backup schedule?"
+    back: "Use velero create schedule with a --schedule interval; to change the default, delete the velero-default schedule and recreate it with your own settings."
+    detail: "Add --include-namespaces=kube-system,kube-public,kommander to scope a schedule to specific namespaces."
+    code: |
+      velero create schedule <backup-schedule-name> -n ${WORKSPACE_NAMESPACE} \
+      --kubeconfig=${CLUSTER_NAME}.conf --snapshot-volumes=false --schedule="@every 8h"
+    page: "577"
+    section: "Creating Backup Schedules"
+
+  - id: bak-restore-prereqs
+    kind: fact
+    front: "What must be true before restoring a cluster from a Velero backup?"
+    back: "The Rook Ceph backend storage must still be operational, the Velero platform service must still be operational, and Velero must be set to restore-only-mode so backups do not run while restoring."
+    detail: "The backup must come from the same NKP version and the same cluster — restoring an older version or another cluster's backup results in an inoperable cluster."
+    page: "578"
+    section: "Restoring a Cluster from Backup"
+
+  - id: bak-restore-webhook
+    kind: concept
+    front: "What two management-cluster objects must be adjusted around a Velero restore?"
+    back: "Delete the ResourceQuota named one-kommandercluster-per-kommander-workspace (it is restored automatically from the backup), and remove the CREATE rule operation from the kommander-validating webhook, re-adding it after the restore."
+    page: "578"
+    section: "Restoring a Cluster from Backup"
+
+  - id: bak-diagnostics
+    kind: command
+    front: "Which commands give Velero backup and restore diagnostics?"
+    back: "Check whether Velero is running with kubectl, then use the velero get subcommands to assess overall health."
+    code: |
+      kubectl get all -A | grep velero
+      velero get schedules
+      velero get backups
+      velero get restores
+      velero get backup-locations
+      velero get snapshot-locations
+    page: "579"
+    section: "Backup Service Diagnostics"
+
+  - id: bak-pcbr
+    kind: term
+    front: "Prism Central Backup and Recovery (PCBR) for NKP"
+    back: "A localized recovery solution that replicates Prism Central data to a recovery site or another cluster in the same site, restoring PC entities, configurations, and cluster associations after a disaster recovery event."
+    detail: "Because NKP relies on Prism Central for infrastructure orchestration, these connections are critical during failover. Nutanix recommends a strategy starting with Continuous Backup integrated with Point-in-Time Backup."
+    page: "579"
+    section: "Prism Central Backup and Recovery (PCBR) for NKP"
+
+  - id: bak-pcbr-ip
+    kind: concept
+    front: "How does PCBR recovery differ when the Prism Central IP changes?"
+    back: "With the same IP, the NKP cluster re-establishes its connection once PC recovers, but image and identity checks are still required. With a new IP, the NKP cluster must be updated to connect to the new PC address across infrastructure providers, cluster resources, CCM, and CSI configurations."
+    detail: "In both cases NKP OS images must be re-imported in Prism Central and the PC cluster name restored to its pre-disaster value so new nodes get expected region labels."
+    page: "580"
+    section: "Prism Central Backup and Recovery (PCBR) for NKP"
+
+  - id: bak-pcbr-admin
+    kind: fact
+    front: "Why does Nutanix recommend custom credentials rather than admin for NKP's Prism Central access?"
+    back: "If admin credentials are used, they are factory reset during recovery and must be manually changed back to the previous password so the NKP cluster can reconnect. Custom user credentials are restored by the recovery process."
+    detail: "Setting the admin password back to the exact pre-recovery value keeps existing CAPX, CCM, and CSI secrets valid."
+    page: "580"
+    section: "Prism Central Backup and Recovery (PCBR) for NKP"
+
+  - id: bak-mgmt-patterns
+    kind: concept
+    front: "What two backup storage patterns exist for NKP Management Cluster backup?"
+    back: "Internal backup storage location, where a secondary licensed NKP Management Cluster runs in standby mode and stores backups in its internal rook-ceph object store; or External backup storage location, where the primary stores backups in an external S3-compatible store such as Nutanix Objects or Amazon S3."
+    detail: "With the external pattern, a standby secondary cluster is not required to create backups."
+    page: "581"
+    section: "NKP Management Cluster Backup and Restore"
+
+  - id: bak-mgmt-no-volumes
+    kind: fact
+    front: "Does NKP Management Cluster backup include application volumes?"
+    back: "No. Management Cluster backup does not include application volume backups — you must use a separate workload backup procedure for stateful application data."
+    page: "581"
+    section: "NKP Management Cluster Backup and Restore"
+
+  - id: bak-mgmt-execute
+    kind: command
+    front: "How do you execute and verify an NKP Management Cluster backup?"
+    back: "Create the backup in the kommander namespace against the configured BSL, then verify with velero backup get, describe, and logs."
+    code: |
+      velero --kubeconfig ${SOURCE_KUBECONFIG} backup create ${BACKUP_NAME} \
+        -n kommander --storage-location ${BACKUP_STORAGE_LOCATION} --snapshot-volumes=false -w
+    page: "584"
+    section: "Backing Up an NKP Management Cluster"
+
+  - id: bak-restore-order
+    kind: concept
+    front: "In what order are resources restored to a target NKP Management Cluster?"
+    back: "Workspaces, then projects, then custom AppDeployment config maps, then RBAC and other management resources, KommanderCluster resources, CAPI secrets, CAPI provider secrets, provider connections, and finally CAPI resources — after which paused managed clusters are resumed."
+    detail: "URL redirections and pointers to the DR Management Cluster only become available after the CAPI restore completes."
+    page: "585"
+    section: "Recovering an NKP Management Cluster After a Disaster"
+
+  - id: bak-restic-prometheus
+    kind: concept
+    front: "How do you back up a Prometheus stateful workload between NKP clusters?"
+    back: "Use Velero with the Restic backend, which requires deployNodeAgent set to true in the Velero deployment overrides on both source and target clusters, and annotate the Prometheus pod with backup.velero.io/backup-volumes set to the pod volume name."
+    detail: "Use the pod volume name (for example db), not the PVC name."
+    page: "587"
+    section: "Backing Up and Restoring a Prometheus Stateful Workload"

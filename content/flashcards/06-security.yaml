@@ -1,0 +1,66 @@
+# Policy & Security — purpose-written study cards from the NKP 2.17 Guide.
+id: fc-security
+title: "Policy & Security"
+icon: lock
+order: 6
+summary: "Gatekeeper, OPA constraints, and the policy layer that replaced Pod Security Policies."
+cards:
+  - id: sec-gatekeeper
+    kind: term
+    front: "What is Gatekeeper in NKP?"
+    back: "Gatekeeper is the policy controller for Kubernetes that lets organizations enforce configurable policies using the Open Policy Agent (OPA). It enforces policies by rejecting non-compliant resources, and serves as an alternative to Pod Security Policies."
+    detail: "OPA is a policy engine for Cloud Native environments hosted by CNCF as a graduate-level project. Gatekeeper is deployed pre-configured with constraint templates that enforce multi-tenancy in projects, so disabling it has consequences."
+    page: "620"
+    section: "Enforcing Policies Using Gatekeeper"
+
+  - id: sec-constrainttemplate
+    kind: term
+    front: "What is a ConstraintTemplate in the OPA Constraint Framework?"
+    back: "A resource that must be defined before a constraint can be created; it describes both the Rego (a query language) that enforces the constraint and the schema of the constraint."
+    detail: "The schema lets an admin fine-tune a constraint's behavior, much like arguments to a function. Constraints then inform Gatekeeper what the admin wants to enforce, and how."
+    page: "620"
+    section: "Enforcing Policies Using Gatekeeper"
+
+  - id: sec-gatekeeper-psp-examples
+    kind: fact
+    front: "Which Gatekeeper constraint templates does NKP document as Pod Security Policy replacements?"
+    back: "k8spspprivilegedcontainer (with the psp-privileged-container constraint) prevents privileged pods from running, and k8spsphostfilesystem (with the psp-host-filesystem constraint) restricts which host paths can be mounted as volumes."
+    detail: "Both templates come from the open-policy-agent gatekeeper-library pod-security-policy library. Violations are rejected by the \"validation.gatekeeper.sh\" admission webhook."
+    page: "621"
+    section: "Enforcing Policies Using Gatekeeper"
+
+  - id: sec-tfa-whitelist
+    kind: concept
+    front: "What is the traefik-forward-auth-mgmt whitelist?"
+    back: "A list of allowed user email addresses configured in the Kommander Installation resource that grants users access to the NKP UI; each user must also be given access to Kubernetes resources via RBAC."
+    code: |
+      traefik-forward-auth-mgmt:
+        values: |
+          traefikForwardAuth:
+            whitelist:
+            - < allowed email addresses >
+    page: "619"
+    section: "Connecting Kommander to an IdP Using SAML"
+
+  - id: sec-bcrypt-hash
+    kind: command
+    front: "How do you generate the bcrypt password hash for a local NKP user?"
+    back: "Use the htpasswd CLI to produce the hash, then place it in the staticPasswords section of the dex configuration alongside the user's email."
+    code: "htpasswd -bnBC 10 \"\" password | tr -d ':\\n' && echo"
+    page: "626"
+    section: "Creating Local Users During the Kommander Installation"
+
+  - id: sec-saml-limits
+    kind: fact
+    front: "What does the SAML 2.0 Dex connector support?"
+    back: "SAML 2.0 supports the groups claim but does not support refresh tokens and does not support the preferred_user claim. Its status is stable."
+    page: "616"
+    section: "Identity Providers"
+
+  - id: sec-kommander-install-config
+    kind: command
+    front: "Which command deploys a modified Dex configuration from an installer config file?"
+    back: "Run kommander install with the --installer-config flag pointing at your kommander.yaml, then log in at https://<your-cluster-host>/nkp/kommander/dashboard."
+    code: "kommander install --installer-config kommander.yaml"
+    page: "620"
+    section: "Connecting Kommander to an IdP Using SAML"

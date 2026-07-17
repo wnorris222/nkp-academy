@@ -1,0 +1,384 @@
+# CLI & Troubleshooting — purpose-written study cards from the NKP 2.17 Guide.
+id: fc-cli
+title: "CLI & Troubleshooting"
+icon: terminal
+order: 10
+summary: "The nkp and kubectl commands you reach for when building, checking, and debugging a cluster."
+cards:
+  - id: cmd-get-kubeconfig
+    kind: command
+    front: "How do you retrieve the kubeconfig file for a cluster you just created?"
+    back: "Run `nkp get kubeconfig` with the `-c` flag for the cluster name and redirect the output into a `.conf` file."
+    detail: "A kubeconfig file is generated automatically when you create a cluster. You must run `nkp get kubeconfig` for each cluster you want to generate a kubeconfig file for."
+    code: "nkp get kubeconfig -c ${CLUSTER_NAME} > ${CLUSTER_NAME}.conf"
+    page: "34"
+    section: "Commands within a kubeconfig File"
+
+  - id: cmd-export-kubeconfig
+    kind: command
+    front: "How do you set the context so kubectl and nkp commands run against your NKP cluster instead of the bootstrap cluster?"
+    back: "Export the KUBECONFIG environment variable from the cluster's kubeconfig file. This must be done for each terminal session."
+    detail: "Best suited for single-cluster environments — it sets the environment for all commands you run after exporting it, so the NKP CLI does not accidentally run operations on, for example, the bootstrap cluster."
+    code: "export KUBECONFIG=${CLUSTER_NAME}.conf"
+    page: "34"
+    section: "Commands within a kubeconfig File"
+
+  - id: cmd-kubeconfig-flag
+    kind: command
+    front: "In a multi-cluster environment, how do you target a specific cluster for a single command?"
+    back: "Use the `--kubeconfig=<CLUSTER_NAME>.conf` flag, which defines the configuration file for the cluster you want to access. This is better suited for multi-cluster environments."
+    detail: "This is the easiest way to ensure you are working on the correct cluster when operating multiple clusters. If you did not store the name as an environment variable, enter the cluster name followed by `.conf`."
+    code: "nkp install kommander --kubeconfig=azurecluster1.conf"
+    page: "34"
+    section: "Commands within a kubeconfig File"
+
+  - id: cmd-describe-cluster
+    kind: command
+    front: "How do you check the health of the cluster infrastructure after an NKP install?"
+    back: "Run `nkp describe cluster` with the `--cluster-name` flag. A healthy cluster returns Cluster, ClusterInfrastructure, ControlPlane, Machines, and Workers all with READY = True."
+    detail: "NKP ships with default diagnosis tools such as the `describe` command that you can use to validate your installation."
+    code: "nkp describe cluster --cluster-name=${CLUSTER_NAME}"
+    page: "1040"
+    section: "Checking the Cluster Infrastructure and Nodes"
+
+  - id: cmd-get-nodes
+    kind: command
+    front: "How do you confirm all cluster nodes are ready?"
+    back: "Run `kubectl get nodes` — every node should show STATUS `Ready`. To verify a successful installation, all verification commands should return as Ready or True."
+    code: "kubectl get nodes"
+    page: "1040"
+    section: "Checking the Cluster Infrastructure and Nodes"
+
+  - id: cmd-get-cluster-api
+    kind: command
+    front: "How do you gather a list of all CAPI resources that comprise a cluster and their statuses?"
+    back: "Run `kubectl get cluster-api`. It shows the status of clusters, machines, control planes, and infrastructure components."
+    detail: "Before proceeding with workload deployment or integration, reviewing the CAPI resources helps identify configuration issues and confirms that the cluster is stable."
+    code: "kubectl get cluster-api"
+    page: "1041"
+    section: "Monitor the CAPI Resources"
+
+  - id: cmd-get-pods-all-namespaces
+    kind: command
+    front: "How do you verify all system pods came up after installing NKP?"
+    back: "Run `kubectl get pods --all-namespaces` and confirm every pod is in a `Running` or `Completed` state."
+    detail: "If any pod is not in Running or Completed status, you need to investigate further — see the Troubleshooting section."
+    code: "kubectl get pods --all-namespaces"
+    page: "1041"
+    section: "Verify all Pods"
+
+  - id: cmd-diagnose
+    kind: command
+    front: "How do you collect diagnostic data from pods and infrastructure for Nutanix Support?"
+    back: "Run the `nkp diagnose` command — it collects information from pods and infrastructure into a support bundle covering the last 48 hours of the life of the cluster."
+    detail: "Output example — `Collecting support bundle ...` then `support-bundle-2021-08-13T14_44_23.tar.gz`. Prerequisites are an AMD 64-based Linux or macOS machine, a running Kubernetes cluster, and access to the NKP binary."
+    code: "nkp diagnose"
+    page: "1068"
+    section: "Generate a Support Bundle"
+
+  - id: cmd-diagnose-extract-bundle
+    kind: command
+    front: "How do you view the contents of a generated support bundle?"
+    back: "Extract the tarball with `tar -xzvf`, replacing the filename with the location reported in the previous step."
+    detail: "A new directory named `support-bundle-<date-created>` is created containing sub-directories with the diagnostic information."
+    code: "tar -xzvf support-bundle-<date-created>.tar.gz"
+    page: "1068"
+    section: "Generating a Support Bundle"
+
+  - id: cmd-diagnose-list-bundle
+    kind: command
+    front: "What sub-directories does an extracted support bundle contain?"
+    back: "Listing the extracted directory shows — cluster-info, cluster-resources, configmaps, node-diagnostics, pod-logs, secrets, and version.yaml."
+    code: "ls support-bundle-<date-created>"
+    page: "1068"
+    section: "Generating a Support Bundle"
+
+  - id: cmd-diagnose-bootstrap
+    kind: command
+    front: "How do you collect diagnostics from a bootstrap cluster that has not yet pivoted to the management cluster?"
+    back: "Specify the bootstrap cluster kubeconfig with the `--bootstrap-kubeconfig` parameter. You receive an additional support bundle named `bootstrap-support-bundle-<date created>`."
+    detail: "Bootstrap diagnostics are independent of general NKP cluster diagnostics — a static collector set gathers ClusterInfo, ClusterResources, AllLogs, ConfigMaps, and Secrets."
+    code: "nkp diagnose --bootstrap-kubeconfig <path-to-kubeconfig>"
+    page: "1069"
+    section: "Collecting Information from a Bootstrap Cluster"
+
+  - id: cmd-diagnose-default-config
+    kind: command
+    front: "How do you print the default collectors configuration so you can customize it?"
+    back: "Run `nkp diagnose default-config` and redirect it to a YAML file, then edit that file to make appropriate modifications."
+    detail: "By default, `nkp diagnose` does not require that you supply a configuration."
+    code: "nkp diagnose default-config > bundle.yaml"
+    page: "1069"
+    section: "Using Customizations"
+
+  - id: cmd-diagnose-ssh
+    kind: command
+    front: "The Kubernetes API is unavailable. How do you still collect node-level information?"
+    back: "Use SSH fallback — run `nkp diagnose ssh` against an Ansible inventory file that specifies the nodes to access for data collection."
+    detail: "Not all clusters have SSH access configured; if they do not, SSH fallback is not possible. Only a limited subset of inventory.yaml is supported — `ansible_host`, `ansible_port`, `ansible_user`, and `ansible_ssh_private_key_file`. Per node collection timeouts are supported using the `--timeout` parameter."
+    code: "nkp diagnose ssh <path/to/ansible-inventory.yaml>"
+    page: "1069"
+    section: "Using SSH Fallback and Ansible"
+
+  - id: cmd-pivot
+    kind: command
+    front: "What is a \"pivot\" and which two commands perform it?"
+    back: "If you created a cluster without `--self-managed`, it has no CAPI controllers or cert-manager and is managed from the cluster it was created from (e.g. the bootstrap cluster). Transforming it into a self-managed cluster is called a pivot."
+    detail: "Run `nkp create capi-components --kubeconfig=<newcluster>` then `nkp move --to-kubeconfig=<newcluster>`."
+    code: |
+      nkp create capi-components --kubeconfig=<newcluster>
+      nkp move --to-kubeconfig=<newcluster>
+    page: "693"
+    section: "Creating CAPI Components with HTTP or HTTPS Proxy Settings"
+
+  - id: cmd-create-bootstrap-proxy
+    kind: command
+    front: "How do you create a bootstrap cluster in a proxied environment?"
+    back: "Include the `--http-proxy`, `--https-proxy`, and `--no-proxy` flags on `nkp create bootstrap`. Without these values NKP cannot create the requisite parts of your new cluster correctly."
+    detail: "The delimiter between each proxy value within a flag is a comma with no space character following it. Flags can include a mix of IP addresses and domain names. Create the bootstrap cluster from within the same network where the new cluster will run."
+    code: |
+      nkp create bootstrap --kubeconfig $HOME/.kube/config \
+        --http-proxy <string> \
+        --https-proxy <string> \
+        --no-proxy <string>
+    page: "693"
+    section: "Creating a Bootstrap Cluster with HTTP Proxy Settings"
+
+  - id: cmd-proxy-flags-by-infra
+    kind: command
+    front: "Which proxy flags does `nkp create cluster` use on Nutanix vs. on AWS/Azure/GCP/vSphere/Pre-provisioned?"
+    back: "Nutanix infrastructure uses cluster-wide flags; the other providers split proxy settings between control plane and worker machines."
+    detail: "Nutanix — `--http-proxy string`, `--https-proxy string`, `--no-proxy strings`. AWS/Azure/GCP/vSphere/Pre-provisioned — `--control-plane-http-proxy string`, `--control-plane-https-proxy string`, `--control-plane-no-proxy strings`, `--worker-http-proxy string`, `--worker-https-proxy string`, `--worker-no-proxy strings`."
+    code: |
+      # Nutanix
+      nkp create cluster nutanix \
+        --cluster-name ${CLUSTER_NAME} \
+        --http-proxy="${HTTP_PROXY}" \
+        --https-proxy="${HTTPS_PROXY}" \
+        --no-proxy="${NO_PROXY}"
+
+      # AWS, Azure, GCP, vSphere, Preprovisioned
+      nkp create cluster [aws, azure, gcp, preprovisioned, vsphere] \
+        --cluster-name ${CLUSTER_NAME} \
+        --control-plane-http-proxy="${HTTP_PROXY}" \
+        --control-plane-https-proxy="${HTTPS_PROXY}" \
+        --control-plane-no-proxy="${NO_PROXY}" \
+        --worker-http-proxy="${WORKER_HTTP_PROXY}" \
+        --worker-https-proxy="${WORKER_HTTPS_PROXY}" \
+        --worker-no-proxy="${WORKER_NO_PROXY}"
+    page: "695"
+    section: "Cluster Creation with HTTP or HTTPS Proxy"
+
+  - id: cmd-no-proxy-contents
+    kind: command
+    front: "What must the NO_PROXY variable contain for NKP core components to work?"
+    back: "Your internal addresses, localhost and 127.0.0.1, the default Kubernetes service subnet 10.96.0.0/12, the default pod subnet 192.168.0.0/16, the internal kube-apiserver services, and cloud auto-IP addresses."
+    detail: "169.254.169.254 is the AWS metadata server; .elb.amazonaws.com lets worker nodes talk directly to the kube-apiserver ELB. Warning — NO_PROXY contains the Kubernetes Services CIDR; if your cluster's CIDR differs from the default 10.96.0.0/12, update the value."
+    code: |
+      export HTTP_PROXY=http://example.org:8080
+      export HTTPS_PROXY=http://example.org:8080
+      export NO_PROXY="example.org,example.com,example.net,localhost,127.0.0.1,10.96.0.0/12,192.168.0.0/16,..."
+    page: "695"
+    section: "Configure the Control Plane and Worker Nodes to Use HTTP/S Proxy"
+
+  - id: cmd-edit-cluster-proxy
+    kind: command
+    front: "How do you update proxy configuration for kubelet and containerd after deployment?"
+    back: "Edit the Cluster resource and add the proxy block under `spec.topology.variables` for `clusterConfig`. After applying the new manifests, Cluster API recreates nodes with the new settings."
+    detail: "The spec includes `proxy.http`, `proxy.https`, and `additionalNo` entries."
+    code: "kubectl edit clusters CLUSTER_NAME -n NAMESPACE"
+    page: "697"
+    section: "Adding or Modifying HTTP Proxy Settings After Deployment"
+
+  - id: cmd-metallb-apply
+    kind: command
+    front: "How do you apply a MetalLB configuration for external load balancing?"
+    back: "Write the IPAddressPool and L2Advertisement (or BGPPeer/BGPAdvertisement) manifest to metallb-conf.yaml and apply it."
+    detail: "Important — do not edit the default MetalLB IPAddressPool and L2Advertisement on a cluster; modifying them to host additional IP address pools will cause the cluster upgrade process to stall and fail. Always create a new IPAddressPool and a new L2Advertisement instead. MetalLB IP ranges must be within the node's primary network subnet and must not conflict with the pod and service subnets."
+    code: "kubectl apply -f metallb-conf.yaml"
+    page: "699"
+    section: "Load Balancers"
+
+  - id: cmd-registry-mirror-url
+    kind: command
+    front: "How do you tell a new cluster to pull images from your local registry mirror?"
+    back: "Export REGISTRY_URL and pass it to `nkp create cluster` with the `--registry-mirror-url` flag."
+    detail: "Replace `azure` with your choice of provider — gcp, vsphere, vcd, pre-provisioned, aws."
+    code: |
+      export REGISTRY_URL="<https/http>://<registry-address>:<registry-port>"
+      nkp create cluster azure --registry-mirror-url=${REGISTRY_URL}
+    page: "701"
+    section: "Registry and Registry Mirrors"
+
+  - id: cmd-push-bundle
+    kind: command
+    front: "How do you upload the NKP image bundle into your registry for an air-gapped install?"
+    back: "Use `nkp push bundle` with `--bundle` (the group of images) and `--to-registry`."
+    detail: "Either use the exported `${REGISTRY_URL}` or `--to-registry=<registry-address>/<registry-name>`. Example — `nkp push bundle --bundle container-images/konvoy-image-bundle-nkp-version.tar --to-registry=333000009999.dkr.ecr.us-west-2.amazonaws.com/can-test`"
+    code: "nkp push bundle --bundle <bundle> --to-registry=${REGISTRY_URL}"
+    page: "701"
+    section: "Registry and Registry Mirrors"
+
+  - id: cmd-registry-mirror-flags
+    kind: command
+    front: "Which flags pass local registry details into `nkp create cluster`?"
+    back: "Four registry mirror flags map to the exported REGISTRY_* variables. REGISTRY_CA is only needed if the registry uses a self-signed certificate and the machines are not already configured to trust it; username and password are optional."
+    detail: "To increase Docker Hub's rate limit, use your Docker Hub credentials when creating the cluster by setting `--registry-mirror-url=https://registry-1.docker.io --registry-mirror-username=<your-username> --registry-mirror-password=<your-password>`."
+    code: |
+      export REGISTRY_URL="<https/http>://<registry-address>:<registry-port>"
+      export REGISTRY_USERNAME=<username>
+      export REGISTRY_PASSWORD=<password>
+      export REGISTRY_CA=<path to the cacert file on the bastion>
+
+      --registry-mirror-url=${REGISTRY_URL} \
+      --registry-mirror-cacert=${REGISTRY_CA} \
+      --registry-mirror-username=${REGISTRY_USERNAME} \
+      --registry-mirror-password=${REGISTRY_PASSWORD}
+    page: "705"
+    section: "Export Registry Variables and Flags for Cluster Creation"
+
+  - id: cmd-dry-run-yaml
+    kind: command
+    front: "How do you generate the cluster YAML manifests without actually creating the cluster?"
+    back: "Add the `--dry-run` and `-o yaml` flags to the `nkp create cluster` command and redirect to a file. This is how you change Pod and Services subnets, which must be done at cluster creation."
+    detail: "Default NKP subnets are pods `192.168.0.0/16` and services `10.96.0.0/12`. Edit `spec.clusterNetwork.services.cidrBlocks` and `spec.clusterNetwork.pods.cidrBlocks`. With Calico CNI, also edit `data.\"custom-resources.yaml\".spec.calicoNetwork.ipPools.cidr`."
+    code: "nkp create cluster preprovisioned --cluster-name ${CLUSTER_NAME} --control-plane-endpoint-host <control plane endpoint host> --control-plane-endpoint-port <control plane endpoint port, if different than 6443> --dry-run -o yaml > cluster.yaml"
+    page: "702"
+    section: "Cluster Pod and Services Subnets"
+
+  - id: cmd-bastion-registry-env
+    kind: command
+    front: "On a bastion host, which environment variables enable connection to an existing registry?"
+    back: "Export REGISTRY_ADDRESS (the address of an existing registry the new cluster nodes will mirror from) and optionally REGISTRY_CA (path on the bastion host to the registry CA)."
+    detail: "REGISTRY_CA is only needed if the registry uses a self-signed certificate and the VMs are not already configured to trust that CA. You must create the VM template with the Nutanix Image Builder to use the registry mirror feature."
+    code: |
+      export REGISTRY_ADDRESS=<https/http>://<registry-address>:<registry-port>
+      export REGISTRY_CA=<path to the CA on the bastion host>
+    page: "704"
+    section: "Creating a Bastion Host"
+
+  - id: cmd-extract-airgapped-bundle
+    kind: command
+    front: "How do you unpack the NKP air-gapped bundle on the bastion host?"
+    back: "Download `nkp-air-gapped-bundle_nkp-version_linux_amd64.tar.gz` and extract the tar file to a local directory."
+    detail: "Bastion resource requirements — vCPU Count 8, Memory 16 GB, Disk Volume 80 GB. A local registry or Docker version 27.4.0 must be installed, plus kubectl."
+    code: "tar -xzvf nkp-air-gapped-bundle_nkp-version_linux_amd64.tar.gz"
+    page: "704"
+    section: "Creating a Bastion Host"
+
+  - id: cmd-fips-flags
+    kind: command
+    front: "How do you create a cluster in FIPS mode?"
+    back: "Add the FIPS image repository and version tag flags to the `nkp create cluster` command to point the controllers at the official Nutanix FIPS builds of Kubernetes."
+    code: |
+      --kubernetes-version=v<kubernetes-version>+fips.0 \
+      --etcd-version=etcd-version+fips.0 \
+      --kubernetes-image-repository=docker.io/mesosphere \
+    page: "705"
+    section: "FIPS Requirements"
+
+  - id: cmd-flatcar-flags
+    kind: command
+    front: "What extra flags does provisioning Flatcar Linux require?"
+    back: "Pass `--os-hint flatcar`, and specify the network interface with `--virtual-ip-interface ens192` — otherwise cluster creation might fail because kube-vip cannot configure the first control-plane virtual IP."
+    detail: "NKP configures Flatcar cluster nodes to use Control Groups (cgroups) version 1. In versions before Flatcar 3033.3.x, a restart is required to apply the changes to the kernel."
+    code: |
+      nkp create cluster aws \
+          --cluster-name ${CLUSTER_NAME} \
+          --os-hint flatcar
+    page: "706"
+    section: "Provision Flatcar Linux OS"
+
+  - id: cmd-inspect-get-pods
+    kind: command
+    front: "You hit issues during cluster creation — what's the first command to investigate?"
+    back: "Check your pods across all namespaces to see if anything is not running, then investigate those pods."
+    code: "kubectl get pods -A"
+    page: "706"
+    section: "Inspect Cluster for Issues"
+
+  - id: cmd-capi-provider-logs
+    kind: command
+    front: "How do you check the logs of the Cluster API pod for your infrastructure provider?"
+    back: "Use `kubectl logs` with the provider label selector and the provider's namespace, pointing at the cluster's kubeconfig. The example uses Nutanix — replace with your infrastructure."
+    code: "kubectl logs -l cluster.x-k8s.io/provider=infrastructure-nutanix --namespace capx-system --kubeconfig ${CLUSTER_NAME}.conf"
+    page: "707"
+    section: "Inspect Cluster for Issues"
+
+  - id: cmd-get-machinehealthcheck
+    kind: command
+    front: "How do you view the self-healing configuration for your node pools?"
+    back: "List the MachineHealthCheck resources — output shows NAME, CLUSTER, EXPECTEDMACHINES, MAXUNHEALTHY, CURRENTHEALTHY, and AGE for the control and worker node pools."
+    code: "kubectl get MachineHealthCheck"
+    page: "707"
+    section: "Configuring Self-healing"
+
+  - id: cmd-edit-machinehealthcheck
+    kind: command
+    front: "How do you change self-healing behavior, and what is the default threshold?"
+    back: "Modify the `spec.maxUnhealthy` field in the MachineHealthCheck resource. The default value is 40%."
+    detail: "For ClusterClass-based clusters run `kubectl edit cluster -n <namespace> <cluster name>`; for non-ClusterClass-based clusters run `kubectl edit machinehealthcheck -n <namespace> <mhc-name>`. To configure per node pool, edit the Cluster resource under `spec.topology.workers.machineDeployments[*].machineHealthCheck`."
+    code: "kubectl edit cluster -n <namespace> <cluster name>"
+    page: "707"
+    section: "Configuring Self-healing"
+
+  - id: cmd-cert-renewal
+    kind: command
+    front: "How long do Kubernetes control plane certificates last in NKP, and how are they renewed?"
+    back: "PKI/TLS certificates for components like etcd, kubernetes-apiserver, and kube-proxy expire by default after one year and renew when the administrator updates the cluster. Kubernetes automatically renews all certificates during control plane upgrades; for long-running clusters NKP provides automated renewal without a cluster upgrade."
+    detail: "Nutanix recommends renewing control plane certificates in the NKP cluster only using the Cluster API (CAPI) method. NKP does not support automated renewal for attached clusters — renew those manually to prevent cluster inaccessibility. The CAPI method applies to all infrastructure providers except EKS and AKS."
+    page: "708"
+    section: "Certificate Renewal"
+
+  - id: cmd-get-gitrepository
+    kind: command
+    front: "How do you investigate the Git repository that application definitions originate from?"
+    back: "Application definitions come from the source Git repository and are configured in the cluster for Flux to consume. Use `kubectl get gitrepository -A` or describe a specific one."
+    detail: "Also — `kubectl describe -n <namespace> gitrepository <name>`"
+    code: "kubectl get gitrepository -A"
+    page: "1075"
+    section: "Application Discovery Commands"
+
+  - id: cmd-get-apps
+    kind: command
+    front: "How do you verify the status of Apps, ClusterApps, and AppDeployments together?"
+    back: "Query all three resource types at once across all namespaces."
+    code: "kubectl get apps,clusterapps,appdeployments -A"
+    page: "1075"
+    section: "Application Discovery Commands"
+
+  - id: cmd-get-kustomization
+    kind: command
+    front: "How do you check the status of all Kustomizations created by an AppDeployment?"
+    back: "Each AppDeployment creates a Kustomization. List them all with `kubectl get kustomization -A`, or describe a specific one."
+    detail: "Also — `kubectl describe -n <namespace> kustomization <name>`"
+    code: "kubectl get kustomization -A"
+    page: "1075"
+    section: "Application Discovery Commands"
+
+  - id: cmd-get-helmrelease
+    kind: command
+    front: "How do you check that HelmReleases are Ready?"
+    back: "HelmRelease(s) are deployed by each Kustomization, and for the Application to function these resources must be in the \"Ready\" state. List or describe them."
+    detail: "Each HelmRelease also consumes a HelmChart — check those with `kubectl get helmchart -A`. Note the doc's describe example spells the resource `helmrelrease`."
+    code: "kubectl get helmrelease -A"
+    page: "1076"
+    section: "Application Discovery Commands"
+
+  - id: cmd-get-workspaces
+    kind: command
+    front: "How do you investigate workspace information?"
+    back: "Workspaces are managed by a Custom Resource named Workspaces — use common kubectl verbs against it."
+    detail: "Also — `kubectl describe workspace <name>`. The controller that manages Workspaces is the kommander-cm deployment in the kommander namespace; check its logs with `kubectl logs -n kommander deployment/kommander-cm --all-containers --tail -1`."
+    code: "kubectl get workspaces"
+    page: "1076"
+    section: "Workspace Discovery Commands"
+
+  - id: cmd-get-kommanderclusters
+    kind: command
+    front: "How do you check the attached clusters in a workspace?"
+    back: "Query the kommanderclusters resource in the workspace namespace, as YAML or via describe."
+    detail: "Also — `kubectl describe kommanderclusters -n <workspace-namespace>`"
+    code: "kubectl get kommanderclusters -n <workspace-namespace> -o yaml"
+    page: "1077"
+    section: "Workspace Discovery Commands"
