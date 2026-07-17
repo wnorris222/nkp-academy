@@ -45,9 +45,9 @@ questions:
   correct: b
   explanation: Projects manage configMaps, continuous deployments, secrets, services, quotas, role-based access control, and multi-tenant logging by leveraging federated resources.
   source:
-    label: Creating a Project Using the UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
-    page: p.418
+    label: Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-projects-c.html
+    page: ''
     quote: Projects support the management of configMaps, continuous deployments, secrets, services, quotas, and role-based access control and multi-tenant logging by leveraging federated resources.
 - id: q119
   type: multiple_choice
@@ -66,9 +66,9 @@ questions:
   correct: b
   explanation: NKP leverages Kubernetes Cluster Federation (KubeFed) to coordinate the configuration of multiple clusters in a Project.
   source:
-    label: Creating a Project Using the UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
-    page: p.418
+    label: Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-projects-c.html
+    page: ''
     quote: Using Projects, NKP leverages Kubernetes Cluster Federation (KubeFed) to coordinate the configuration of multiple Kubernetes clusters.
 - id: q120
   type: multiple_choice
@@ -87,9 +87,9 @@ questions:
   correct: b
   explanation: Projects let central IT or a business unit share their Kubernetes clusters among several teams and deploy configurations/services consistently.
   source:
-    label: Creating a Project Using the UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
-    page: p.418
+    label: Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-projects-c.html
+    page: ''
     quote: Projects enable central IT or a business unit to share their Kubernetes clusters among several teams… enable teams to deploy their configurations and services to clusters in a consistent way.
 - id: q121
   type: multiple_choice
@@ -108,9 +108,9 @@ questions:
   correct: b
   explanation: A Project Namespace is a Kommander federated namespace created on all clusters matching the project labels; it isolates configurations across clusters.
   source:
-    label: Creating a Project Using the UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
-    page: p.418
+    label: Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-projects-c.html
+    page: ''
     quote: Project Namespaces isolate configurations across clusters and are created on all clusters matching the project labels.
 - id: q122
   type: multiple_choice
@@ -129,9 +129,9 @@ questions:
   correct: b
   explanation: Kommander uses labels — you select clusters manually or define labels for dynamic association — to determine a Project's clusters.
   source:
-    label: Creating a Project Using the UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
-    page: p.418
+    label: Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-projects-c.html
+    page: ''
     quote: Kommander allows a user to use labels to select, manually or dynamically, the Kubernetes clusters associated with a Project.
 - id: q123
   type: multiple_choice
@@ -171,9 +171,9 @@ questions:
   correct: b
   explanation: Configure a label selector so matching clusters are added dynamically — future clusters with matching labels join automatically.
   source:
-    label: Creating a Project Using the UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
-    page: p.418
+    label: Create a Project Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-create-a-project-using-ui-t.html
+    page: ''
     quote: define labels that Kommander will use to dynamically add clusters… to have them automatically associated with Projects based on their labels.
 - id: q125
   type: multiple_choice
@@ -213,9 +213,9 @@ questions:
   correct: b
   explanation: When a cluster's labels match, the Project's federated namespace is created on it.
   source:
-    label: Creating a Project Using the UI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
-    page: p.418
+    label: Projects
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-projects-c.html
+    page: ''
     quote: When a Project is created, NKP creates a federated namespace that is propagated to the Kubernetes clusters associated with this Project… created on all clusters matching the project labels.
 - id: q127
   type: multiple_choice
@@ -234,9 +234,9 @@ questions:
   correct: b
   explanation: Project role bindings assign a specific project role to a specific group of users, providing controlled access to project resources.
   source:
-    label: Managing Access to Projects
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-access-control-c.html
-    page: p.446
+    label: Project Role Bindings
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-project-role-bindings-c.html
+    page: ''
     quote: Project role bindings assign a specific project role to a specific group of users, providing controlled access to the project resources.
 - id: q128
   type: multiple_choice
@@ -423,9 +423,9 @@ questions:
   correct: b
   explanation: Project CD is backed by Flux (FluxCD), which continuously deploys applications using GitOps processes.
   source:
-    label: Continuous Deployment
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-deployment-c.html
-    page: p.435
+    label: Project Deployments
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-project-deployments-c.html
+    page: ''
     quote: Use Project Deployments to manage GitOps based Continuous Deployments… This is backed by Flux, which enables software and applications to be continuously deployed (CD) using GitOps processes.
 - id: q137
   type: multiple_choice
@@ -444,9 +444,9 @@ questions:
   correct: b
   explanation: GitOps stores the configuration describing how an app is deployed in a Git repo and continuously synchronizes it to the cluster so the cluster's state always matches the repo.
   source:
-    label: Continuous Delivery with GitOps
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-delivery-with-gitops-c.html
-    page: p.436
+    label: GitOps
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-gitops-c.html
+    page: ''
     quote: The configuration that describes how your application is deployed to a cluster are stored in a Git repository. The configuration is continuously synchronized from the Git repository to the cluster…
 - id: q138
   type: multiple_choice
@@ -468,9 +468,9 @@ questions:
   - c
   explanation: 'GitOps benefits: a familiar collaborative change/review process, a clear change log and audit trail (Git log + Kubernetes Events), and avoiding configuration drift via a single source of truth.'
   source:
-    label: Continuous Delivery with GitOps
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-delivery-with-gitops-c.html
-    page: p.436
+    label: GitOps
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-gitops-c.html
+    page: ''
     quote: Familiar, collaborative change and review process… Clear change log and audit trail… Avoid configuration drift… a single source of truth for cluster and application configuration.
 - id: q139
   type: multiple_choice
@@ -531,9 +531,9 @@ questions:
   correct: b
   explanation: Disable the auto sync feature — Flux stops synchronizing the cluster state from the GitOps repo, letting you use kubectl/helm to resolve the incident.
   source:
-    label: Continuous Delivery with GitOps
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-delivery-with-gitops-c.html
-    page: p.436
+    label: GitOps
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-gitops-c.html
+    page: ''
     quote: Kommander's CD strategy supports this scenario by letting you disable the auto sync feature. After auto sync is disabled, Flux will stop synchronizing the cluster state from the GitOps git repository.
 - id: q142
   type: multiple_choice
@@ -552,9 +552,9 @@ questions:
   correct: b
   explanation: When you use the Project CD feature, a dedicated service account named after the Project is automatically generated with namespace-restricted RBAC, isolating tenant access to their namespace.
   source:
-    label: Continuous Deployment
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-continuous-deployment-c.html
-    page: p.436
+    label: Project Developer Security
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-project-dev-security-c.html
+    page: ''
     quote: This service account with the same name as the Project name is configured with limited RBAC permissions, restricting its access solely to the namespace where the resources are provisioned.
 - id: q143
   type: multiple_choice
@@ -594,9 +594,9 @@ questions:
   correct: b
   explanation: Add clusters by selecting them manually or (recommended) applying/adjusting labels so matching clusters are added dynamically.
   source:
-    label: Creating a Project Using the UI
+    label: Create a Project Using the UI
     url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-create-a-project-using-ui-t.html
-    page: p.418
+    page: ''
     quote: you can either select manually existing clusters or define labels that Kommander will use to dynamically add clusters.
 - id: q145
   type: multiple_choice
@@ -723,7 +723,7 @@ questions:
   correct: b
   explanation: Project Quotas are defined using a Kubernetes FederatedResourceQuota named 'kommander'.
   source:
-    label: Project Quotas and Limit Ranges
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-project-quotas-and-limit-ranges-t.html
-    page: p.455
+    label: Creating Project Quotas and Limit Ranges Using the CLI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-creating-project-quotas-and-limit-ranges-using-cli-t.html
+    page: ''
     quote: All the Project Quotas are defined using a Kubernetes FederatedResourceQuota called kommander which you can also create/update using kubectl.
