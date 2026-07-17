@@ -149,3 +149,28 @@ export interface ExamReport {
   sections: ExamSectionResult[];
   results: ExamQuestionResult[];
 }
+
+export interface Flashcard {
+  id: string;
+  module_id: string;
+  module_title: string;
+  track: string;
+  front: string;
+  answer: string;
+  back: string;
+  source?: Source | null;
+}
+
+export interface Deck {
+  id: string;
+  title: string;
+  kind: "all" | "track" | "module";
+  count: number;
+}
+
+export interface FlashcardDeck {
+  deck_id: string;
+  title: string;
+  count: number;
+  cards: Flashcard[];
+}

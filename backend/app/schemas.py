@@ -135,6 +135,33 @@ class LeaderboardOut(BaseModel):
     generated_at: datetime
 
 
+# ---- Flashcards ----
+
+class FlashcardOut(BaseModel):
+    id: str
+    module_id: str
+    module_title: str
+    track: str
+    front: str
+    answer: str
+    back: str
+    source: SourceOut | None = None
+
+
+class DeckOut(BaseModel):
+    id: str
+    title: str
+    kind: str  # "all" | "track" | "module"
+    count: int
+
+
+class FlashcardDeckOut(BaseModel):
+    deck_id: str
+    title: str
+    count: int
+    cards: list[FlashcardOut]
+
+
 # ---- Practice exam ----
 
 class ExamQuestionOut(BaseModel):

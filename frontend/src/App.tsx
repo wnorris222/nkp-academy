@@ -7,6 +7,7 @@ import ExamPage from "./pages/Exam";
 import Leaderboard from "./pages/Leaderboard";
 import Login from "./pages/Login";
 import Quiz from "./pages/Quiz";
+import Flashcards from "./pages/Flashcards";
 import type { ReactNode } from "react";
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -35,6 +36,7 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/module/:moduleId" element={<Quiz />} />
         <Route path="/exam" element={<ExamPage />} />
+        <Route path="/flashcards" element={<Flashcards />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -24,7 +24,15 @@ from .metrics import (
     http_requests_total,
     registry,
 )
-from .routers import auth, content_router, exam, leaderboard, progress, quiz
+from .routers import (
+    auth,
+    content_router,
+    exam,
+    flashcards,
+    leaderboard,
+    progress,
+    quiz,
+)
 
 settings = get_settings()
 
@@ -107,6 +115,7 @@ app.include_router(quiz.router)
 app.include_router(progress.router)
 app.include_router(leaderboard.router)
 app.include_router(exam.router)
+app.include_router(flashcards.router)
 
 
 # ---- Static SPA (production only) ----

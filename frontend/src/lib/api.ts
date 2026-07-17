@@ -1,9 +1,11 @@
 // Thin typed API client. Same-origin in production; Vite proxies /api in dev.
 import type {
   Badge,
+  Deck,
   Exam,
   ExamAnswerInput,
   ExamReport,
+  FlashcardDeck,
   GradeResult,
   Leaderboard,
   ModuleDetail,
@@ -72,6 +74,9 @@ export const api = {
     }),
   progress: () => request<Progress>("/api/progress"),
   leaderboard: () => request<Leaderboard>("/api/leaderboard"),
+  decks: () => request<Deck[]>("/api/flashcards/decks"),
+  flashcards: (deckId: string) =>
+    request<FlashcardDeck>(`/api/flashcards?deck_id=${encodeURIComponent(deckId)}`),
   generateExam: (count: number) => request<Exam>(`/api/exam?count=${count}`),
   submitExam: (answers: ExamAnswerInput[]) =>
     request<ExamReport>("/api/exam/submit", {

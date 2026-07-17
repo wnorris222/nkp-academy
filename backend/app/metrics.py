@@ -51,3 +51,10 @@ exams_submitted_total = Counter(
     ["result"],  # "pass" | "fail"
     registry=registry,
 )
+
+flashcard_decks_served_total = Counter(
+    "nkp_academy_flashcard_decks_served_total",
+    "Flashcard decks served, partitioned by deck kind.",
+    ["kind"],  # "all" | "track" | "module"
+    registry=registry,
+)
