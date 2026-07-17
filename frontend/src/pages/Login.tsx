@@ -3,6 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 
+/** Normalise free text into a handle the API will accept.
+ *
+ * The username doubles as the session token and shows up on the leaderboard,
+ * so the API only allows letters, numbers, `-` and `_`. People naturally type
+ * their real name ("Taylor Norris"), so fold it to a handle as they type
+ * ("taylor-norris") rather than rejecting it after a round-trip. Trailing
+ * hyphens are kept while typing — stripping them would stop you typing one.
+ */
+function toHandle(raw: string): string {
+  return raw
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-") // spaces and punctuation become hyphens
+    .replace(/-{2,}/g, "-") // collapse runs
+    .replace(/^-+/, ""); // never lead with a hyphen
+}
+
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -14,9 +30,18 @@ export default function Login() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+
+    // Drop any trailing hyphen left over from typing before validating.
+    const handle = toHandle(username).replace(/-+$/, "");
+    if (handle.length < 2) {
+      setError("Username must be at least 2 letters or numbers.");
+      return;
+    }
+    setUsername(handle);
+
     setBusy(true);
     try {
-      await login(username.trim(), displayName.trim() || undefined);
+      await login(handle, displayName.trim() || undefined);
       navigate("/");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong");
@@ -56,12 +81,19 @@ export default function Login() {
             <input
               autoFocus
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsername(toHandle(e.target.value))}
               placeholder="e.g. priya-partner"
               className="w-full rounded-xl border border-charcoal-border bg-charcoal-light px-4 py-2.5 text-slate-100 outline-none focus:border-iris"
               required
               minLength={2}
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
             />
+            <p className="mt-1.5 text-xs text-slate-500">
+              Letters, numbers, <code>-</code> and <code>_</code> only — spaces become
+              hyphens. Use Display name for your full name.
+            </p>
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-semibold text-slate-300">

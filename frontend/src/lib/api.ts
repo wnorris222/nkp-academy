@@ -28,6 +28,30 @@ export function clearToken(): void {
   localStorage.removeItem(TOKEN_KEY);
 }
 
+/** Flatten a FastAPI error body into one readable line.
+ *
+ * FastAPI uses two shapes: `{detail: "..."}` for a raised HTTPException, and
+ * `{detail: [{msg, loc}, ...]}` for 422 request-validation failures. Treating
+ * the second as a string renders "[object Object]" and hides the real reason,
+ * so both are handled here.
+ */
+function errorMessage(body: unknown, fallback: string): string {
+  const detail = (body as { detail?: unknown } | null)?.detail;
+
+  if (typeof detail === "string" && detail.trim()) return detail;
+
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map((item) => (item as { msg?: unknown })?.msg)
+      .filter((msg): msg is string => typeof msg === "string" && msg.trim().length > 0)
+      // Pydantic prefixes custom-validator failures with "Value error, ".
+      .map((msg) => msg.replace(/^value error,\s*/i, ""));
+    if (messages.length) return messages.join(" · ");
+  }
+
+  return fallback;
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken();
   const headers: Record<string, string> = {
@@ -38,13 +62,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   const resp = await fetch(path, { ...options, headers });
   if (!resp.ok) {
-    let detail = resp.statusText;
+    let message = resp.statusText;
     try {
-      detail = (await resp.json()).detail ?? detail;
+      message = errorMessage(await resp.json(), message);
     } catch {
-      /* ignore non-JSON errors */
+      /* non-JSON error body — keep the status text */
     }
-    throw new ApiError(resp.status, detail);
+    throw new ApiError(resp.status, message);
   }
   if (resp.status === 204) return undefined as T;
   return resp.json() as Promise<T>;
