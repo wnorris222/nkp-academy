@@ -213,9 +213,9 @@ questions:
   correct: b
   explanation: Select the app card's three-dot button > Disable, then confirm with Disable Application.
   source:
-    label: 'Ultimate: Enabling an Application Using the UI'
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-enterprise-enable-an-app-using-ui-t.html
-    page: p.337
+    label: Disable an Application Using the UI
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-essential-disable-an-app-using-ui-t.html
+    page: ''
     quote: Select the three-dot button of the desired application card and select Disable... select Disable Application.
 - id: q161
   type: multiple_choice
@@ -402,9 +402,9 @@ questions:
   correct: b
   explanation: Verify with kubectl get helmreleases <app> -n ${WORKSPACE_NAMESPACE} -w; the HelmRelease must be marked Ready.
   source:
-    label: Deploying Platform Applications Using CLI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
-    page: p.355
+    label: Verify the Project Platform Applications
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-verify-the-project-platform-applications-t.html
+    page: ''
     quote: Connect to the attached cluster and watch the HelmReleases to verify the deployment... kubectl get helmreleases kiali -n ${WORKSPACE_NAMESPACE} -w. HelmRelease must be marked as Ready.
 - id: q170
   type: multiple_choice
@@ -591,9 +591,9 @@ questions:
   correct: b
   explanation: Disable/remove a platform application via the CLI with kubectl delete appdeployment -n <WORKSPACE_NAMESPACE> <app>.
   source:
-    label: Deploying Platform Applications Using CLI
-    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform:top-deploy-platform-app-using-cli-t.html
-    page: p.681
+    label: Disable NKP-managed Ceph
+    url: https://portal.nutanix.com/page/documents/details?targetId=Nutanix-Kubernetes-Platform-v2_18:top-disable-nkp-managed-ceph-t.html
+    page: ''
     quote: kubectl delete appdeployment -n <WORKSPACE_NAMESPACE> rook-ceph-cluster.
 - id: q179
   type: multiple_choice
